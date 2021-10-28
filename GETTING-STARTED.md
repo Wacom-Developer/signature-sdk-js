@@ -1,26 +1,17 @@
 # Wacom Signature SDK for JavaScript
 
 - [Wacom Signature SDK for JavaScript](#wacom-signature-sdk-for-javascript)
-  - [Test Environment](#test-environment)
-    - [Android](#android)
-    - [Chrome OS](#chrome-os)
-    - [Chromium OS CloudReady](#chromium-os-cloudready)
-    - [Linux](#linux)
-    - [Mac](#mac)
-    - [Windows 10](#windows-10)
+  - [Setting up the Demo application](#setting-up-the-demo-application)
+    - [How to use](#how-to-use)
   - [Installation](#installation)
   - [Licensing](#licensing)
+    - [Setting up the license](#setting-up-the-license)
   - [Operate the Demo application](#operate-the-demo-application)
-    - [Choose File](#choose-file)
+    - [Load captured signature](#load-captured-signature)
     - [Capture with STU device](#capture-with-stu-device)
-    - [Capture with generic Pen](#capture-with-generic-pen)
+    - [Capture with Generic Pen](#capture-with-generic-pen)
   - [Known issues](#known-issues)
-    - [Android](#android-1)
-    - [Chrome OS](#chrome-os-1)
-    - [Chromium OS CloudReady](#chromium-os-cloudready-1)
-    - [Linux](#linux-1)
-    - [Mac](#mac-1)
-    - [Windows 10](#windows-10-1)
+    - [Windows 10](#windows-10)
 
 
 The **Wacom Signature SDK for JavaScript** is intended to generate signature objects for the user. It provides the documentation and tools to create signature enabled applications.
@@ -29,33 +20,26 @@ It does, however, require a browser that supports **WebAssembly** primarily, and
 
 Please view the README for additional information on WebHid and WebAssembly. 
 
-## Test Environment
+## Setting up the Demo application
 
-### Android
+### How to use
 
-Currently, WebHid is not implemented for Android. However, it is on the road map and it will be available some day.
+Currently, WebHid works if executed locally or on a secure connection.
 
-### Chrome OS
+The Signature SDK for JavaScript is distributed as two files:
 
-WebHid works fine on Chrome OS.
+1. wasm – This is the SDK itself.
+2. js – This is the JavaScript wrapper.
 
-### Chromium OS CloudReady
+Using the SDK via the website must be done on a web server due to security restrictions. It cannot be used directly from the local file system. Additionally, the connection must be secure (https) when using another URL other than localhost.
 
-WebHid works fine on Chromium OS CloudReady. However, STU tablets are not detected. More information can be viewed in "Known issues".
+Only the JavaScript file needs to be included & imported on the html page:
 
-### Linux
+```
+      <script src="signature_sdk.js"></script> <!-- signature SDK -->
+```
 
-WebHid works fine on Linux. However, STU tablets are not detected. More information can be viewed in "Known issues".
-
-### Mac
-
-WebHid works fine on Mac.
-
-### Windows 10
-
-The SDK is dependent on WebAssembly technology and the browsers supported by it. A full list of supported browsers can be found here: https://caniuse.com/wasm
-
-In addition, due to WebAssembly security restrictions, the demo page must be opened on a web server and not directly from a local file system.
+Due to WebAssembly security restrictions, the demo page must be opened on a web server and not directly from a local file system.
 For initial development it is convenient to use localhost for this purpose.
 
 For example, use node.js with http-server, then launch the demo code from the local server as:
@@ -85,7 +69,27 @@ For more information regarding using node.js, see: https://www.npmjs.com/package
 ## Licensing
 
 
+### Setting up the license
 
+ 
+
+            The Signature SDK for JavaScript requires a valid license. You may obtain either an evaluation license or commercial license at: https://developer.wacom.com/en-us/developer-dashboard/license-keys.
+
+ 
+
+Once you have a valid license, you can initialize the Signature SDK for JavaScript with the following code:
+```
+      try {
+
+        mSigObj.setLicence("PUT HERE YOUR LICENCE STRING");  
+
+      } catch (e) {
+
+        ...
+
+      }
+```
+Now you may use any of the API functions, calling them directly from the Signature Object. You can see these functions in more detail in: SIGNATURE-COMPONENTS-API.md.
 
 Install the JWT license which is supplied separately.
 
@@ -117,7 +121,7 @@ Each section does the following:
 
 After using all three sections, the signature image will appear at the bottom. 
 
-### Choose File
+### Load captured signature
 
 To load a previously captured signature, select a file with the "Choose File" button. This file may have been saved either as a .txt file, as an encoded bitmap or as raw FSS data.
 
@@ -125,22 +129,17 @@ To load a previously captured signature, select a file with the "Choose File" bu
 
 This will then open up an instance of File Explorer and you may select a signature previously captured. This may be done through the use of a .png file.
 
-![Example PNG file](media/choosefile-2.png)
-
-
 From there, the SDK will render the signature selected by the user and display it in the "Signature image" section at the bottom of the page. 
 
-![SDK render](media/choosefile-3.png)
+![SDK render](media/choosefile-2.png)
 
 Another acceptable format for input in the SDK is a .txt file, provided the .txt file contains data for the signature stored in FSS format. An example of this format is shown below. 
 
-![Example FSS file](media/choosefile-4.png)
-
-![Example FSS](media/choosefile-5.png)
+![Example FSS](media/choosefile-3.png)
 
 The FSS displayed on screen will yield the signature displayed in the next screenshot in the "Signature image" section at the bottom of the page. 
 
-![Example FSS result](media/choosefile-6.png)
+![Example FSS result](media/choosefile-4.png)
 
 ### Capture with STU device
 
@@ -177,7 +176,7 @@ The Signature will then be displayed in the Signature image box below. 
 ![STU render](media/stu-7.png)
 
 
-### Capture with generic Pen
+### Capture with Generic Pen
 
 
 
@@ -212,93 +211,6 @@ The Signature will then be displayed in the Signature image box below. 
 
 
 ## Known issues
-
-### Android
-
-Currently, WebHid is not implemented for Android. However, it is on the road map and it will be available some day.
-
-### Chrome OS
-
-No issues have been reported for Chrome OS.
-
-### Chromium OS CloudReady 
-
-WebHid works fine, though issues with STU tablets not being detected are known. 
-
-This distribution comes with Wacom drivers already installed, so to fix this issue, we need to blacklist it in order to let the STU devices be registered as HID devices.
-
-Firstly, we need to disable rootfs verification to be able to write into the system files.
-
-To disable rootfs verification, the following steps must be followed:
-
-1. Log in
-2. Press ctl+alt+t to open a terminal
-3. Type in "shell" and hit enter
-4. Confirm that the yellow "crosh" prompt is now a green "chronos@localhost" prompt
-
-5. Disable rootfs verification: 
-
-```
-sudo disable_verity
-```
-
-
-
-
-6. Reboot your device
-
-```
-sudo reboot
-```
-
-
-
-7. You can now log in and proceed with rootfs edits as you normally would. You will still need to remount root as read/write:
-
-
-
-
-
-
-```
-sudo mount -o rw,remount /
-```
-
-Once you have permissions to write to the file system, you need to blacklist wacom driver. This can be done by putting in the file:
-
-```
-<b>/etc/modprobe.d/blacklist.conf</b>
-```
-
-on the line:
-```
-<b>blacklist wacom</b>
-```
-Then update-initramfs -u to have the system re-generate the initramfs.
-
-### Linux 
-
-Most Linux distributions come with default Wacom drivers installed. This driver does not have support for STU devices, and once it finds a STU tablet it raises an error refusing to register the HID device. In order to allow the STU tablet to be registered as an HID device, the Wacom driver must be disabled. 
-
-This can be done by putting in the file:
-```
-<b>/etc/modprobe.d/blacklist.conf</b>
-```
-on the line:
-```
-<b>blacklist wacom</b>
-```
-Then update-initramfs -u to have the system re-generate the initramfs.
-
-On most Linux systems, USB devices are mapped with read-only permissions by default. To allow Chrome to open a USB device, you will need to add a new udev rule. Create a file at ```/etc/udev/rules.d/99-stu.rules``` with the following content:
-
-```KERNEL=="hidraw*", ATTRS{idVendor}=="056a", GROUP="plugdev", MODE="0660"``` where 056a is the code for the Wacom vendor and the current user needs to be in plugdev group.
-
-A more generic rule could be ```KERNEL=="hidraw*", ATTRS{idVendor}=="056a", MODE:="0666"``` that grand permissions to all users (see udev rules manual for further details).
-
-### Mac
-
-No issues have been reported for Mac.
 
 ### Windows 10
 

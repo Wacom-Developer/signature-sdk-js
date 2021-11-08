@@ -15,23 +15,29 @@
 
 ## Introduction
 
-Wacom’s Signature Library provides software components to capture handwritten signatures from a pen tablet. The library simplifies the interaction with Wacom pen tablets and provides an API to manage and display signatures.
+Wacom’s Signature Library provides software components to capture handwritten signatures from a pen tablet. The library simplifies the interaction with Wacom pen tablets and provides an API to manage and display signatures. 
 
-Chromium has added a new feature called WebHid that allows connections to HID devices. This new feature of Chromium-based browsers has been utilized to allow access to STU devices.
+Chromium has added a new feature called WebHid that allows connections to HID devices. This new feature of Chromium-based browsers has been utilized to allow access to STU devices. 
 
 ### Supported web browsers
 
 The **Signature SDK for JavaScript** is based on WebAssembly, a binary instruction format that is supported for most major modern web browsers.
 
-Additional information about compatibility can be viewed [here.](https://caniuse.com/wasm)
+Additional information about WebAssembly compatibility can be viewed [here.](https://caniuse.com/wasm)
 
 All the browsers that implement WebHid should be supported. Thus, at the moment it is supported as a feature on:
 
 - Chromium
 - Google Chrome
 - Microsoft Edge
+- Opera
 
 Firefox and Safari have refused to implement this feature on the basis of security reasons, so it won't be supported.
+
+WebHid is required by STUs for timely captures rates. When capturing data with an STU on Firefox or Safari, it will still run, but capture rates will be limited.
+<FILL IN CAPTURE RATE HERE. STATE THEY ARE NOT LIMITED BY THE WEBHID BUT DOCUMENT CAPTURE RATE PROPERLY. TABLE WOULD BE GOOD.>
+
+Additional information about WebHid compatibility can be viewed [here.](https://caniuse.com/webhid)
 
 ### Creating the Signature Object
 

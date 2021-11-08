@@ -34,8 +34,16 @@ All the browsers that implement WebHid should be supported. Thus, at the moment 
 
 Firefox and Safari have refused to implement this feature on the basis of security reasons, so it won't be supported.
 
-WebHid is required by STUs for timely captures rates. When capturing data with an STU on Firefox or Safari, it will still run, but capture rates will be limited.
-<FILL IN CAPTURE RATE HERE. STATE THEY ARE NOT LIMITED BY THE WEBHID BUT DOCUMENT CAPTURE RATE PROPERLY. TABLE WOULD BE GOOD.>
+WebHid is required by STUs for timely captures rates. When capturing data with an STU on Firefox or Safari, it will still run, but capture rates will be limited by the lack of WebHid.
+
+| Browser        | WebHid support |
+| -------------- | -------------- |
+| Chrome         | Yes            |
+| Chromium       | Yes            |
+| Microsoft Edge | Yes            |
+| Opera          | Yes            |
+| Firefox        | No             |
+| Safari         | No             |
 
 Additional information about WebHid compatibility can be viewed [here.](https://caniuse.com/webhid)
 

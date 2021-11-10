@@ -11,7 +11,7 @@
   - [About the content of this folder](#about-the-content-of-this-folder)
     - [Library](#library)
     - [Documentation](#documentation)
-    - [Demos](#demos)
+    - [Signature-SDK-Download](#signature-sdk-download)
 
 ## Introduction
 
@@ -67,19 +67,17 @@ Before the Signature Object can be created, the WebAssembly module must be loade
 
 In the examples below, two different ways of capturing a signature are described:
 
- 
-
 ### Using Wacom STU tablet
 
             Using Wacom STU SDK for JavaScript, we can capture a valid signature from a Wacom STU tablet. For more information, please see the examples or the Wacom STU SDK information.
-
- 
 
 ### Using HTML5 canvas
 
             Most modern browsers are able to capture pen data. Here, two examples of how to capture a valid signature through the use of an HTML5 canvas and pen device have been provided. While you can use this method to capture a signature using a mouse or a touch screen, this signature won’t have pressure information and therefore an invalid signature for validation purposes.
 
 ### Problems
+
+When collecting pen data from a device other than an STU, HTML5 pointer events for these devices are captured using JavaScript point events. Due to limitations of certain browsers, the sample rates may be limited when running these point events. 
 
 Firefox supports pen pressure since Firefox 59. This however needs to be activated. On Windows, you may need to toggle a browser setting to get pen pressure to function.
 
@@ -101,15 +99,15 @@ This folder contains the files that make up the SDK itself.
 
 ### Documentation
 
-This folder contains some documentation.
 
 - README.md – This file, containing general background and platform information.
 - SIGNATURE-COMPONENTS-API.md – The description of the API
 - GETTING-STARTED.md – The description of how to use the Windows sample. 
+- THIRDPARTY.md - List of third-party licenses
 
-### Demos
+### Signature-SDK-Download
 
 This folder contains some demonstration code.
 
-- common – this folder holds code common across all the examples
-- simple – this folder contains a simple example that shows how to load and capture signatures, using either an STU Device or Pen in an HTML5 canvas.
+- common – This folder holds code common across all the examples.
+- simple – This folder contains a simple example that shows how to load and capture signatures, using either an STU Device or Pen in an HTML5 canvas.

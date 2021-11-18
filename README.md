@@ -105,9 +105,10 @@ This folder contains the files that make up the SDK itself.
 - GETTING-STARTED.md – The description of how to use the Windows sample. 
 - THIRDPARTY.md - List of third-party licenses
 
-### Signature-SDK-Download
+### Sample
 
 This folder contains some demonstration code.
 
 - common – This folder holds code common across all the examples.
+- readme.txt - This readme covers the contents of the SDK
 - simple – This folder contains a simple example that shows how to load and capture signatures, using either an STU Device or Pen in an HTML5 canvas.

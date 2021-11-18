@@ -87,7 +87,7 @@ For Firefox:
 2. Type "w3c" in the search box, then double click on "dom.w3c_pointer_events_dispatch_by_pointer_messages". Change its value column to "true".
 3. Make sure "dom.w3c_pointer_events.enabled" is also set to "true". This is the default for this version of Firefox.
 
- 
+ NB: In the Windows version, capturing a signature would lead to the PC's Network Card ID being saved as signature property. In the JavaScript version, this field is not mandatory anymore. 
 
 ## About the content of this folder
 

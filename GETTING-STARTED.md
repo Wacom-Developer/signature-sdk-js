@@ -82,6 +82,7 @@ eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJiMzNhYWUyODA0NmM0MmE5OTgyY2E1NTd
 ``` 
 
 Once you have a valid license, you can initialize the Signature SDK for JavaScript with the following code:
+
 ```
       try {
 
@@ -93,6 +94,7 @@ Once you have a valid license, you can initialize the Signature SDK for JavaScri
 
       }
 ```
+
 Now you may use any of the API functions, calling them directly from the Signature Object. You can see these functions in more detail in: SIGNATURE-COMPONENTS-API.md.
 
 Install the JWT license which is supplied separately.

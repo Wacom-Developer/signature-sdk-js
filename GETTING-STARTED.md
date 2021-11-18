@@ -44,11 +44,11 @@ For initial development it is convenient to use localhost for this purpose.
 
 For example, use node.js with http-server, then launch the demo code from the local server as:
 ```
-  http://localhost:8080/dist/demos/simple/index.html
+  http://localhost:8080/sample/simple/index.html
 ```
 ## Installation
 
-No SDK installation is required. Unzip the files and copy the distribution folders 'dist'. 
+No SDK installation is required. Unzip the downloaded SDK files and copy them into the sample's "common" folder. 
 
 The demonstration must be run from an http server. localhost servers are acceptable. Examples of a suitable local server include IIS, Python or Node.js. This guide will briefly go over setting up a local server in node.js. 
 
@@ -60,8 +60,8 @@ To summarise the node.js server setup:
 - start a command prompt, ```cd \myserver```
 - install the server components: ```npm install http-server -g```
 - start the local server: ```http-server```
-- copy the SDK distribution folder 'dist' to ```\myserver```
-- browse to the start page: ```http://localhost:8080/dist/demos/simple/index.html```
+- copy the SDK simple and common folders to ```\myserver```
+- browse to the start page: ```http://localhost:8080/sample/simple/index.html```
 - click a button for the required operation e.g. ```Capture with STU device```
 
 For more information regarding using node.js, see: https://www.npmjs.com/package/http-server
@@ -97,7 +97,7 @@ To obtain a license for the SDK, please contact your regional Wacom Sales repres
 
 Insert the license string in the demo code.
 
-e.g: dist\demos\simple\simple.js. Within this file, locate 'PUT HERE YOUR LICENCE STRING' and insert the license string in its place. 
+e.g: sample\simple\simple.js. Within this file, locate 'PUT HERE YOUR LICENCE STRING' and insert the license string in its place. 
 
 ## Operate the Demo application
 
@@ -159,17 +159,13 @@ You may now write your signature. 
 
 ![Signature written](media/stu-5.png)
 
-If you make a mistake, you may use the "Clear" button to erase all.
-
-![STU clear](media/stu-6.png)
-
-This will remove all digital ink on the screen and revert it to how it was at the beginning. 
+If you make a mistake, you may use the "Clear" button to erase all. This will remove all digital ink on the screen and revert it to how it was at the beginning. 
 
 If the user changes their mind, the "Cancel" button may be pressed at any time to close the signing application. Once happy with the signature, press OK. 
 
 The Signature will then be displayed in the Signature image box below. 
 
-![STU render](media/stu-7.png)
+![STU render](media/stu-6.png)
 
 
 ### Capture with Generic Pen

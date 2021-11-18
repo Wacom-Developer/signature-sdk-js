@@ -288,7 +288,9 @@ Returns a string with some additional data collected at capture time. The specif
 | ------------------------------------------------------------------------------------------ |
 | DataType: Indicates the type of information that is going to be retrieve at can be one of: |
  <ul>                                                                                       
-      <li>Module.CaptureData.Digitizer: Identifying information for the digitizer that captured the signature.</li><li>Module.CaptureData.Digitizer_Driver: Identifying information for the digitizer driver software.</li><li>Module.CaptureData.Machine_OS: Identifying information for computer operating system.</li><li>Module.CaptureData.Network_Card: Identifying information for network card.</li>
+      <li>Module.CaptureData.Digitizer: Identifying information for the digitizer that captured the signature.</li><li>Module.CaptureData.Digitizer_Driver: Identifying information for the digitizer driver software.</li><li>Module.CaptureData.Machine_OS: Identifying information for computer operating system.</li><li>Module.CaptureData.Network_Card: Identifying information for network card.</br>       <i>NB: the Network_Card parameter is not implemented in this edition.</i> 
+
+</li>
 </ul>
 
 

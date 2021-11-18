@@ -1,0 +1,2 @@
+/* touch-action: none; is required to make pen works fine with WILL */
+html, body {touch-action: none;}

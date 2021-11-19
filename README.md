@@ -102,7 +102,7 @@ This folder contains the files that make up the SDK itself.
 
 - README.md – This file, containing general background and platform information.
 - SIGNATURE-COMPONENTS-API.md – The description of the API
-- GETTING-STARTED.md – The description of how to use the Windows sample. 
+- GETTING-STARTED.md – The description of how to use the sample. 
 - THIRDPARTY.md - List of third-party licenses
 
 ### Sample

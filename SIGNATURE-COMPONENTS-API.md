@@ -536,39 +536,11 @@ Renders an image of the signature. Optionally encodes the SigObj in the generate
 | paddingX, paddingY: float values with the padding around the signature image, added to both the left and the right for paddingX, and both the top and bottom for paddingY. Dimensions are specified as mm or pixels. <ul><li>Negative value = mm.</li> <li>Positive value = pixels.</li></ul> |
 | Flags: int value with a combination of the following values (a single value from each mandatory group must be included):                                                                                                                                                                      |
 
-  Output group (mandatory):
-
-    0x2000      (RenderOutputBase64)    – return base-64 encoded string
-
-    0x800        (RenderOutputBinary)      – return bitmap as binary data
-
-    0x1000      (RenderOutputFilename) – write bitmap to file
-
- 
-
-  Colour selection group (mandatory):
-
-    0x20000 (RenderColor1BPP)             – render 1 bit monochrome
-
-    0x40000 (RenderColorRGB_256)      – render RGB 256 image
-
-    0x80000 (RenderColorARGB_8888) – render  ARGB 32 bits image (recommended)
-
- 
-
-  Image format flags (optional):
-
-    0x10000 (RenderBackgroundTransparent) – Make background transparent
-
  
 
   Image extension (optional):
 
-    0x400000 (RenderEncodeData) – Encode signature data within image
-
-    0x800000 (RenderWatermark)  – Include watermark within image to indicate presence of encoded data
-
- 
+    0x400000 (RenderEncodeData) – Encode signature data within image (only valid for png type)
 
   Other (optional):
 

@@ -44,7 +44,7 @@
 
 
 
-The Signature SDK for JavaScript is based on WebAssembly, a binary instruction format supported for most of the major modern web browsers (see https://caniuse.com/wasm for more information about compatibility) and is distributed as two files: 
+The Signature SDK for JavaScript is based on WebAssembly, a binary instruction format supported by most of the major modern web browsers (see https://caniuse.com/wasm for more information about compatibility) and is distributed as two files: 
 
 1. wasm – This is the SDK itself.
 2. js – This is the JavaScript wrapper.
@@ -104,7 +104,7 @@ With the signature object properly configured, you can use the following methods
 
 
 
-The SigObj encapsulates a captured handwritten signature. When populated, it contains a wealth of data that fully describes both the static and dynamic characteristic of a signature and the context in which the signature was captured. A Signature object can be bound (at the moment of capture) to the host document or other data set to provide a means of determining whether or not any changes have been made subsequently, either maliciously or unintentionally.
+The SigObj encapsulates a captured handwritten signature. When populated, it contains a wealth of data that fully describes both the static and dynamic characteristic of a signature and the context in which the signature was captured. A Signature object can be bound (at the moment of capture) to the host document or another data set to provide a means of determining whether or not any changes have been made subsequently, either maliciously or unintentionally.
 
 ## Methods summary
 
@@ -148,7 +148,7 @@ The SigObj encapsulates a captured handwritten signature. When populated, it con
 
 ### canDecrypt
 
-Checks if it has been set a password or private key for the signature object. Setting a password or private key for the signature object implies that when loading a signature, the Signature SDK will try to decrypt it with the provided password or private key.
+Checks if there has been a password or private key set for the signature object. Setting a password or private key for the signature object implies that when loading a signature, the Signature SDK will try to decrypt it with the provided password or private key.
 
 
 | Return values                                    |
@@ -160,7 +160,7 @@ Checks if it has been set a password or private key for the signature object. Se
 
 ### canEncrypt
 
-Checks if it has been set a password or public key for the signature object. Setting a password or public key for the signature object implies that when exporting a signature, the Signature SDK will try to decrypt it with the provided password or public key.
+Checks if there has been a password or public key set for the signature object. Setting a password or public key for the signature object implies that when exporting a signature, the Signature SDK will try to decrypt it with the provided password or public key.
 
 
 
@@ -195,7 +195,7 @@ When a signature is captured it can be defined an integrity key. This function c
 
 | Return values                                                                                                               |
 | --------------------------------------------------------------------------------------------------------------------------- |
-| The function returns a promise that resolves when success to the following possible values:                                 |
+| The function returns a promise that resolves when it succeeds to the following possible values:                                 |
 | Module.IntegrityStatus.OK – Integrity Ok. Data has not changed since signature capture.                                     |
 | Module.IntegrityStatus.FAIL – Integrity Fail. Data has changed since signature capture.                                     |
 | Module.IntegrityStatus.MISSING – Integrity Missing. Signature integrity value not found.                                    |
@@ -262,11 +262,11 @@ Generates a new signature with the data passed.
 | Why: String indicating the reason for signing.                                                                                                                                                                                                                                                                                                                 |
 | Where: String indicating where the signature was captured.                                                                                                                                                                                                                                                                                                     |
 | IntegrityKey: A value that indicates the type of integrity that will be applied to the signature. It can be one of the following: <ul>  <li>Module.KeyType.None</li><li>Module.KeyType.MD5 </li><li>Module.KeyType.SHA-1</li><li>Module.KeyType SHA-224</li><li>Module.KeyType.SHA-256</li><li>Module.KeyType.SHA-384</li><li>Module.KeyType.SHA-512</li></ul> |
-| DocumentHash: Hash object indicating the document to be bound with the signature. This value can be null if we don’t desire to bind any document to the signature.                                                                                                                                                                                             |
+| DocumentHash: Hash object indicating the document that's to be bound with the signature. This value can be null if we don’t desire to bind any document to the signature.                                                                                                                                                                                             |
 | Strokes: a vector with the captured strokes.                                                                                                                                                                                                                                                                                                                   |
 | Digitizer_Characteristics: DigitizerCharacteristics object with the characteristics of the digitizer that capture the signature strokes.                                                                                                                                                                                                                       |
 | DigitizerInfo: String indicating information about the digitizer.                                                                                                                                                                                                                                                                                              |
-| NicInfo: String indicating a unique ID for the device that capture the signature.                                                                                                                                                                                                                                                                              |
+| NicInfo: String indicating a unique ID for the device that captures the signature.                                                                                                                                                                                                                                                                              |
 | TimeRes: Integer indicating the resolution of the time.                                                                                                                                                                                                                                                                                                        |
 | Date: Javascript date that indicates when the signature was captured.                                                                                                                                                                                                                                                                                          |
 
@@ -275,7 +275,7 @@ Generates a new signature with the data passed.
 
 | Return values                                                                             |
 | ----------------------------------------------------------------------------------------- |
-| The function returns a promise that resolves when success to true or raise and exception. |
+| The function returns a promise that resolves upon success to true or raises an exception. |
 
 
 
@@ -286,9 +286,9 @@ Returns a string with some additional data collected at capture time. The specif
 
 | Parameters                                                                                 |
 | ------------------------------------------------------------------------------------------ |
-| DataType: Indicates the type of information that is going to be retrieve at can be one of: |
+| DataType: Indicates the type of information that is going to be retrieved. It can be one of the following: |
  <ul>                                                                                       
-      <li>Module.CaptureData.Digitizer: Identifying information for the digitizer that captured the signature.</li><li>Module.CaptureData.Digitizer_Driver: Identifying information for the digitizer driver software.</li><li>Module.CaptureData.Machine_OS: Identifying information for computer operating system.</li><li>Module.CaptureData.Network_Card: Identifying information for network card.</br>       <i>NB: the Network_Card parameter is not implemented in this edition.</i> 
+      <li>Module.CaptureData.Digitizer: Identifying information for the digitizer that captured the signature.</li><li>Module.CaptureData.Digitizer_Driver: Identifying information for the digitizer driver software.</li><li>Module.CaptureData.Machine_OS: Identifying information for the computer operating system.</li><li>Module.CaptureData.Network_Card: Identifying information for the network card.</br>       <i>NB: the Network_Card parameter is not implemented in this edition.</i> 
 
 </li>
 </ul>
@@ -393,7 +393,7 @@ Returns the width of the bounding rectangle of the signature in 0.01mm units. Re
 
 ### getWho
 
-Returns the name of signatory, as specified at the time of signature capture.
+Returns the name of the signatory, as specified at the time of signature capture.
 
 | Parameters |
 | ---------- |
@@ -401,7 +401,7 @@ Returns the name of signatory, as specified at the time of signature capture.
 
 | Return values                                                         |
 | --------------------------------------------------------------------- |
-| The name of signatory, as specified at the time of signature capture. |
+| The name of the signatory, as specified at the time of signature capture. |
 
 ### getWhy
 
@@ -421,7 +421,7 @@ Returns the reason for signing, as specified at the time of signature capture.
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Parameters                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | IsoData: The iso signature.                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| IsoType: The type of the signature. It can be one of: <ul><li>Module.IsoType.ISO19784_7_BINARY – exports the signature as binary ISO19784_7</li><li>Module.IsoType.ISO19785_3_XML – exports the signature as xml ISO19785_3</li><li>Module.IsoType.ISO19784_7_ENCRYPTED_BINARY – exports the signature as ISO19784_7 encrypted as binary.</li><li>Module.IsoType.ISO19784_7_ENCRYPTED_TEXT – exports the signature as ISO19784_7 encrypted as text.</li></ul> |
+| IsoType: The type of the signature. It can be one of the following: <ul><li>Module.IsoType.ISO19784_7_BINARY – exports the signature as binary ISO19784_7</li><li>Module.IsoType.ISO19785_3_XML – exports the signature as xml ISO19785_3</li><li>Module.IsoType.ISO19784_7_ENCRYPTED_BINARY – exports the signature as ISO19784_7 encrypted as binary.</li><li>Module.IsoType.ISO19784_7_ENCRYPTED_TEXT – exports the signature as ISO19784_7 encrypted as text.</li></ul> |
 | AdditionalImportIsoData: The ISO format lacks some important properties of the Wacom signature. With this object we can assign the values for these properties. See the section AdditionalImportIsoData for more information about it.                                                                                                                                                                                                                        |
 
 
@@ -502,7 +502,7 @@ Returns true if the signature is not generated by the method generateSignature.
 
 ### ReadEncodedBitmapBinary
 
-Reads the encoded SigObj data from a binary data which was created using RenderBitmap function.
+Reads the encoded SigObj data from binary data which was created using RenderBitmap function.
 
 | Parameters                                 |
 | ------------------------------------------ |
@@ -528,7 +528,7 @@ Renders an image of the signature. Optionally encodes the SigObj in the generate
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Will InkCanvas: Inking canvas for rendering the image using Wacom WILL Ink SDK. If this value is null, the image is rendered using a common JavaScript canvas.                                                                                                                                |
 | width: int value indicating the width specified as DPI (dots per inch) or Pixels. Negative value = DPI (the signature is not scaled). Positive value = Pixels (the signature is scaled to fit the area).                                                                                      |
-| height: int value indicating the Height specified as DPI (dots per inch) or Pixels. Negative value = DPI (the signature is not scaled). Positive value = Pixels (the signature is scaled to fit the area).                                                                                    |
+| height: int value indicating the height specified as DPI (dots per inch) or Pixels. Negative value = DPI (the signature is not scaled). Positive value = Pixels (the signature is scaled to fit the area).                                                                                    |
 | mimeType: String specifying the image format as one of:<ul><li>image/png</li> <li>image/jpeg</li></ul>                                                                                                                                                                                        |
 | inkWidth: float value with the signature ink width in pixels. This is only valid when using a standard JavaScript canvas. When using WILL Ink canvas, this value is ignored.                                                                                                                  |
 | inkColor: String with the signature ink colour.                                                                                                                                                                                                                                               |
@@ -573,7 +573,7 @@ Each ExtraData item must be given an identifying key name under a string value n
 
 | Parameters                                                                |
 | ------------------------------------------------------------------------- |
-| **Key:** name of the extra data, it already exists it will be overridden. |
+| **Key:** name of the extra data, if it already exists it will be overridden. |
 | **Value:** value of the extra data.                                       |
 
 
@@ -661,7 +661,7 @@ Set a private key for asymmetric encryption. The private key is used for decrypt
 
 ### setPublicKey
 
-Set a public key for asymmetric encryption. The public key is using for encryption.
+Set a public key for asymmetric encryption. The public key is used for encryption.
 
 | Parameters                                        |
 | ------------------------------------------------- |
@@ -674,7 +674,7 @@ Set a public key for asymmetric encryption. The public key is using for encrypti
 
 ## Hash
 
-The hash object is used to bound a signature to a document. For example: it is necessary to sign a PDF. To do this, we create a hash document using:
+The hash object is used to bind a signature to a document. For example: it is necessary to sign a PDF. To do this, we create a hash document using:
 
 ```const hash = new Module.Hash(hashType);```
 
@@ -702,7 +702,7 @@ Then using the function add(byteArray) we add the content of the PDF.
 
  
 
- This object it is used to apport extra properties to the ISO format. These options are:
+This object is used to apport extra properties to the ISO format. These options are:
 
 ### setWho(who)
 

@@ -11,7 +11,7 @@
   - [About the content of this folder](#about-the-content-of-this-folder)
     - [Library](#library)
     - [Documentation](#documentation)
-    - [Signature-SDK-Download](#signature-sdk-download)
+    - [Sample](#sample)
 
 ## Introduction
 
@@ -33,8 +33,9 @@ All the browsers that implement WebHid should be supported. Thus, at the moment 
 - Opera
 
 Firefox and Safari have refused to implement this feature on the basis of security reasons, so it won't be supported.
+WebHid is required by STUs for timely captures rates. 
 
-WebHid is required by STUs for timely captures rates. When capturing data with an STU on Firefox or Safari, it will still run, but capture rates will be limited by the lack of WebHid.
+When capturing data with an STU on Firefox or Safari, it will still run, but capture rates will be limited by the lack of WebHid.
 
 | Browser        | WebHid support |
 | -------------- | -------------- |

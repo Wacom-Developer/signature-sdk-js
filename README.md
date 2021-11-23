@@ -9,7 +9,6 @@
     - [Using HTML5 canvas](#using-html5-canvas)
     - [Problems](#problems)
   - [About the content of this folder](#about-the-content-of-this-folder)
-    - [Library](#library)
     - [Documentation](#documentation)
     - [Sample](#sample)
 
@@ -64,7 +63,7 @@ Before the Signature Object can be created, the WebAssembly module must be loade
 
 ## Ways of capturing a signature
 
-            Using the signature object’s function generateSignature, it is possible to generate new signatures. This function needs to be provided by the captured points, which can come from a Wacom STU devices, HTML canvas, etc. However, only signatures with pressure values will be valid for signature validation. This means that capturing the signature with a mouse or touch screen would not be a valid signature for validation purposes.
+            Using the signature object’s function generateSignature, it is possible to generate new signatures. This function needs to be provided by the captured points, which can come from a Wacom STU device, HTML canvas, etc. However, only signatures with pressure values will be valid for signature validation. This means that capturing the signature with a mouse or touch screen would not be a valid signature for validation purposes.
 
 In the examples below, two different ways of capturing a signature are described:
 
@@ -88,15 +87,9 @@ For Firefox:
 2. Type "w3c" in the search box, then double click on "dom.w3c_pointer_events_dispatch_by_pointer_messages". Change its value column to "true".
 3. Make sure "dom.w3c_pointer_events.enabled" is also set to "true". This is the default for this version of Firefox.
 
- NB: In the Windows version, capturing a signature would lead to the PC's Network Card ID being saved as signature property. In the JavaScript version, this field is not mandatory anymore. 
+NB: In the Windows version, capturing a signature would lead to the PC's Network Card ID being saved as signature property. In the JavaScript version, this field is not mandatory anymore. 
 
 ## About the content of this folder
-
- 
-
-### Library
-
-This folder contains the files that make up the SDK itself.
 
 ### Documentation
 

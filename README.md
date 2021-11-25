@@ -16,7 +16,7 @@
 
 Wacom’s Signature Library provides software components to capture handwritten signatures from a pen tablet. The library simplifies the interaction with Wacom pen tablets and provides an API to manage and display signatures. 
 
-Chromium has added a new feature called WebHid that allows connections to HID devices. This new feature of Chromium-based browsers has been utilized to allow access to STU devices. 
+Chromium has added a new feature called WebHID that allows connections to HID devices. This new feature of Chromium-based browsers has been utilized to allow access to STU devices. 
 
 ### Supported web browsers
 
@@ -24,7 +24,7 @@ The **Signature SDK for JavaScript** is based on WebAssembly, a binary instructi
 
 Additional information about WebAssembly compatibility can be viewed [here.](https://caniuse.com/wasm)
 
-All the browsers that implement WebHid should be supported. Thus, at the moment it is supported as a feature on:
+All the browsers that implement WebHID should be supported. Thus, at the moment it is supported as a feature on:
 
 - Chromium
 - Google Chrome
@@ -32,11 +32,11 @@ All the browsers that implement WebHid should be supported. Thus, at the moment 
 - Opera
 
 Firefox and Safari have refused to implement this feature on the basis of security reasons, so it won't be supported.
-WebHid is required by STUs for timely captures rates. 
+WebHID is required by STUs for timely captures rates. 
 
-When capturing data with an STU on Firefox or Safari, it will still run, but capture rates will be limited by the lack of WebHid.
+When capturing data with an STU on Firefox or Safari, it will still run, but capture rates will be limited by the lack of WebHID.
 
-| Browser        | WebHid support |
+| Browser        | WebHID support |
 | -------------- | -------------- |
 | Chrome         | Yes            |
 | Chromium       | Yes            |
@@ -45,7 +45,7 @@ When capturing data with an STU on Firefox or Safari, it will still run, but cap
 | Firefox        | No             |
 | Safari         | No             |
 
-Additional information about WebHid compatibility can be viewed [here.](https://caniuse.com/webhid)
+Additional information about WebHID compatibility can be viewed [here.](https://caniuse.com/WebHID)
 
 ### Creating the Signature Object
 

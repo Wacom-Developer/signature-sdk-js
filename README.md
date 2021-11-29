@@ -63,7 +63,7 @@ Before the Signature Object can be created, the WebAssembly module must be loade
 
 ## Ways of capturing a signature
 
-            Using the signature object’s function generateSignature, it is possible to generate new signatures. This function needs to be provided by the captured points, which can come from a Wacom STU device, HTML canvas, etc. However, only signatures with pressure values will be valid for signature validation. This means that capturing the signature with a mouse or touch screen would not be a valid signature for validation purposes.
+            Using the signature object’s function generateSignature, it is possible to generate new signatures. This function needs to be provided by the capture points, which can come from a Wacom STU device, HTML canvas, etc. However, only signatures with pressure values will be valid for signature validation. This means that capturing the signature with a mouse or touch screen would not be a valid signature for validation purposes.
 
 In the examples below, two different ways of capturing a signature are described:
 
@@ -73,7 +73,7 @@ In the examples below, two different ways of capturing a signature are described
 
 ### Using HTML5 canvas
 
-            Most modern browsers are able to capture pen data. Here, two examples of how to capture a valid signature through the use of an HTML5 canvas and pen device have been provided. While you can use this method to capture a signature using a mouse or a touch screen, this signature won’t have pressure information and therefore an invalid signature for validation purposes.
+            Most modern browsers are able to capture pen data. Here, two examples of how to capture a valid signature through the use of an HTML5 canvas and pen device have been provided. While you can use this method to capture a signature using a mouse or a touch screen, this signature won’t have pressure information and therefore an invalid signature for validation purposes. 
 
 ### Problems
 
@@ -101,7 +101,7 @@ NB: In the Windows version, capturing a signature would lead to the PC's Network
 
 ### Sample
 
-This folder contains some demonstration code.
+This folder contains some demonstration code. Please note that the demo may need to be modified to meet customer needs. 
 
 - common – This folder holds code common across all the examples.
 - readme.txt - This readme covers the contents of the SDK

@@ -1,6 +1,6 @@
 ## Third-party Licenses
 
-Licenses for third-party libraries used by the Signature Javascript SDK.
+Licenses for third-party libraries used by the Signature JavaScript SDK.
 
 ## bigint.js
 
@@ -21,7 +21,7 @@ MD5 hash function
 - license: MIT
 
 ## sjcl.js
-Stanford Javascript Crypto Library
+Stanford JavaScript Crypto Library
 - SJCL is open
 - License: under a BSD license or under the GNU GPL, version 2.0.
 - http://opensource.org/licenses/BSD-2-Clause

@@ -15,7 +15,7 @@
 
 
 The **Wacom Signature SDK for JavaScript** is intended to generate signature objects for the user. It provides the documentation and tools to create signature enabled applications.
-The Javascript SDK implements the functionality in browser ready script. No component installations are required and the SDK is platform independent.
+The JavaScript SDK implements the functionality in browser ready script. No component installations are required and the SDK is platform independent.
 It does, however, require a browser that supports **WebAssembly** primarily, and **WebHID** when using an STU tablet for pen input.
 
 Please view the README for additional information on WebHID and WebAssembly. 

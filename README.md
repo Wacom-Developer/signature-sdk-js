@@ -95,14 +95,14 @@ NB: In the Windows version, capturing a signature would lead to the PC's Network
 
 
 - README.md – This file, containing general background and platform information.
-- SIGNATURE-COMPONENTS-API.md – The description of the API
+- SIGNATURE-COMPONENTS-API.md – The description of the API.
 - GETTING-STARTED.md – The description of how to use the sample. 
-- THIRDPARTY.md - List of third-party licenses
+- THIRDPARTY.md - List of third-party licenses.
 
 ### Sample
 
-This folder contains some demonstration code. Please note that the demo may need to be modified to meet customer needs. 
+This folder contains the SDK's demonstration code. Please note that due to different screen sizes on devices, the demo may need to be modified to meet customer needs. 
 
 - common – This folder holds code common across all the examples.
-- readme.txt - This readme covers the contents of the SDK
+- readme.txt - This readme covers the contents of the SDK.
 - simple – This folder contains a simple example that shows how to load and capture signatures, using either an STU Device or Pen in an HTML5 canvas.

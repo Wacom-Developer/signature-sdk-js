@@ -33,7 +33,7 @@ The Signature SDK for JavaScript is distributed as two files:
 
 Using the SDK via the website must be done on a web server due to security restrictions. It cannot be used directly from the local file system. Additionally, the connection must be secure (https) when using another URL other than localhost.
 
-Only the JavaScript file needs to be included & imported on the html page:
+Only the JavaScript file needs to be included & imported on the HTML page:
 
 ```
       <script src="signature_sdk.js"></script> <!-- signature SDK -->
@@ -42,7 +42,7 @@ Only the JavaScript file needs to be included & imported on the html page:
 Due to WebAssembly security restrictions, the demo page must be opened on a web server and not directly from a local file system.
 For initial development it is convenient to use localhost for this purpose.
 
-For example, use node.js with http-server, then launch the demo code from the local server as:
+For example, use Node.js with http-server, then launch the demo code from the local server as:
 ```
   http://localhost:8080/sample/simple/index.html
 ```
@@ -50,12 +50,12 @@ For example, use node.js with http-server, then launch the demo code from the lo
 
 No SDK installation is required. Unzip the downloaded SDK files and copy them into the sample's "common" folder. 
 
-The demonstration must be run from an http server. localhost servers are acceptable. Examples of a suitable local server include IIS, Python or Node.js. This guide will briefly go over setting up a local server in node.js. 
+The demonstration must be run from an http server. localhost servers are acceptable. Examples of a suitable local server include IIS, Python or Node.js. This guide will briefly go over setting up a local server in Node.js. 
 
-To summarise the node.js server setup:
+To summarize the Node.js server setup:
 
 
-- install node.js from https://nodejs.org/en/download/
+- install Node.js from https://nodejs.org/en/download/
 - create a folder e.g. ```c:\myserver```
 - start a command prompt, ```cd \myserver```
 - install the server components: ```npm install http-server -g```
@@ -64,7 +64,7 @@ To summarise the node.js server setup:
 - browse to the start page: ```http://localhost:8080/sample/simple/index.html```
 - click a button for the required operation e.g. ```Capture with STU device```
 
-For more information regarding using node.js, see: https://www.npmjs.com/package/http-server
+For more information regarding using Node.js, see: https://www.npmjs.com/package/http-server
 
 ## Licensing
 
@@ -79,7 +79,7 @@ For more information regarding using node.js, see: https://www.npmjs.com/package
 
 An evaluation license is also available here:
 
-``` eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJiMzNhYWUyODA0NmM0MmE5OTgyY2E1NTdkZjhmY2YxOCIsImV4cCI6MTY0NTMxNTE5OSwiaWF0IjoxNjM3MjQ5MjM3LCJzZWF0cyI6MCwicmlnaHRzIjpbIkpTX0NPUkUiLCJTSUdfU0RLX0NPUkUiXSwiZGV2aWNlcyI6W10sInR5cGUiOiJldmFsIiwibGljX25hbWUiOm51bGwsIndhY29tX2lkIjoiYjMzYWFlMjgwNDZjNDJhOTk4MmNhNTU3ZGY4ZmNmMTgiLCJsaWNfdWlkIjoiZjRkMGNlOWItMjA3OS00ODJiLWJmMzEtZTBhMzYwMjUxMGEwIiwiYXBwc193aW5kb3dzIjpbXSwiYXBwc19pb3MiOltdLCJhcHBzX2FuZHJvaWQiOltdLCJtYWNoaW5lX2lkcyI6W119.K6VYDH9eroho5i5zN2x7kHVDfd0OqFkaJMJ09rTJQyyAvwjBaa4kWOjT2B0F4hZDpaYoftRlTaooKGIdhAc34YPDJbACkRuNH8CXCIhG8P8cJxk0ERqizatBYaT7pudKoFY2ZPYRr_p9aA5iUQwOj48dWlyFlPr6rtz8BBIGPF2C9LWya6eAE-u6ycKEjSU1HlxVNWNbWUCHdjHBK0XfIZ4CDsir6JUETK4RjydCLnG642nVzC-vCzaiG3113wcT-96P--j52LqdV3GuGN9u6HzAvIF92y0YGetOP2tXubFcGtd4KIX9hoV2ofUzKxjA4Fh49RB084_jlTfslsILDw```  
+```eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJiMzNhYWUyODA0NmM0MmE5OTgyY2E1NTdkZjhmY2YxOCIsImV4cCI6MTY0Nzg1NTY1MCwiaWF0IjoxNjQxMjg5Mzg0LCJzZWF0cyI6MCwicmlnaHRzIjpbIkpTX0NPUkUiLCJTSUdfU0RLX0NPUkUiXSwiZGV2aWNlcyI6W10sInR5cGUiOiJldmFsIiwibGljX25hbWUiOm51bGwsIndhY29tX2lkIjoiYjMzYWFlMjgwNDZjNDJhOTk4MmNhNTU3ZGY4ZmNmMTgiLCJsaWNfdWlkIjoiODg2MDYwYTctM2Y4ZC00N2RmLThmMDctM2I3YjQwYzg1YzEwIiwiYXBwc193aW5kb3dzIjpbXSwiYXBwc19pb3MiOltdLCJhcHBzX2FuZHJvaWQiOltdLCJtYWNoaW5lX2lkcyI6W119.CzpaKJB5VqmfD6DmR3m2tFwJ8O2oXztCWWPVU8ehIMT5bzO-d3pNzNJtONysKE_kM7LPsGakq4ybISjChSH1h75VAyqNjK3dfFIZuCG1Br4ir9Gg6Lt9ksOSwpYwz-LGABY8ArznO1dOCjqOYAa58yHs36Rjj5lGz48GhXwv9g2udxwNt4HgF5FI36jAIL7X8LSj4EtQB5ncVSEm6sqFPbFJhF-gBRqq1rjsd9VLBCrnROgkitBWsmzSr4woDepNn_9GP7u2z4MutVl3FOP6vdqQNLO4lO-eTCcOlApbt6VRvAkljEsS_x8F0zdVFUU28yKDwvvGxfoneHyb7gUctA```  
 
  NB: this particular license is only valid for a limited time. 
 

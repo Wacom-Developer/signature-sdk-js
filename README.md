@@ -47,6 +47,8 @@ When capturing data with an STU on Firefox or Safari, it will still run, but cap
 
 Additional information about WebHID compatibility can be viewed [here.](https://caniuse.com/WebHID)
 
+When using the SDK on iOS and MacOS devices, Safari 15 or later is required as a minimum. 
+
 ### Creating the Signature Object
 
  

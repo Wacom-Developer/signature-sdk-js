@@ -1,0 +1,16 @@
+/* touch-action: none; is required to make pen works fine with WILL */
+/*#signatureWindow {touch-action: none;}*/
+
+#modal-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    opacity: .50;
+    -webkit-opacity: .5;
+    -moz-opacity: .5;
+    filter: alpha(opacity=50);
+    z-index: 1000;	
+}

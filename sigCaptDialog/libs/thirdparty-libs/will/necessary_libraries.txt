@@ -1,0 +1,7 @@
+Put here the following libraries:
+
+clipper.js -> https://github.com/Doodle3D/clipper-js
+long.js -> https://github.com/dcodeIO/long.js
+md5.min.js -> https://github.com/blueimp/JavaScript-MD5
+poly2tri.min.js -> https://github.com/r3mi/poly2tri.js
+protobuf.js -> https://github.com/protobufjs/protobuf.js

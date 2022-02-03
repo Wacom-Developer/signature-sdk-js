@@ -1,0 +1,5 @@
+Put here the following libraries:
+
+BigInt.js -> https://github.com/Evgenus/BigInt
+md5.min.js -> https://github.com/blueimp/JavaScript-MD5
+sjcl.js -> https://github.com/bitwiseshiftleft/sjcl

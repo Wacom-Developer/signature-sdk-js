@@ -14,9 +14,11 @@
 
 ## Introduction
 
-Wacom’s Signature Library provides software components to capture handwritten signatures from a pen tablet. The library simplifies the interaction with Wacom pen tablets and provides an API to manage and display signatures. 
+Wacom’s Signature SDK library for JavaScript provides software components to capture handwritten signatures from a Web Browser. 
+The library simplifies the interaction with Wacom pen tablets and provides an API to manage and display signatures. 
 
-Chromium has added a new feature called WebHID that allows connections to HID devices. This new feature of Chromium-based browsers has been utilized to allow access to STU devices. 
+The signature can be captured using the standard JavaScript canvas API, or using a Wacom STU tablet. In order to use a Wacom STU tablet the Web Browser needs to support WebHID feature.
+Additional information about WebHID can be viewed [here.](https://caniuse.com/webhid)
 
 ### Supported web browsers
 
@@ -24,7 +26,7 @@ The **Signature SDK for JavaScript** is based on WebAssembly, a binary instructi
 
 Additional information about WebAssembly compatibility can be viewed [here.](https://caniuse.com/wasm)
 
-All the browsers that implement WebHID should be supported. Thus, at the moment it is supported as a feature on:
+For using Wacom STU tablets all the browsers that implement WebHID should be supported. Thus, at the moment it is supported as a feature on:
 
 - Chromium
 - Google Chrome
@@ -32,20 +34,17 @@ All the browsers that implement WebHID should be supported. Thus, at the moment 
 - Opera
 
 Firefox and Safari have refused to implement this feature on the basis of security reasons, so it won't be supported.
-WebHID is required by STUs for timely captures rates. 
 
-When capturing data with an STU on Firefox or Safari, it will still run, but capture rates will be limited by the lack of WebHID.
 
-| Browser        | WebHID support |
-| -------------- | -------------- |
-| Chrome         | Yes            |
-| Chromium       | Yes            |
-| Microsoft Edge | Yes            |
-| Opera          | Yes            |
-| Firefox        | No             |
-| Safari         | No             |
+| Browser        | Canvas support | WebHID support |
+| -------------- | -------------- | -------------- |
+| Chrome         | Yes            | Yes            |
+| Chromium       | Yes            | Yes            |
+| Microsoft Edge | Yes            | Yes            |
+| Opera          | Yes            | Yes            |
+| Firefox        | Yes            | No             |
+| Safari         | Yes            | No             |
 
-Additional information about WebHID compatibility can be viewed [here.](https://caniuse.com/WebHID)
 
 When using the SDK on iOS and MacOS devices, Safari 15 or later is required as a minimum. 
 
@@ -93,18 +92,17 @@ NB: In the Windows version, capturing a signature would lead to the PC's Network
 
 ## About the content of this folder
 
-### Documentation
-
-
 - README.md – This file, containing general background and platform information.
-- SIGNATURE-COMPONENTS-API.md – The description of the API.
-- GETTING-STARTED.md – The description of how to use the sample. 
+- GETTING-STARTED.md – The description of how to use the Signature SDK. 
 - THIRDPARTY.md - List of third-party licenses.
 
-### Sample
+### Documentation
+
+- Signature_SDK_JS_API.md – The description of the Signature SDK API.
+
+### Demos
 
 This folder contains the SDK's demonstration code. Please note that due to different screen sizes on devices, the demo may need to be modified to meet customer needs. 
 
 - common – This folder holds code common across all the examples.
-- readme.txt - This readme covers the contents of the SDK.
-- simple – This folder contains a simple example that shows how to load and capture signatures, using either an STU Device or Pen in an HTML5 canvas.
+- complete_demo – This folder contains a demo that shows all the features of Signature SDK JS using SigCaptDialog library.

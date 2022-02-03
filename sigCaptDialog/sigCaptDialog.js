@@ -644,7 +644,7 @@ class SigCaptDialog {
 	  this.mLoadingImageDiv.style.backgroundColor="white";
 	  this.mLoadingImageDiv.style.width = "100%";
 	  this.mLoadingImageDiv.style.height = "100%";
-	  this.mLoadingImageDiv.innerHTML = '<div id="loadingDiv" style="padding-left:10px;display:table-cell;vertical-align:middle;"><table><tr><td><img src="../../sigCaptDialog/images/loading.gif"></td><td>Loading the image, this could take a few seconds...</td></tr></div>';
+	  this.mLoadingImageDiv.innerHTML = '<div id="loadingDiv" style="padding-left:10px;display:table-cell;vertical-align:middle;"><table><tr><td><img src="./libs/stu_capture/loading.gif"></td><td>Loading the image, this could take a few seconds...</td></tr></div>';
 	  this.mFormDiv.appendChild(this.mLoadingImageDiv);
   }
 	
@@ -818,9 +818,9 @@ class SigCaptDialog {
   }
   
   async btnClearClick() {
-    if (this.capturedPoints.length > 0) {
+    //if (this.capturedPoints.length > 0) {
 	  await this.clearScreen();
-	}
+	//}
 	
 	this.onClearListeners.forEach(listener => listener());
   }
@@ -1100,7 +1100,7 @@ class SigCaptDialog {
                 'stroke_id': currentStrokeID
             };
 			
-			//console.log(JSON.stringify(point));
+			console.log(JSON.stringify(point));
 		
             currentStroke.push_back(point);	
 			

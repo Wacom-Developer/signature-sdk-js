@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	    <title>Signature SDK - Simple demo</title>
+	    <link href="../../sigCaptDialog/style/sigCaptDialog.css" rel="stylesheet" type="text/css">		
+	    <link href="../../sigCaptDialog/libs/thirdparty-libs/jquery-ui.min.css" rel="stylesheet" type="text/css">
+	    <script src="../../sigCaptDialog/libs/thirdparty-libs/jquery.min.js"></script>
+	    <script src="../../sigCaptDialog/libs/thirdparty-libs/jquery-ui.min.js"></script>		
+		<script src="../../sigCaptDialog/libs/thirdparty-libs/jquery.ui.touch-punch.min.js"></script>		
+		<script src="../../sigCaptDialog/libs/thirdparty-libs/will/clipper.js"></script>
+	    <script src="../../sigCaptDialog/libs/thirdparty-libs/will/md5.min.js"></script>
+	    <script src="../../sigCaptDialog/libs/thirdparty-libs/will/poly2tri.min.js"></script>
+	    <script src="../../sigCaptDialog/libs/thirdparty-libs/will/long.js"></script>
+	    <script src="../../sigCaptDialog/libs/thirdparty-libs/will/protobuf.min.js"></script>
+        <script src="../../sigCaptDialog/libs/will/libs/wacom-digital-ink-min.js"></script>	
+	    <script type="text/javascript">
+		    const {
+			    fsx, Matrix,
+			    InputDevice, InputListener,
+			    SensorChannel, InkController,
+			    Brush2D, BrushPrototype, ShapeFactory,
+			    BrushGL, URIResolver,
+			    Intersector, Selector,
+			    PathPointContext, InkBuilder, Stroke,
+			    InkModel, SpatialContext, InkCodec,
+			    Color, Rect, BlendMode,
+			    InkCanvas2D, StrokeRenderer2D,
+			    InkCanvasGL, StrokeRendererGL, OffscreenCanvasGL, 
+			    PointerData
+		    } = DigitalInk;
+	    </script>	
+	    <script src="../../sigCaptDialog/libs/will/InkCanvas.js"></script>
+	    <script src="../../sigCaptDialog/libs/will/InkCanvasRaster.js"></script>	
+	    <script src="../../sigCaptDialog/libs/will/ValueTransformer.js"></script>
+	    <script src="../../sigCaptDialog/libs/will/URIBuilder.js"></script>
+	    <script src="../../sigCaptDialog/libs/will/BrushPalette.js"></script>
+	    <script src="../../sigCaptDialog/libs/will/Config.js"></script>
+	    <script src="../../sigCaptDialog/libs/will/DataRepository.js"></script>
+	    <script src="../../sigCaptDialog/libs/will/DataModel.js"></script>
+		
+		<script src="../../sigCaptDialog/libs/thirdparty-libs/stu_capture/BigInt.js"></script>		
+	    <!--script src="../../sigCaptDialog/libs/thirdparty-libs/stu_capture/md5.min.js"></script-->
+	    <script src="../../sigCaptDialog/libs/thirdparty-libs/stu_capture/sjcl.js"></script>
+		<script src="../../sigCaptDialog/libs/stu_capture/stu-sdk.min.js"></script> <!-- used to connect to STU devices -->        
+	    <script src="../../sigCaptDialog/libs/stu_capture/stu_capture.js"></script> <!-- used for capture data from STU devices -->
+	    <script src="../../sigCaptDialog/libs/stu_capture/stu_capture_encryption.js"></script> <!-- STU encryption functions -->	    
+
+        <script src="../common/libs/signature_sdk.js"></script> <!-- signature SDK -->
+		<script src="../common/libs/signature_sdk_helper.js"></script> <!-- signature SDK helper -->
+		
+        <script src="../../sigCaptDialog/sigCaptDialog.js"></script>
+		<script src="../../sigCaptDialog/stuCaptDialog.js"></script>
+		
+	    <script src="simple.js"></script>
+    </head>
+    <body>
+        <h1>Signature SDK <span id="version_txt"></span>- Simple demo</h1>
+	    <p>This is a pure javascript version of Signature SDK, using WebAssembly. This version it is supported by the major web browsers, you can see <a href="https://caniuse.com/?search=webassembly">here the list of compatible browsers</a>.</p>
+	    With the SDK you can:
+	    <ul>
+	        <li>
+		        Load a previous captured Signature:
+			    <br><br><input type="file" id="myfile" name="myfile" onchange="javascript:loadFromFile();" disabled="disabled">
+		    </li>
+		    <br>
+		    <li>
+		        Capture with STU device. This makes use of STU-SDK for javascript, and it is only supported on web browsers that supports WebHID. You can see <a href="https://caniuse.com/?search=webhid">here the list of compatible browsers</a>.
+			    <br><br><button id="capture_stu_device" onClick="captureFromSTU()" disabled="disabled">Capture with STU device</button>
+		    </li>
+		    <br>
+		    <li>
+		        <div>
+		            Capture the signature using standard javascript events.
+			        <br><br>
+		            <input type="checkbox" name="allow_mouse_check" id="allow_mouse_check" checked="checked">
+		            <label for="allow_mouse_check">Allow mouse input</label>			
+		            &nbsp;&nbsp;
+		            <input type="checkbox" name="allow_touch_check" id="allow_touch_check" checked="checked">
+		            <label for="allow_touch_check">Allow touch</label>			
+		            &nbsp;&nbsp;
+		            <input type="checkbox" name="allow_pen_check" id="allow_pen_check" checked="checked">
+		            <label for="allow_pen_check">Allow pen</label>			
+		            &nbsp;&nbsp;
+			        <br><br>
+		            <button type="button" id="canvas_capture_btn" onClick="captureFromCanvas()" disabled="disabled">Capture with Generic Canvas</button>			  
+			    </div>
+		    </li>
+	    </ul>
+	    <fieldset id="signature_image" style="width:310px;height:210pxdisplay: flex;justify-content: center;align-items: center;">
+	        <legend>Signature image:</legend>
+		    <img id="sig_image" style="display:block;margin: auto;">
+	    </fieldset>
+	    <br>
+	    <fieldset id="signature_text" style="width:620px;height:210px;">
+	        <legend>Signature text:</legend>
+		    <textarea id="sig_text" style="width:100%; height:100%;"></textarea>
+	    </fieldset>
+    </body>
+</html>

@@ -106,3 +106,4 @@ This folder contains the SDK's demonstration code. Please note that due to diffe
 
 - common – This folder holds code common across all the examples.
 - complete_demo – This folder contains a demo that shows all the features of Signature SDK JS using SigCaptDialog library.
+- simple – This folder contains a simple example that shows how to load and capture signatures, using either an STU Device or Pen in an HTML5 canvas.

@@ -4,14 +4,18 @@
 class StuCaptDialog {
 	
     constructor(config) {
-		this.config = config;		
+		if (this.config) {
+		    this.config = config;		
+				
+		    if (this.config.encrypt == undefined) {
+		        this.config.encrypt = true;	
+		    }
 		
-		if (this.config.encrypt == undefined) {
-		    this.config.encrypt = true;	
-		}
-		
-		if (this.config.sizeMode == undefined) {
-			this.config.sizeMode = "stu";
+		    if (this.config.sizeMode == undefined) {
+			    this.config.sizeMode = "stu";
+		    }
+		} else {
+			this.config = {};
 		}
 	    
 		this.mPenData = Array();

@@ -321,7 +321,7 @@ class SigCaptDialog {
 	  height: 300,
 	  left: 0,
 	  top:0,
-	  centered:false,
+	  centered:true,
 	  title: "My Tittle",
 	  borderColor: "#0097d4",
 	  borderWidth: "1p",
@@ -341,7 +341,9 @@ class SigCaptDialog {
 	  draggable: true
     };  
 	  
-	this.mapConfig(config);
+	if (config) {
+	    this.mapConfig(config);
+	}
 	
 	this.capturedPoints = new Array();
 	this.onClearListeners = new Array();
@@ -644,7 +646,7 @@ class SigCaptDialog {
 	  this.mLoadingImageDiv.style.backgroundColor="white";
 	  this.mLoadingImageDiv.style.width = "100%";
 	  this.mLoadingImageDiv.style.height = "100%";
-	  this.mLoadingImageDiv.innerHTML = '<div id="loadingDiv" style="padding-left:10px;display:table-cell;vertical-align:middle;"><table><tr><td><img src="./libs/stu_capture/loading.gif"></td><td>Loading the image, this could take a few seconds...</td></tr></div>';
+	  this.mLoadingImageDiv.innerHTML = '<div id="loadingDiv" style="padding-left:10px;display:table-cell;vertical-align:middle;"><table><tr><td><img src="../../sigCaptDialog/images/loading.gif"></td><td>Loading the image, this could take a few seconds...</td></tr></div>';
 	  this.mFormDiv.appendChild(this.mLoadingImageDiv);
   }
 	
@@ -1100,7 +1102,7 @@ class SigCaptDialog {
                 'stroke_id': currentStrokeID
             };
 			
-			console.log(JSON.stringify(point));
+			//console.log(JSON.stringify(point));
 		
             currentStroke.push_back(point);	
 			

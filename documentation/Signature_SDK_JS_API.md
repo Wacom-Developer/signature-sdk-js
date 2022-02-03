@@ -329,9 +329,9 @@ Each extra data item must be given an identifying key name under a string value 
 
 Returns the height of the bounding rectangle of the signature in 0.01mm units. Returns 0 if the object does not contain signature data.
 
-| Parameters |
-| ---------- |
-| None       |
+| Parameters                                                                                                                                   |
+| -------------------------------------------------------------------------------------------------------------------------------------------- |
+| relative : boolean indicating if the desire height it is only containing the strokes (false) or the whole screen used for capturing (true)   |
 
 
 | Return values                                                                                                                   |
@@ -393,11 +393,9 @@ Returns the date when the signature was captured.
 Returns the width of the bounding rectangle of the signature in 0.01mm units. Returns 0 if the object does not contain signature data.
 
 
-
-
-| Parameters |
-| ---------- |
-| None       |
+| Parameters                                                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------- |
+| relative : boolean indicating if the desire width it is only containing the strokes (false) or the whole screen used for capturing (true)   |
 
 
 

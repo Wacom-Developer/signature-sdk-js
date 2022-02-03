@@ -48,14 +48,14 @@
 
 The Signature SDK for JavaScript is based on WebAssembly, a binary instruction format supported by most of the major modern web browsers (see https://caniuse.com/wasm for more information about compatibility) and is distributed as two files: 
 
-1. wasm – This is the SDK itself.
-2. js – This is the JavaScript wrapper.
+1. signature_sdk.wasm – This is the SDK itself.
+2. signature_sdk.js – This is the JavaScript wrapper.
 
 Using the SDK via the website must be done on a web server due to security restrictions. It cannot be used directly from the local file system. Additionally, the connection must be secure (https) when using another URL other than localhost.
 
 Firstly, the JavaScript needs to be imported from signature_sdk.wasm.
 
-```<script src="../common/signature_sdk.js"></script> <!-- signature SDK -->```
+```<script src="{path to the sdk}/signature_sdk.js"></script> <!-- signature SDK -->```
 
 Once the Signature SDK is imported, it is recommended to wait until the WebAssembly module is loaded:
 
@@ -241,10 +241,10 @@ Exports the signature as an ISO format. The format depends on the passed paramet
 | Parameters                                                                                            |
 | ----------------------------------------------------------------------------------------------------- |
 | IsoType -  The possible values are:                                                                   |
-| Module.IsoType.ISO19784_7_BINARY – exports the signature as binary ISO19784_7                         |
+| Module.IsoType.ISO19794_7_BINARY – exports the signature as binary ISO19794_7                         |
 | Module.IsoType.ISO19785_3_XML – exports the signature as xml ISO19785_3                               |
-| Module.IsoType.ISO19784_7_ENCRYPTED_BINARY – exports the signature as ISO19784_7 encrypted as binary. |
-| Module.IsoType.ISO19784_7_ENCRYPTED_TEXT – exports the signature as ISO19784_7 encrypted as text.     |
+| Module.IsoType.ISO19794_7_ENCRYPTED_BINARY – exports the signature as ISO19794_7 encrypted as binary. |
+| Module.IsoType.ISO19794_7_ENCRYPTED_TEXT – exports the signature as ISO19794_7 encrypted as text.     |
 
 
 

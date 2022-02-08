@@ -240,7 +240,7 @@ The FSS displayed on screen will yield the same signature in the previous image.
 
 The settings section contains configuration for the demo's:
 
-- Ink: This section allows for selection of the type of inking tool, its colour, 
+- Ink: This section allows for selection of the type of inking tool, its colour and the choice of whether or not to use a background image. 
 
 
 - Capture window: This section allows adjustment of the capture window's size, fonts, their size and x/y offsets that appear within it and the number of buttons that appear. 

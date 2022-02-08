@@ -6,9 +6,8 @@ Module.onRuntimeInitialized = _ => {
     mSigObj = new Module.SigObj();	
 	mHash = new Module.Hash(Module.HashType.SHA512);	  
 	try {
-	    //mSigObj.setLicence("PUT HERE YOUR LICENCE STRING");   
-		mSigObj.setLicence("eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJMTVMiLCJleHAiOjE2NjczNzcxMTUsImlhdCI6MTYzNTg0NTEwOCwicmlnaHRzIjpbIlNJR19TREtfQ09SRSIsIkpTX0NPUkUiXSwiZGV2aWNlcyI6WyJXQUNPTV9BTlkiXSwidHlwZSI6ImV2YWwiLCJsaWNfbmFtZSI6IlRlc3QgbGljZW5zZSBbMTYzNTg0MTExNV0iLCJ3YWNvbV9pZCI6IjE1M2JlODlmLTk2MzctNGFiNC05OTk5LTk0ZTBjOGUwZDJhMyIsImxpY191aWQiOiI2M2IyNGU2YS05ZDI3LTQ3ZDMtODk0NS00OTkyM2FjMjA0ZTIiLCJhcHBzX3dpbmRvd3MiOltdLCJhcHBzX2lvcyI6W10sImFwcHNfYW5kcm9pZCI6W10sIm1hY2hpbmVfaWRzIjpbIjAwNTA1NkMwMDAwMSIsIjAwNTA1NkMwMDAwOCJdfQ.LKYsb6HR9K1M-69RNXhdZV_uSpxLyVgJHl0yjKlVRO0YfmNGB9sxGVIDE0ec7SDSV5417QikD8hxTyL6i5B97p7Pl99d_gvdJubW1k9oVpR1JEq3dws-whQggVpySIhBU0BGPhRQP1VzIvpsfrGcMP0-LTeOJoKCKBM9FwTbO98QAtIZq_xbqGyQjOkCQj3GXgRv8BdmGYtih7Antr7pCrVkSc3WtcDxQS3XoedNBOae4nUe2Op1Rgwhk4Oymjl_3q5z9hhoa5rYf7kwkpv5B78BbX6tGlUEFABLS0BgYdYNhUxsYuip3FnqoS543H7_q1s1CzhmREF7n1SZDS781A");		
-        document.getElementById("myfile").disabled=false;
+	    mSigObj.setLicence("PUT HERE YOUR LICENCE STRING");   
+		document.getElementById("myfile").disabled=false;
 		
 		if (navigator.hid) {
 		    document.getElementById("capture_stu_device").disabled=false;

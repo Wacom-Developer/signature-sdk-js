@@ -7,9 +7,13 @@
   - [Licensing](#licensing)
     - [Setting up the license](#setting-up-the-license)
   - [Operate the Demo application](#operate-the-demo-application)
-    - [Load captured signature](#load-captured-signature)
-    - [Capture with STU device](#capture-with-stu-device)
-    - [Capture with Generic Pen](#capture-with-generic-pen)
+    - [Capture Signature](#capture-signature)
+      - [Choose file](#choose-file)
+      - [Capture signature from STU tablet](#capture-signature-from-stu-tablet)
+      - [Capture signature from Generic device](#capture-signature-from-generic-device)
+    - [Read Signature](#read-signature)
+      - [Load captured signature](#load-captured-signature)
+    - [Settings](#settings)
   - [Known issues](#known-issues)
     - [Windows 10](#windows-10)
 
@@ -101,7 +105,7 @@ Once you have a valid license, you can initialize the Signature SDK for JavaScri
       }
 ```
 
-Now you may use any of the API functions, calling them directly from the Signature Object. You can see these functions in more detail in: SIGNATURE-COMPONENTS-API.md.
+Now you may use any of the API functions, calling them directly from the Signature Object. You can see these functions in more detail in: Signature_SDK_JS_API.md.
 
 Install the JWT license which is supplied separately.
 
@@ -109,7 +113,7 @@ To obtain a license for the SDK, please contact your regional Wacom Sales repres
 
 Insert the license string in the demo code.
 
-e.g: sample\simple\simple.js. Within this file, locate 'PUT HERE YOUR LICENCE STRING' and insert the license string in its place. 
+e.g: demos\simple\simple.js. Within this file, locate 'PUT HERE YOUR LICENCE STRING' and insert the license string in its place. 
 
 ## Operate the Demo application
 
@@ -117,41 +121,50 @@ When opening the demo application, you will reach this page. Its main functions 
 
 ![Demo Frontpage](media/demo-1.png)
 
-
 Each section does the following:
 
-- Choose file: Choose a file to load a previously captured signature.
-- Capture with STU device: With an attached STU, capture a new signature. 
-- Capture with generic Pen: With an attached integrated pen device, capture a new signature. 
+- Capture Signature: Choose a file to load a previously captured signature.
+- Read Signature: With an attached STU, capture a new signature. 
+- Settings: With an attached integrated pen device, capture a new signature. 
 
 
+### Capture Signature
 
+The main functionalities of this page are:
+
+- Choose file: Choose a file to bind to the signature. This can be later used to see if the document has been changed or not. 
+- Capture signature from STU tablet: With an attached STU, capture a new signature. 
+- Capture signature from Generic device: With an attached integrated pen device, capture a new signature. 
+
+In the case of the latter two option, the user will have the option to save the signature as a .png, .txt on in Wacom's .fss (Forensic Signature Stream) format. 
 
 After using all three sections, the signature image will appear at the bottom. 
 
-### Load captured signature
+The user may also add the signatory and the reason for signing in the Signatory and Reason categories. This information will appear within the signature box.
 
-To load a previously captured signature, select a file with the "Choose File" button. This file may have been saved either as a .txt file, as an encoded bitmap or as raw FSS data.
+Additional data may be included through the use of "Add extra data". 
 
-![Choose File button](media/choosefile-1.png)
+![Adding a signatory and reason for signing](media/signatory-reason.png)
 
-This will then open up an instance of File Explorer and you may select a signature previously captured. This may be done through the use of a .png file.
+#### Choose file
 
-From there, the SDK will render the signature selected by the user and display it in the "Signature image" section at the bottom of the page. 
+A file may be selected to be bound to a signature due to be captured. 
 
-![SDK render](media/choosefile-2.png)
+![Example signature](media/choose-file-1.png)
 
-Another acceptable format for input in the SDK is a .txt file, provided the .txt file contains data for the signature stored in FSS format. An example of this format is shown below. 
+Once the signature is generated, a document may be selected with "Choose file". From there, the user may select the "Read Signature" tab.
 
-![Example FSS](media/choosefile-3.png)
+A list of details of the signature will be visible. Upon choosing the file previously bound to a signature, you'll get a prompt saying the signed data is correct. 
 
-The FSS displayed on screen will yield the signature displayed in the next screenshot in the "Signature image" section at the bottom of the page. 
+![Example success](media/choose-file-2.png)
 
-![Example FSS result](media/choosefile-4.png)
+If the signed data does not match, the user will be informed of this error.
 
-### Capture with STU device
+![Example failure](media/choose-file-3.png)
 
-To capture a signature with an STU, plug in an STU and click the "Capture with STU device" button.
+#### Capture signature from STU tablet
+
+To capture a signature with an STU, plug in an STU and click the "Capture signature from STU tablet" button.
 
 ![Choose File button](media/stu-1.png)
 
@@ -180,12 +193,12 @@ The Signature will then be displayed in the Signature image box below. 
 ![STU render](media/stu-6.png)
 
 
-### Capture with Generic Pen
+#### Capture signature from Generic device
 
 
 
 
-To capture a signature with an integrated pen device, plug in an integrated pen device and click the "Capture with generic Pen" button.
+To capture a signature with an integrated pen device, plug in an integrated pen device and click the "Capture signature from Generic device" button.
 
 ![Capture button](media/pen-1.png)
 
@@ -193,25 +206,47 @@ On the screen, this display will appear. 
 
 ![Capture display](media/pen-2.png)
 
-
-
-
-
-You may now write your signature. 
+You may now write your signature. This may be done by mouse, touch and pen, with a toggle list for enabling and disabling each. 
 
 ![Signed display](media/pen-3.png)
 
-If you make a mistake, you may use the "Clear" button to erase all.
-
-![Display with mistake](media/pen-4.png)
-
-This will remove all digital ink on the screen and revert it to how it was at the beginning. 
+If you make a mistake, you may use the "Clear" button to erase all. This will remove all digital ink on the screen and revert it to how it was at the beginning. 
 
 If the user changes their mind, the "Cancel" button may be pressed at any time to close the signing application. Once happy with the signature, press OK. 
 
 The Signature will then be displayed in the Signature image box below. 
 
-![Pen render](media/pen-5.png)
+### Read Signature
+
+#### Load captured signature
+
+To load a previously captured signature, select a file with the "Choose File" button. This file may have been saved either as a .txt file, as an encoded bitmap or as raw FSS data.
+
+![Choose File button](media/read-file-1.png)
+
+This will then open up an instance of File Explorer and you may select a signature previously captured. This may be done through the use of a .png file.
+
+From there, the SDK will render the signature selected by the user and display it in the "Signature image" section at the bottom of the page. 
+
+![SDK render](media/read-file-2.png)
+
+Another acceptable format for input in the SDK is a .txt file, provided the .txt file contains data for the signature stored in FSS format. An example of this format is shown below. 
+
+![Example FSS](media/read-file-3.png)
+
+The FSS displayed on screen will yield the same signature in the previous image. 
+
+### Settings
+
+The settings section contains configuration for the demo's:
+
+- Ink: This section allows for selection of the type of inking tool, its colour and the choice of whether or not to use a background image. 
+
+
+- Capture window: This section allows adjustment of the capture window's size, fonts, their size and x/y offsets that appear within it and the number of buttons that appear. 
+
+
+- Render: This section allows configuration of the signature render upon completion of a successful signature capture. 
 
 
 ## Known issues

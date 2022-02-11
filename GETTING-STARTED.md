@@ -238,7 +238,7 @@ The FSS displayed on screen will yield the same signature in the previous image.
 
 ### Settings
 
-The settings section contains configuration for the demo's:
+The settings section contains configuration for the demos:
 
 - Ink: This section allows for selection of the type of inking tool, its colour and the choice of whether or not to use a background image. 
 

@@ -6,6 +6,8 @@
   - [Installation](#installation)
   - [Licensing](#licensing)
     - [Setting up the license](#setting-up-the-license)
+      - [Simple demo - in demos/simple/simple.js](#simple-demo---in-demossimplesimplejs)
+      - [Complete demo - in demos/complete_demo/index.html](#complete-demo---in-demoscomplete_demoindexhtml)
   - [Operate the Demo application](#operate-the-demo-application)
     - [Capture Signature](#capture-signature)
       - [Choose file](#choose-file)
@@ -14,6 +16,7 @@
     - [Read Signature](#read-signature)
       - [Load captured signature](#load-captured-signature)
     - [Settings](#settings)
+  - [Operate the Simple Demo application](#operate-the-simple-demo-application)
   - [Known issues](#known-issues)
     - [Windows 10](#windows-10)
 
@@ -48,7 +51,7 @@ For initial development it is convenient to use localhost for this purpose.
 
 For example, use Node.js with http-server, then launch the demo code from the local server as:
 ```
-  http://localhost:8080/sample/simple/index.html
+  http://localhost:8080/demos/complete_demo/index.html
 ```
 ## Installation
 
@@ -65,8 +68,8 @@ To summarize the Node.js server setup:
 - install the server components: ```npm install http-server -g```
 - start the local server: ```http-server```
 - copy the SDK simple and common folders to ```\myserver```
-- browse to the start page: ```http://localhost:8080/sample/simple/index.html```
-- click a button for the required operation e.g. ```Capture with STU device```
+- browse to the start page: ```http://localhost:8080/demos/complete_demo/index.html```
+- click a button for the required operation e.g. ```Capture signature with STU tablet```
 
 For more information regarding using Node.js, see: https://www.npmjs.com/package/http-server
 
@@ -93,6 +96,8 @@ An evaluation license is also available here:
 
 Once you have a valid license, you can initialize the Signature SDK for JavaScript with the following code:
 
+#### Simple demo - in demos/simple/simple.js
+
 ```
       try {
 
@@ -103,6 +108,17 @@ Once you have a valid license, you can initialize the Signature SDK for JavaScri
         ...
 
       }
+```
+
+#### Complete demo - in demos/complete_demo/index.html
+
+```
+<script>
+		    const licence = "PUT HERE YOUR LICENCE STRING";
+
+        ...
+
+</script>        
 ```
 
 Now you may use any of the API functions, calling them directly from the Signature Object. You can see these functions in more detail in: Signature_SDK_JS_API.md.
@@ -247,6 +263,12 @@ The settings section contains configuration for the demos:
 
 
 - Render: This section allows configuration of the signature render upon completion of a successful signature capture. 
+
+## Operate the Simple Demo application
+
+A simplified version of the JS demo exists within demos/simple/index.html, with the only options existing being to read a signature and capture a signature with a generic device or signature device. 
+
+![Simple demo](media/simple-demo.png)
 
 
 ## Known issues

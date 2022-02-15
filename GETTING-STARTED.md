@@ -55,7 +55,7 @@ For example, use Node.js with http-server, then launch the demo code from the lo
 ```
 ## Installation
 
-No SDK installation is required. Unzip the downloaded SDK files and copy them into the sample's "common" folder. 
+No SDK installation is required. Unzip the downloaded SDK files and copy them into the sample's "common/libs" folder. 
 
 The demonstration must be run from an http server. localhost servers are acceptable. Examples of a suitable local server include IIS, Python or Node.js. This guide will briefly go over setting up a local server in Node.js. 
 
@@ -69,7 +69,7 @@ To summarize the Node.js server setup:
 - start the local server: ```http-server```
 - copy the SDK simple and common folders to ```\myserver```
 - browse to the start page: ```http://localhost:8080/demos/complete_demo/index.html```
-- click a button for the required operation e.g. ```Capture signature with STU tablet```
+- click a button for the required operation e.g. ```Capture signature from STU tablet```
 
 For more information regarding using Node.js, see: https://www.npmjs.com/package/http-server
 
@@ -79,8 +79,7 @@ For more information regarding using Node.js, see: https://www.npmjs.com/package
 ### Setting up the license
 
  
-
-            The Signature SDK for JavaScript requires a valid license. You may obtain either an evaluation license or commercial license at: https://developer.wacom.com/en-us/developer-dashboard/license-keys.
+The Signature SDK for JavaScript requires a valid license. You may obtain either an evaluation license or commercial license at: https://developer.wacom.com/en-us/developer-dashboard/license-keys.
 
 
 
@@ -129,7 +128,7 @@ To obtain a license for the SDK, please contact your regional Wacom Sales repres
 
 Insert the license string in the demo code.
 
-e.g: demos\simple\simple.js. Within this file, locate 'PUT HERE YOUR LICENCE STRING' and insert the license string in its place. 
+Within index.html or simple.js for the complete and simple demos respectively, locate 'PUT HERE YOUR LICENCE STRING' and insert the license string in its place. 
 
 ## Operate the Demo application
 
@@ -152,7 +151,7 @@ The main functionalities of this page are:
 - Capture signature from STU tablet: With an attached STU, capture a new signature. 
 - Capture signature from Generic device: With an attached integrated pen device, capture a new signature. 
 
-In the case of the latter two option, the user will have the option to save the signature as a .png, .txt on in Wacom's .fss (Forensic Signature Stream) format. 
+In the case of the latter two options, the user will have the option to save the signature as a .png, .txt on in Wacom's .fss (Forensic Signature Stream) format. 
 
 After using all three sections, the signature image will appear at the bottom. 
 
@@ -248,9 +247,12 @@ From there, the SDK will render the signature selected by the user and display i
 
 Another acceptable format for input in the SDK is a .txt file, provided the .txt file contains data for the signature stored in FSS format. An example of this format is shown below. 
 
+
 ![Example FSS](media/read-file-3.png)
 
 The FSS displayed on screen will yield the same signature in the previous image. 
+
+From the loaded signature, the following data can be extracted such as the signatory name, reason for signing, date/time signed and additional data the user may have previously added. 
 
 ### Settings
 

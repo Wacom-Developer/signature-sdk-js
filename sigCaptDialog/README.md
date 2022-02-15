@@ -1,10 +1,10 @@
 # SigCaptDialog for Wacom Signature SDK 
 
-The Signature SDK library does not provide a way to capture the signature points. It generates the Signature with a previously captured points. It is the responsibility of the integrator determine how the points are captured. 
-SigCaptDialog it is a library that provides a canvas for capturing data either using a Wacom STU signature tablet or a generic device using standard javascript canvas component.
+The Signature SDK library does not provide a way to capture the signature points; rather, it generates the signature with points once they've been captured. It is the responsibility of the integrator to determine how the points are captured. 
+SigCaptDialog is a library that provides a canvas for capturing data, either using a Wacom STU signature tablet or a generic device using standard JavaScript canvas components.
 
 ## How to use SigCaptDialog library
-The main library file is **sigCaptDialog.js** that consist on class that it is used to open a canvas for signature capturing.
+The main library file is **sigCaptDialog.js**. This file consists of a class that is used to open a canvas for signature capturing.
 The simplest ways of using it would be:
 
 ```js
@@ -33,8 +33,8 @@ sigCaptDialog.startCapture();
 
 ```
 
-With the default library we are able to capture Pointer events from Javascript such as mouse, touch or pen data.
-In Web Browsers that supports WebHID it is also possible to connect to Wacom STU devices using **stuCaptDialog.js** that it is based on Wacom STU SDK for JavaScript.
+With the default library, we are able to capture pointer events from JavaScript such as mouse, touch or pen data.
+In Web Browsers that supports WebHID, it is also possible to connect to Wacom STU devices using **stuCaptDialog.js**. This is based on Wacom STU SDK for JavaScript.
 
 The usage is similar to SigCaptDialog:
  
@@ -64,19 +64,19 @@ stuCaptDialog.open(sigObj, "Signatory", "Reason for signing", null, Module.KeyTy
 
 ``` 
 
-Apart from **signCaptDialog.js** and **stuCaptDialog.js** some third-party licences needs to be added to the project:
+Apart from **signCaptDialog.js** and **stuCaptDialog.js**, some third-party licences need to be added to the project:
 
 ####  Generic functionality libraries
-- **jquery.min.js** and **jquery-ui.min.js** are used implementing draggin into the canvas dialog.
-- **jquery.ui.touch-punch.min.js** is used for implementing draggin with touch into the canvas dialog.
+- **jquery.min.js** and **jquery-ui.min.js** are used for implementing dragging into the canvas dialog.
+- **jquery.ui.touch-punch.min.js** is used for implementing dragging with touch into the canvas dialog.
 
-#### Libraries necessaries when using STU Devices
-- **BigInt.js**, **md5.min.js** and **sjcl.js**. This libraries are necessary when implementing encryption
-on STU devices connection.
+#### Libraries necessary when using STU Devices
+- **BigInt.js**, **md5.min.js** and **sjcl.js**. These libraries are necessary when implementing encryption
+on STU device connections.
 
 #### Libraries used for WILL Ink SDK
-Altough it is possible to use Signature SDK JS without WILL Ink SDK it is used by default, and in order to use it
-we need to include this third party libraries:
+Altough it is possible to use Signature SDK JS without WILL Ink SDK, it is used by default. In order to use it
+we need to include these third party libraries:
 - **clipper.js**
 - **long.js**
 - **md5.min.js** 
@@ -86,7 +86,7 @@ we need to include this third party libraries:
 ## Configure the libary 
 
 ### Signature Capture Dialog
-Using a JSON config string that it is passed on the constructor it can be configure the dialog appearance.
+A JSON config string that is passed by the constructor can be used to configure the dialog appearance.
 
 The default values for SigCapDialog looks like:
 
@@ -140,35 +140,35 @@ const config = {
 	
 ``` 
 
-Where the meaing of each field it is:
+Where the meaning of each field is:
 
 * **width**: Integer value indicating the width of the canvas.
 * **weight**: Integer value indicating the height of the canvas.
 * **left**: Integer value with the left of the canvas when it is opened as float dialog.
 * **top**: Integer value with the top of the canvas when it is opened as float dialog.
-* **centered**: Boolean value that indicates if the dialog should be centered on the screen when is opening as float dialog. If this value is true, the left and top values are ignored.
+* **centered**: Boolean value that indicates if the dialog should be centered on the screen when it is opened as a float dialog. If this value is true, the left and top values are ignored.
 * **title**: String with the title to show in the title bar when it is opened as float dialog.
-* **borderColor**: String with the color of the border when the dialog is opened as float dialog.
-* **borderWidth**: Integer indicating the width of dialogs’s border when opening as float dialog.
-* **hasTitle**: Boolean value indicating if there is title bar when opening as float dialog.
-* **attachTo**: String that indicates the id of a div in which the capture dialog will be attached as children. When it is not defined the dialog will be opened as float. 
-* **modal**: Boolean indicating that the dialog will be opened as modal or not. A modal dialog it is the one that blocks the rest of the screen content, disabling other form controls.
-* **draggable**: When the dialog is shown as a float dialog and has title bar, this Boolean value indicates if the dialog can be moved draggin the title bar.
-* **source**: Indicates what kind of event if accepted. The possible values are: mouse, touch, pen and stu  in the format of source:{mouse:true, touch:true, pen:true, stu:true}, if one value is missing or false this source won’t be captured, for ecample, if we defined mouse as false, the mouse won’t be valid for signature capturing. Plase be aware that in order to capture signatures for forensic validation not all the source provided necessary data such as pressure.
+* **borderColor**: String indicating the color of the border when the dialog is opened as float dialog.
+* **borderWidth**: Integer indicating the width of the dialogs’ border when opening as float dialog.
+* **hasTitle**: Boolean value indicating if there is a title bar when opening as float dialog.
+* **attachTo**: String that indicates the id of a div, in which the capture dialog will be attached as children. When it is not defined, the dialog will be opened as a float. 
+* **modal**: Boolean indicating that the dialog will be opened as modal or not. A modal dialog is one that blocks the rest of the screen's content, disabling other form controls.
+* **draggable**: When the dialog is shown as a float dialog and has a title bar. This Boolean value indicates if the dialog can be moved when dragging the title bar.
+* **source**: Indicates what kind of event if accepted. The possible values are: mouse, touch, pen and stu in the format of source:{mouse:true, touch:true, pen:true, stu:true}; if one value is missing or false, this source won’t be captured. For example, if we defined mouse as false, the mouse won’t be valid for signature capturing. NB: When capturing signatures with mouse or touch for forensic validation, not all the necessary data (such as pen pressure) can be provided.
 * **will**: This library uses Wacom WILL Ink SDK for inking. Here we can pass an object indicating the tool type to use for drawing and the color of the inking. For example will:{tool:”pen”, color:”#0000F55”} will draw simulating a blue pen.
-* **buttons**: By default the dialog will show three buttons at the bottom for aceptance, cancel or clear. With this configuration we can indicating the buttons to show, its appearance and the action to be executed when clicked.
-The order indicates the order in which it will be draw from left to right.
-    * **text**: Button text. If the text of the button starts with * indicates that it will use translations strings if exists.
-	* **texClor**: Button text color.
-	* **backgroundColor**: String indicationg the background color of the button.
-	* **borderWidth**: Number indicationg the width of the button border.
+* **buttons**: By default, the dialog will show three buttons at the bottom for aceptance, cancel or clear. With this configuration we can adjust the buttons to display, their appearance and the action to be executed when selected.
+The order indicates the order in which it will be displayed from left to right.
+    * **text**: Button text. If the text of the button starts with *, this indicates that it will use translation strings, given that they exist.
+	* **textColor**: Button text color.
+	* **backgroundColor**: String indicating the background color of the button.
+	* **borderWidth**: Number indicating the width of the button border.
 	* **borderColor**: String that indicates the button color border.
-	* **onClick**: Function that will be executed when the butotn is clicked.
-* **buttonsFont**: A String indicating the name of the font  to use on the buttons.
-* **background**: The captured dialog can have a color or image as background. Also transparency can be apply.
+	* **onClick**: Function that will be executed when the button is clicked.
+* **buttonsFont**: A String indicating the name of the font to use on the buttons.
+* **background**: The captured dialog can have a color or image as background. Transparency can also be applied.
     * **color**: String with the background color to be applied.
 	* **alpha**: Float number between 0 (transparent) to 1 (opaque).
-    * **image**: Image object with the image to put on background.
+    * **image**: Image object with the image to be set as the background.
 * **reason**: Object with the metrics to show the reason for signing.
     * **visible**: Boolean indicating if the reason for signing should be shown.
     * **fontFace**: String with the name of the font.
@@ -183,14 +183,14 @@ The order indicates the order in which it will be draw from left to right.
     * **color**: String with the text color.
     * **offsetX**: Number indicating the offset from the right.
     * **offsetY**: Number indicating the offset from the date text.
-* **date**:  Object with the metrics to show the date a time of signing.
+* **date**:  Object with the metrics to show the date at the time of signing.
     * **visible**: Boolean indicating if the date should be shown.
     * **fontFace**: String with the font name.
-    * **fontSize**: Number indicationg the font size.
-    * **color**: String indicationg the font color.
+    * **fontSize**: Number indicating the font size.
+    * **color**: String indicating the font color.
     * **offsetX**: Number indicating the offset from the right.
     * **offsetY**: Number indicating the offset from the bottom.
-* **signingLine**: Object with the metrics to show the signing line. It consists on:
+* **signingLine**: Object with the metrics to show the signing line. It consists of:
     * **visible**: Boolean indicating if the signing line should be shown.
     * **left**: Number indicating the padding from the left.
     * **right**: Number indicating the padding from the right.
@@ -201,13 +201,11 @@ The order indicates the order in which it will be draw from left to right.
 
 ### STU Capture Dialog
 
-When capturing data from STU device, apart from the below options there are some device specific ones.
+When capturing data from an STU device, apart from the above options, there are some device specific ones.
 
-* **encrypt**: Boolean indicating if the comunication with the STU Tablet should be encrypted. By deafult is true.
-* **sizeMode**: Indicates how the size of the dialog shoul be, the possible values are:
+* **encrypt**: Boolean indicating if the communication with the STU Tablet should be encrypted. By default this is true.
+* **sizeMode**: Indicates what the size of the dialog should be. The possible values are:
     * **fixed**: It takes the passed width and height.
-	* **fit**: It takes the size of the parent with attached to a div.
-	* **strech**: It ajust to one passed dimension, width or height and adjus the other in proportion.
+	* **fit**: It takes the size of the parent when attached to a div.
+	* **stretch**: It adjusts to one passed dimension, width or height and adjusts the other in proportion.
 	* **stu**: It takes the device dimensions.
-	
-	

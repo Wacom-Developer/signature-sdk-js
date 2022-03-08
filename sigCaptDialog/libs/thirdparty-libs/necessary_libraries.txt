@@ -1,5 +1,0 @@
-Put here the following libraries:
-
-jquery.min.js -> https://github.com/jquery/jquery
-jquery-ui.min.js and jquery-ui.min.css -> https://github.com/jquery/jquery-ui
-jquery-ui-touch-punch.min.js -> https://github.com/furf/jquery-ui-touch-punch

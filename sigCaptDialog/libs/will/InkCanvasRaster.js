@@ -7,7 +7,7 @@ class InkCanvasRaster extends InkCanvas {
 		
 		this.strokeRenderer = new StrokeRendererGL(this.canvas);	
 		
-		this.bounds = Rect.create(0, 0, width, height);
+		this.bounds = new Rect(0, 0, width, height);
 	}
 	
 	delete() {

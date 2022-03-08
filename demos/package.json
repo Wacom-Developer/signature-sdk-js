@@ -1,0 +1,19 @@
+{
+  "name": "signature-sdk-for-web-demos",
+  "productName": "Signature SDK - Web Demos",
+  "version": "1.0.0",
+  "description": "Signature SDK Javascript demos",
+  "dependencies": {
+    "digital-ink": "../sigCaptDialog/libs/will/digital-ink",
+    "stu-capture": "../sigCaptDialog/libs/stu_capture",
+    "jquery": "^3.5.1",
+    "jquery-ui-dist": "^1.13.1",
+    "jquery-ui-touch-punch": "^0.2.3"
+  },
+  "scripts": {
+    "preinstall": "preinstall.sh",
+    "start": "python -m SimpleHTTPServer 8080"
+  },
+  "author": "Juan Garrido",
+  "license": "MIT"
+}

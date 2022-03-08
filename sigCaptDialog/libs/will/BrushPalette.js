@@ -54,6 +54,17 @@ BrushPalette.configure = async function(ctx) {
 BrushPalette.delete = async function() {
 	let brushes = Object.values(BrushPalette).filter(value => value instanceof BrushGL);
 
-	for (let brush of brushes)
-		await brush.delete();
+	for (let brush of brushes) {
+		//await brush.delete(); this is not working
+		if (brush.shapeTexture) {
+		    await brush.ctx.deleteTexture(brush.shapeTexture.texture);
+		    delete brush.shapeTexture;
+		}
+		if (brush.fillTexture) {
+		    await brush.ctx.deleteTexture(brush.fillTexture.texture);
+		    delete brush.fillTexture;
+		}
+		
+		delete brush.ctx;
+	}
 }

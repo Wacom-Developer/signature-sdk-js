@@ -6,7 +6,7 @@ Module.onRuntimeInitialized = _ => {
     mSigObj = new Module.SigObj();	
 	mHash = new Module.Hash(Module.HashType.SHA512);	  
 	try {
-	    mSigObj.setLicence("PUT HERE YOUR LICENCE STRING");   
+	    mSigObj.setLicence("eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJMTVMiLCJleHAiOjE2NzU5NDkwOTUsImlhdCI6MTY0NDQxMzE5OCwicmlnaHRzIjpbIlNJR19TREtfQ09SRSIsIkpTX0NPUkUiLCJTSUdfU0RLX0lTTyIsIlNJR19TREtfRU5DUllQVElPTiJdLCJkZXZpY2VzIjpbIldBQ09NX0FOWSJdLCJ0eXBlIjoiZXZhbCIsImxpY19uYW1lIjoiTGljZW5zZSBmb3IgSmF2YXNjcmlwdCBEZW1vIiwid2Fjb21faWQiOiIxNTNiZTg5Zi05NjM3LTRhYjQtOTk5OS05NGUwYzhlMGQyYTMiLCJsaWNfdWlkIjoiZDFmMGZmNGQtODliMy00NDFmLWI2ODYtZjk5MmEzYmEwNDg5IiwiYXBwc193aW5kb3dzIjpbXSwiYXBwc19pb3MiOltdLCJhcHBzX2FuZHJvaWQiOltdLCJtYWNoaW5lX2lkcyI6WyIwMDUwNTZDMDAwMDEiLCIwMDUwNTZDMDAwMDgiXX0.Q--Zng7BpyuDVhrcywHmiXZ60LK9picZe-AU0v7DgFfW2Qy61WRgfBApdjX68mHWLxkMhZK-ev1gInuT7RrnlBb7HIzS95NDD8nJxzeKdm_46XQyzwZIWsrOwzxXzkkdL9ruJJNmgX-56N893tnxH0_egtG5k4Tb4YoQGMqryzS7wSBpNGo-ploqOtmMVmwpX2bYh6cZoc6F4uRS5qosSGL9UEKG9O8DuWzZX7aAkVKuhom4vrFxqqJCPj06NronInKc6VOUpOS46eeARlrQekuvUdtlo177yLyEyp0HZ_HW8JT7_iwZKlgnCyQit0HsawBtIQtzvCh2yKFT7loYvw");   
 		document.getElementById("myfile").disabled=false;
 		
 		if (navigator.hid) {
@@ -113,7 +113,7 @@ async function renderSignature() {
 
 		            window.WILL = inkCanvas;
 	                WILL.type = "raster";
-			        WILL.setColor(Color.fromHex(inkColor));	        
+					WILL.setColor(Color.fromHex(inkColor));
 	                await WILL.setTool("pen");							
 			        return inkCanvas;
 		        }

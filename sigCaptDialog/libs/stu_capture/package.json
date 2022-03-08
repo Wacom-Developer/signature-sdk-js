@@ -1,0 +1,13 @@
+{
+  "name": "STU-SDK",
+  "productName": "STU-SDK",
+  "version": "1.0.0",
+  "description": "STU SDK for Javascript",
+  "dependencies": {
+    "BigInt": "^5.5.3",
+    "blueimp-md5": "^2.19.0",
+    "sjcl": "^1.0.8"
+  },
+  "author": "Juan Garrido",
+  "license": "Wacom"
+}

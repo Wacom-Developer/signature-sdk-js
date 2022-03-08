@@ -1,4 +1,0 @@
-Put here the Signature SDK JS files that you can download from Wacom Signature SDK JS site.
-
-signature_sdk.js 
-signature_sdk.wasm

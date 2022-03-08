@@ -1178,6 +1178,5 @@ class SigCaptDialog {
         context.rotate(-angle);
         context.fillText(evaluationString, -textMetrics.width/2, (textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent)/2);
         context.restore();
-    }
-	
+    }	
 }

@@ -34,46 +34,21 @@ let config = {
 			dynamics: {
 				size: {
 					value: {
-						min: 0.5,
-						max: 1.6,
-
-						remap: v => ValueTransformer.sigmoid(v, 0.62)
+						min: 1,
+						max: 3.2
 					},
 
 					velocity: {
 						min: 5,
-						max: 210
-					}
-				},
+						max: 4000,
 
-				rotation: {
-					dependencies: [SensorChannel.Type.ROTATION, SensorChannel.Type.AZIMUTH]
-				},
+						remap: v => ValueTransformer.sigmoid(v, 0.62, true)
+						// remap: "will://generic/action-remap/Sigmoid?p=0.62&reverse=true"
+					},
 
-				scaleX: {
-					dependencies: [SensorChannel.Type.RADIUS_X, SensorChannel.Type.ALTITUDE],
-
-					value: {
-						min: 1,
-						max: 3
-					}
-				},
-
-				scaleY: {
-					dependencies: [SensorChannel.Type.RADIUS_Y],
-
-					value: {
-						min: 1,
-						max: 3
-					}
-				},
-
-				offsetX: {
-					dependencies: [SensorChannel.Type.ALTITUDE],
-
-					value: {
-						min: 2,
-						max: 5
+					pressure: {
+						min: 0.19,
+						max: 0.88
 					}
 				}
 			}
@@ -633,15 +608,9 @@ let config = {
 	},
 
 	pipeline: {
-		vector: {
-			// splitCount: 1,
-			// movingAverageWindowSize: 15,
-			// epsilon: 0.1
-		},
-
-		raster: {
-			splitCount: 10
-		}
+		// movingAverageWindowSize: 15,
+		// errorThreshold: 0.15,
+		// epsilon: 0.1
 	},
 
 	isBrushGL(brush) {
@@ -652,10 +621,25 @@ let config = {
 		return this.tools[toolID].brush;
 	},
 
+	getSize(toolID) {
+		let size;
+
+		if (this.tools[toolID].statics)
+			size = this.tools[toolID].statics.size;
+
+		if (isNaN(size)) {
+			size = this.tools[toolID].dynamics.size.value;
+			size = {min: size.min, max: size.max};
+		}
+		else
+			size = {min: size, max: size};
+
+		return size;
+	},
+
 	getOptions(sample, toolID, color) {
 		let toolConfig = this.tools[toolID];
 
-		context.basicMode = (toolID == "basic");
 		context.reset(sample, toolConfig.brush, color, toolConfig.dynamics, toolConfig.statics)
 
 		return {
@@ -668,29 +652,15 @@ let config = {
 			inkBulder: Object.assign({brush: toolConfig.brush}, {
 				layout: context.layout,
 				pathPointCalculator: context.calculate.bind(context),
-				pathPointProps: context.statics
-			}, config.getPipelineOptions(context.basicMode, this.isBrushGL(toolConfig.brush) ? "raster" : "vector"))
+				pathPointProps: context.statics,
+				concatSegments: toolConfig.brush instanceof Brush2D
+			}, config.getPipelineOptions(toolConfig))
 		};
 	},
 
-	getPipelineOptions(basicMode, brushType) {
-		let result = {basicMode};
+	getPipelineOptions(toolConfig) {
+		let options = Object.assign({}, config.pipeline, toolConfig.pipeline);
 
-		if (basicMode) {
-			result.interpolateByLength = true;
-			result.splitCount = 3;
-		}
-		else {
-			let options = config.pipeline[brushType];
-
-			result.interpolateByLength = !!options.interpolateByLength || brushType == "raster",
-			result.splitCount = options.splitCount;
-			result.movingAverageWindowSize = options.movingAverageWindowSize;
-			result.epsilon = options.epsilon;
-
-			result.mergePrediction = (WILL.type == "raster" && brushType == "vector");
-		}
-
-		return result;
+		return options;
 	}
 };

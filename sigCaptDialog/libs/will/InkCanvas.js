@@ -4,14 +4,14 @@ class InkCanvas extends InkController {
 
 		this.builder = new InkBuilder();
 
-		this.builder.configure({onBuildComplete: (pathPart) => {
+		this.builder.onComplete = (pathPart) => {
 			if (this.intersector)
 				this.erase(pathPart);
 			else if (this.selector)
 				this.select(pathPart);
 			else
 				this.draw(pathPart);
-		}});
+		};
 
 		this.dataModel = new DataModel();
 		Object.defineProperty(this, "strokes", {get: () => this.dataModel.inkModel.content, enumerable: true});
@@ -71,10 +71,10 @@ class InkCanvas extends InkController {
 		if (this.intersector) {
 			this.intersector.reset(this.dataModel.manipulationsContext);
 
-			this.builder.pathProducer.togglePrediction(false);
+			this.builder.pathProducer.prediction = false;
 		}
 		else
-			this.builder.pathProducer.togglePrediction(true);
+			this.builder.pathProducer.prediction = true;
 
 		if (this.selector)
 			this.selector.reset(this.dataModel.manipulationsContext);

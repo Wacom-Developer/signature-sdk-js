@@ -3,19 +3,23 @@
     <head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<!--meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"-->
-	    <title>Signature SDK Demo</title>
+	    <title>Signature SDK - Complete demo</title>
 		<link href="./style/wacom.css" rel="stylesheet" type="text/css">		
-	    <link href="../../sigCaptDialog/style/sigCaptDialog.css" rel="stylesheet" type="text/css">		
-	    <link href="../../sigCaptDialog/libs/thirdparty-libs/jquery-ui.min.css" rel="stylesheet" type="text/css">
-	    <script src="../../sigCaptDialog/libs/thirdparty-libs/jquery.min.js"></script>
-	    <script src="../../sigCaptDialog/libs/thirdparty-libs/jquery-ui.min.js"></script>		
-		<script src="../../sigCaptDialog/libs/thirdparty-libs/jquery.ui.touch-punch.min.js"></script>		
-		<script src="../../sigCaptDialog/libs/thirdparty-libs/will/clipper.js"></script>
-	    <script src="../../sigCaptDialog/libs/thirdparty-libs/will/md5.min.js"></script>
-	    <script src="../../sigCaptDialog/libs/thirdparty-libs/will/poly2tri.min.js"></script>
-	    <script src="../../sigCaptDialog/libs/thirdparty-libs/will/long.js"></script>
-	    <script src="../../sigCaptDialog/libs/thirdparty-libs/will/protobuf.min.js"></script>
-        <script src="../../sigCaptDialog/libs/will/libs/wacom-digital-ink-min.js"></script>	
+		<link href="/sigCaptDialog/style/sigCaptDialog.css" rel="stylesheet" type="text/css">		
+	    <link href="/demos/node_modules/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" type="text/css">
+	    <script src="/demos/node_modules/jquery/dist/jquery.min.js"></script>
+	    <script src="/demos/node_modules/jquery-ui-dist/jquery-ui.min.js"></script>		
+		<script src="/demos/node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>		
+		<script src="/demos/node_modules/digital-ink/node_modules/clipper-lib/clipper.js"></script>
+	    <script src="/demos/node_modules/digital-ink/node_modules/js-md5/build/md5.min.js"></script>
+	    <script src="/demos/node_modules/digital-ink/node_modules/poly2tri/dist/poly2tri.min.js"></script>
+	    <script src="/demos/node_modules/digital-ink/node_modules/long/dist/long.js"></script>
+	    <script src="/demos/node_modules/digital-ink/node_modules/protobufjs/dist/protobuf.min.js"></script>
+		<script src="/demos/node_modules/digital-ink/node_modules/jszip/dist/jszip.min.js"></script>
+		<script src="/demos/node_modules/digital-ink/node_modules/gl-matrix/gl-matrix-min.js"></script>
+		<script src="/demos/node_modules/digital-ink/node_modules/rbush/rbush.min.js"></script>
+		<script src="/demos/node_modules/digital-ink/node_modules/js-ext/js-ext-min.js"></script>
+        <script src="/demos/node_modules/digital-ink/digital-ink-min.js"></script>	
 	    <script type="text/javascript">
 		    const {
 			    fsx, Matrix,
@@ -28,31 +32,31 @@
 			    InkModel, SpatialContext, InkCodec,
 			    Color, Rect, BlendMode,
 			    InkCanvas2D, StrokeRenderer2D,
-			    InkCanvasGL, StrokeRendererGL, OffscreenCanvasGL, 
-			    PointerData
+			    InkCanvasGL, StrokeRendererGL,  
+			    PointerData, PathProducer, PipelineStage 
 		    } = DigitalInk;
 	    </script>	
-	    <script src="../../sigCaptDialog/libs/will/InkCanvas.js"></script>
-	    <script src="../../sigCaptDialog/libs/will/InkCanvasRaster.js"></script>	
-	    <script src="../../sigCaptDialog/libs/will/ValueTransformer.js"></script>
-	    <script src="../../sigCaptDialog/libs/will/URIBuilder.js"></script>
-	    <script src="../../sigCaptDialog/libs/will/BrushPalette.js"></script>
-	    <script src="../../sigCaptDialog/libs/will/Config.js"></script>
-	    <script src="../../sigCaptDialog/libs/will/DataRepository.js"></script>
-	    <script src="../../sigCaptDialog/libs/will/DataModel.js"></script>
+	    <script src="/sigCaptDialog/libs/will/InkCanvas.js"></script>
+	    <script src="/sigCaptDialog/libs/will/InkCanvasRaster.js"></script>	
+	    <script src="/sigCaptDialog/libs/will/ValueTransformer.js"></script>
+	    <script src="/sigCaptDialog/libs/will/URIBuilder.js"></script>
+	    <script src="/sigCaptDialog/libs/will/BrushPalette.js"></script>
+	    <script src="/sigCaptDialog/libs/will/Config.js"></script>
+	    <script src="/sigCaptDialog/libs/will/DataRepository.js"></script>
+	    <script src="/sigCaptDialog/libs/will/DataModel.js"></script>
+		<script src="/sigCaptDialog/libs/will/Extensions.js"></script>
 		
-		<script src="../../sigCaptDialog/libs/thirdparty-libs/stu_capture/BigInt.js"></script>		
-	    <!--script src="../../sigCaptDialog/libs/thirdparty-libs/stu_capture/md5.min.js"></script-->
-	    <script src="../../sigCaptDialog/libs/thirdparty-libs/stu_capture/sjcl.js"></script>
-		<script src="../../sigCaptDialog/libs/stu_capture/stu-sdk.min.js"></script> <!-- used to connect to STU devices -->        
-	    <script src="../../sigCaptDialog/libs/stu_capture/stu_capture.js"></script> <!-- used for capture data from STU devices -->
-	    <script src="../../sigCaptDialog/libs/stu_capture/stu_capture_encryption.js"></script> <!-- STU encryption functions -->	    
+		<script src="/demos/node_modules/stu-capture/node_modules/BigInt/src/BigInt.js"></script>		
+	    <script src="/demos/node_modules/stu-capture/node_modules/sjcl/sjcl.js"></script>
+		<script src="/sigCaptDialog/libs/stu_capture/stu-sdk.min.js"></script> <!-- used to connect to STU devices -->        
+	    <script src="/sigCaptDialog/libs/stu_capture/stu_capture.js"></script> <!-- used for capture data from STU devices -->
+	    <script src="/sigCaptDialog/libs/stu_capture/stu_capture_encryption.js"></script> <!-- STU encryption functions -->	    
 
         <script src="../common/libs/signature_sdk.js"></script> <!-- signature SDK -->
 		<script src="../common/libs/signature_sdk_helper.js"></script> <!-- signature SDK helper -->
 		
-        <script src="../../sigCaptDialog/sigCaptDialog.js"></script>
-		<script src="../../sigCaptDialog/stuCaptDialog.js"></script>
+        <script src="/sigCaptDialog/sigCaptDialog.js"></script>
+		<script src="/sigCaptDialog/stuCaptDialog.js"></script>
 		<script>
 		    const licence = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJMTVMiLCJleHAiOjE2NjczNzcxMTUsImlhdCI6MTYzNTg0NTEwOCwicmlnaHRzIjpbIlNJR19TREtfQ09SRSIsIkpTX0NPUkUiXSwiZGV2aWNlcyI6WyJXQUNPTV9BTlkiXSwidHlwZSI6ImV2YWwiLCJsaWNfbmFtZSI6IlRlc3QgbGljZW5zZSBbMTYzNTg0MTExNV0iLCJ3YWNvbV9pZCI6IjE1M2JlODlmLTk2MzctNGFiNC05OTk5LTk0ZTBjOGUwZDJhMyIsImxpY191aWQiOiI2M2IyNGU2YS05ZDI3LTQ3ZDMtODk0NS00OTkyM2FjMjA0ZTIiLCJhcHBzX3dpbmRvd3MiOltdLCJhcHBzX2lvcyI6W10sImFwcHNfYW5kcm9pZCI6W10sIm1hY2hpbmVfaWRzIjpbIjAwNTA1NkMwMDAwMSIsIjAwNTA1NkMwMDAwOCJdfQ.LKYsb6HR9K1M-69RNXhdZV_uSpxLyVgJHl0yjKlVRO0YfmNGB9sxGVIDE0ec7SDSV5417QikD8hxTyL6i5B97p7Pl99d_gvdJubW1k9oVpR1JEq3dws-whQggVpySIhBU0BGPhRQP1VzIvpsfrGcMP0-LTeOJoKCKBM9FwTbO98QAtIZq_xbqGyQjOkCQj3GXgRv8BdmGYtih7Antr7pCrVkSc3WtcDxQS3XoedNBOae4nUe2Op1Rgwhk4Oymjl_3q5z9hhoa5rYf7kwkpv5B78BbX6tGlUEFABLS0BgYdYNhUxsYuip3FnqoS543H7_q1s1CzhmREF7n1SZDS781A";
 			var mSigObj;		

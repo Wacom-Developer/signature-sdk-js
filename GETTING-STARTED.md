@@ -6,6 +6,8 @@
   - [Installation](#installation)
   - [Licensing](#licensing)
     - [Setting up the license](#setting-up-the-license)
+      - [Simple demo - in demos/simple/simple.js](#simple-demo---in-demossimplesimplejs)
+      - [Complete demo - in demos/complete_demo/index.html](#complete-demo---in-demoscomplete_demoindexhtml)
   - [Operate the Demo application](#operate-the-demo-application)
     - [Capture Signature](#capture-signature)
       - [Choose file](#choose-file)
@@ -14,6 +16,7 @@
     - [Read Signature](#read-signature)
       - [Load captured signature](#load-captured-signature)
     - [Settings](#settings)
+  - [Operate the Simple Demo application](#operate-the-simple-demo-application)
   - [Known issues](#known-issues)
     - [Windows 10](#windows-10)
 
@@ -48,11 +51,11 @@ For initial development it is convenient to use localhost for this purpose.
 
 For example, use Node.js with http-server, then launch the demo code from the local server as:
 ```
-  http://localhost:8080/sample/simple/index.html
+  http://localhost:8080/demos/complete_demo/index.html
 ```
 ## Installation
 
-No SDK installation is required. Unzip the downloaded SDK files and copy them into the sample's "common" folder. 
+No SDK installation is required. Unzip the downloaded SDK files and copy them into the sample's "common/libs" folder. 
 
 The demonstration must be run from an http server. localhost servers are acceptable. Examples of a suitable local server include IIS, Python or Node.js. This guide will briefly go over setting up a local server in Node.js. 
 
@@ -65,8 +68,8 @@ To summarize the Node.js server setup:
 - install the server components: ```npm install http-server -g```
 - start the local server: ```http-server```
 - copy the SDK simple and common folders to ```\myserver```
-- browse to the start page: ```http://localhost:8080/sample/simple/index.html```
-- click a button for the required operation e.g. ```Capture with STU device```
+- browse to the start page: ```http://localhost:8080/demos/complete_demo/index.html```
+- click a button for the required operation e.g. ```Capture signature from STU tablet```
 
 For more information regarding using Node.js, see: https://www.npmjs.com/package/http-server
 
@@ -76,14 +79,13 @@ For more information regarding using Node.js, see: https://www.npmjs.com/package
 ### Setting up the license
 
  
-
-            The Signature SDK for JavaScript requires a valid license. You may obtain either an evaluation license or commercial license at: https://developer.wacom.com/en-us/developer-dashboard/license-keys.
+The Signature SDK for JavaScript requires a valid license. You may obtain either an evaluation license or commercial license at: https://developer.wacom.com/en-us/developer-dashboard/license-keys.
 
 
 
 An evaluation license is also available here:
 
-```eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJiMzNhYWUyODA0NmM0MmE5OTgyY2E1NTdkZjhmY2YxOCIsImV4cCI6MTY0Nzg1NTY1MCwiaWF0IjoxNjQyNjk0NjIyLCJzZWF0cyI6MCwicmlnaHRzIjpbIkpTX0NPUkUiLCJTSUdfU0RLX0NPUkUiXSwiZGV2aWNlcyI6W10sInR5cGUiOiJldmFsIiwibGljX25hbWUiOm51bGwsIndhY29tX2lkIjoiYjMzYWFlMjgwNDZjNDJhOTk4MmNhNTU3ZGY4ZmNmMTgiLCJsaWNfdWlkIjoiNzEyZmVjZDctNzE5Zi00ZmI3LWFjMmItOTgwNzY2MzI1OGYwIiwiYXBwc193aW5kb3dzIjpbXSwiYXBwc19pb3MiOltdLCJhcHBzX2FuZHJvaWQiOltdLCJtYWNoaW5lX2lkcyI6W119.FojvCBFLkKbRnPzzYV4eFHJuDtMTk0SFZL_kNaarEEc01GPpoGvvGBPVcXWIlhe1jTFaCPhURyYBWZwCHk9AvhQBbXIsLXJiQvNImWfEXTY_ozXOHJEm_-p7LgIryxittdNHD713ngAvU2ir6gTIN2FhzkvR1YUTGRbGGbeGVY_hcdFMpXUDmxE9bqqu4oEDMj3b6xIHoHFHoaClT7MxbsPM_r-PHJgO7Mws4KtCcKt2HBRTYbJQkSvvvdnm1A661D7TAehiCvuzD5t-hQc-eMjroSTWFi3HZh1w8RiW09h4zZy7QWGfqjAJ7JNBMl7WaX-Dz0ucrSohb-C1ivBR3A```  
+```eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJiMzNhYWUyODA0NmM0MmE5OTgyY2E1NTdkZjhmY2YxOCIsImV4cCI6MTY1MzEyNDE4OSwiaWF0IjoxNjQ1NDM4MjA3LCJzZWF0cyI6MCwicmlnaHRzIjpbIkpTX0NPUkUiLCJTSUdfU0RLX0NPUkUiXSwiZGV2aWNlcyI6W10sInR5cGUiOiJldmFsIiwibGljX25hbWUiOm51bGwsIndhY29tX2lkIjoiYjMzYWFlMjgwNDZjNDJhOTk4MmNhNTU3ZGY4ZmNmMTgiLCJsaWNfdWlkIjoiZDJlYTAyNGQtMjg2NC00MGZiLWE1ODUtNzhmNDcyZDMyNzI5IiwiYXBwc193aW5kb3dzIjpbXSwiYXBwc19pb3MiOltdLCJhcHBzX2FuZHJvaWQiOltdLCJtYWNoaW5lX2lkcyI6W119.GJD8SASgJAbVqRKgeKgdbmZNUrCa1cf8F-CSxEtaouHKYuSNe0WBvLLUBMqU9m3LN5iBRdIqo3mhU_LJCAJ00i3hZN4OPT-LZPthwl10or-X4WzJQJrzJo642NMRGYeIGOtVpcAewL6Du2d7D0O4VG8dbcdAFf0P2EGpb_J-rHbq4-J59L7VSqi2s0Ta8kQ3jcfxu6DDmno1PWBZJAP_1bdeu4VpE9aGFbNGwv0FeJwyQftWDtNCkE2OKlLc92CnEqTNVacEUWk3MEQ-gqS8WS355iSOXcSpif0VeuIlFu3ZQeLd_q349uF9jK7cu0kT7iFhOw_aDVrYXen9Z0vJag```  
 
  NB: this particular license is only valid for a limited time. 
 
@@ -92,6 +94,8 @@ An evaluation license is also available here:
 
 
 Once you have a valid license, you can initialize the Signature SDK for JavaScript with the following code:
+
+#### Simple demo - in demos/simple/simple.js
 
 ```
       try {
@@ -105,6 +109,17 @@ Once you have a valid license, you can initialize the Signature SDK for JavaScri
       }
 ```
 
+#### Complete demo - in demos/complete_demo/index.html
+
+```
+<script>
+		    const licence = "PUT HERE YOUR LICENCE STRING";
+
+        ...
+
+</script>        
+```
+
 Now you may use any of the API functions, calling them directly from the Signature Object. You can see these functions in more detail in: Signature_SDK_JS_API.md.
 
 Install the JWT license which is supplied separately.
@@ -113,7 +128,7 @@ To obtain a license for the SDK, please contact your regional Wacom Sales repres
 
 Insert the license string in the demo code.
 
-e.g: demos\simple\simple.js. Within this file, locate 'PUT HERE YOUR LICENCE STRING' and insert the license string in its place. 
+Within index.html or simple.js for the complete and simple demos respectively, locate 'PUT HERE YOUR LICENCE STRING' and insert the license string in its place. 
 
 ## Operate the Demo application
 
@@ -136,7 +151,7 @@ The main functionalities of this page are:
 - Capture signature from STU tablet: With an attached STU, capture a new signature. 
 - Capture signature from Generic device: With an attached integrated pen device, capture a new signature. 
 
-In the case of the latter two option, the user will have the option to save the signature as a .png, .txt on in Wacom's .fss (Forensic Signature Stream) format. 
+In the case of the latter two options, the user will have the option to save the signature as a .png, .txt on in Wacom's .fss (Forensic Signature Stream) format. 
 
 After using all three sections, the signature image will appear at the bottom. 
 
@@ -232,13 +247,16 @@ From there, the SDK will render the signature selected by the user and display i
 
 Another acceptable format for input in the SDK is a .txt file, provided the .txt file contains data for the signature stored in FSS format. An example of this format is shown below. 
 
+
 ![Example FSS](media/read-file-3.png)
 
 The FSS displayed on screen will yield the same signature in the previous image. 
 
+From the loaded signature, the following data can be extracted such as the signatory name, reason for signing, date/time signed and additional data the user may have previously added. 
+
 ### Settings
 
-The settings section contains configuration for the demo's:
+The settings section contains configuration for the demos:
 
 - Ink: This section allows for selection of the type of inking tool, its colour and the choice of whether or not to use a background image. 
 
@@ -247,6 +265,12 @@ The settings section contains configuration for the demo's:
 
 
 - Render: This section allows configuration of the signature render upon completion of a successful signature capture. 
+
+## Operate the Simple Demo application
+
+A simplified version of the JS demo exists within demos/simple/index.html, with the only options existing being to read a signature and capture a signature with a generic device or signature device. 
+
+![Simple demo](media/simple-demo.png)
 
 
 ## Known issues

@@ -55,7 +55,7 @@ include an evaluation licence.
 * create a folder called *digital-ink* within */sigCaptDialog/libs/will/*. 
 * copy the folder from the downloaded WILL Ink SDK to the created above folder
     * */sigCaptDialog/libs/will/digital-ink*
-* start a command prompt in the demos folder */demos/*
+* start a command prompt in the root folder
 * use the command ```npm install``` to create the node_modules folder with all the dependencies
 
 The web based app needs a web server.
@@ -72,7 +72,7 @@ python -m http.server 8080
 
 Now you can access the web-demos via:
 
-```http://localhost:8080/index.html```
+```http://localhost:8080/demos/index.html```
 
 
 ---

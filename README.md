@@ -1,24 +1,24 @@
 # Wacom Signature SDK for JavaScript
 
 - [Wacom Signature SDK for JavaScript](#wacom-signature-sdk-for-javascript)
-  - [Introduction](#introduction)
-    - [Supported web browsers](#supported-web-browsers)
-    - [Creating the Signature Object](#creating-the-signature-object)
-  - [SigCaptDialog for Wacom Signature SDK](#sigcaptdialog-for-wacom-signature-sdk)
-    - [How to use SigCaptDialog library](#how-to-use-sigcaptdialog-library)
-      - [Generic functionality libraries](#generic-functionality-libraries)
-      - [Libraries necessary when using STU Devices](#libraries-necessary-when-using-stu-devices)
-      - [Libraries used for WILL Ink SDK](#libraries-used-for-will-ink-sdk)
-    - [Configure the libary](#configure-the-libary)
-      - [Signature Capture Dialog](#signature-capture-dialog)
-      - [STU Capture Dialog](#stu-capture-dialog)
-  - [Ways of capturing a signature](#ways-of-capturing-a-signature)
-    - [Using Wacom STU tablet](#using-wacom-stu-tablet)
-    - [Using HTML5 canvas](#using-html5-canvas)
-    - [Problems](#problems)
-  - [About the content of this folder](#about-the-content-of-this-folder)
-    - [Documentation](#documentation)
-    - [Demos](#demos)
+	- [Introduction](#introduction)
+		- [Supported web browsers](#supported-web-browsers)
+		- [Creating the Signature Object](#creating-the-signature-object)
+	- [SigCaptDialog for Wacom Signature SDK](#sigcaptdialog-for-wacom-signature-sdk)
+		- [How to use SigCaptDialog library](#how-to-use-sigcaptdialog-library)
+			- [Generic functionality libraries](#generic-functionality-libraries)
+			- [Libraries necessary when using STU Devices](#libraries-necessary-when-using-stu-devices)
+			- [Libraries used for WILL Ink SDK](#libraries-used-for-will-ink-sdk)
+		- [Configure the library](#configure-the-library)
+			- [Signature Capture Dialog](#signature-capture-dialog)
+			- [STU Capture Dialog](#stu-capture-dialog)
+	- [Ways of capturing a signature](#ways-of-capturing-a-signature)
+		- [Using Wacom STU tablet](#using-wacom-stu-tablet)
+		- [Using HTML5 canvas](#using-html5-canvas)
+		- [Problems](#problems)
+	- [About the content of this folder](#about-the-content-of-this-folder)
+		- [Documentation](#documentation)
+		- [Demos](#demos)
 
 ## Introduction
 
@@ -147,7 +147,7 @@ Apart from **signCaptDialog.js** and **stuCaptDialog.js**, some third-party lice
 on STU device connections.
 
 #### Libraries used for WILL Ink SDK
-Altough it is possible to use Signature SDK JS without WILL Ink SDK, it is used by default. In order to use it
+Although it is possible to use Signature SDK JS without WILL Ink SDK, it is used by default. In order to use it
 we need to include these third party libraries:
 - **clipper.js**
 - **long.js**
@@ -155,7 +155,7 @@ we need to include these third party libraries:
 - **poly2tri.min.js**
 - **protobuf.min.js**
 
-### Configure the libary 
+### Configure the library 
 
 #### Signature Capture Dialog
 A JSON config string that is passed by the constructor can be used to configure the dialog appearance.

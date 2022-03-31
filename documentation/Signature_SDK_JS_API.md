@@ -272,8 +272,6 @@ Generates a new signature with the data passed.
 | DigitizerInfo: String indicating information about the digitizer.                                                                                                                                                                                                                                                                                              |
 | NicInfo: String indicating a unique ID for the device that captures the signature.                                                                                                                                                                                                                                                                              |
 | TimeRes: Integer indicating the resolution of the time.                                                                                                                                                                                                                                                                                                        |
-| Date: Javascript date that indicates when the signature was captured.                                                                                                                                                                                                                                                                                          |
-
 
 
 

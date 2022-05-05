@@ -125,6 +125,7 @@ Download the SDK from https://developer.wacom.com/developer-dashboard
 
 The downloaded Zip file contains the SDK ink engine accessed by the sample code. Then:
 
+- copy the files *signature_sdk.js* and *signature_sdk.wasm* from the Signature SDK for JavaScript zip file into the folder /demos/common/libs/
 - create a folder called _digital-ink_ within _/sigCaptDialog/libs/will/_.
 - copy the folder from the downloaded WILL Ink SDK to the created above folder
   - _/sigCaptDialog/libs/will/digital-ink_

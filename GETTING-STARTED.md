@@ -20,7 +20,6 @@
     - [Settings](#settings)
   - [Operate the Simple Demo application](#operate-the-simple-demo-application)
   - [Known issues](#known-issues)
-    - [Windows 10](#windows-10)
 
 The **Wacom Signature SDK for JavaScript** is intended to generate signature objects for the user. It provides the documentation and tools to create signature enabled applications.
 The JavaScript SDK implements the functionality in browser ready script. No component installations are required and the SDK is platform independent.
@@ -320,6 +319,7 @@ A simplified version of the JS demo exists within demos/simple/index.html, with 
 
 ## Known issues
 
-### Windows 10
-
-In previous versions, there was a bug on Chrome and Edge that made the SDK fail. On Windows, it could be tested using Chrome Canary, which fixed the problem. This is an issue fixed in current versions.
+- On Android and iOS, performing two point touch over the signature capture area (e.g zooming in or out) will produce a defaced signature trace on the canvas. 
+- On a Motorola G30, the signature area is not loaded and trace is unable to be added. This is an issue with the installed web browser, rather than an issue with the Signature SDK. 
+- On Chrome 101 with older Windows 10 (or Windows 7) versions, it will not be possible to add STU or Generic signatures. This is a web browser issue that would, were a fix to be made, introduce further problems. 
+- On iOS 15, when adding strokes, occasionally a dot artifact is created at the end point of the stroke when signing. When pressing OK to complete the signature, the dot artifact is no longer visible and the signature renders correctly.

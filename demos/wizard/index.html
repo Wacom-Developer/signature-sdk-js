@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<!--meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"-->
+	    <title>Signature SDK Wizard Demo</title>
+		<link href="../common/style/wacom.css" rel="stylesheet" type="text/css">	
+        <script src="/node_modules/sjcl/sjcl.js"></script>
+		<script src="/sigCaptDialog/libs/stu_capture/stu-sdk.min.js"></script> <!-- used to connect to STU devices -->        
+	    <script src="/sigCaptDialog/libs/stu_capture/stu_capture_encryption.js"></script> <!-- STU encryption functions -->	    		
+		<script src="../common/libs/signature_sdk.js"></script> <!-- signature SDK -->
+				
+		<script src="/wizard/wizard.js"></script>
+        <script src="./pad_defs.js"></script>		
+		<script src="./wizard_demo.js"></script>		
+		<script>		
+		    const licence = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJMTVMiLCJleHAiOjE2NzU5NDkwOTUsImlhdCI6MTY0NDQxMzE5OCwicmlnaHRzIjpbIlNJR19TREtfQ09SRSIsIkpTX0NPUkUiLCJTSUdfU0RLX0lTTyIsIlNJR19TREtfRU5DUllQVElPTiJdLCJkZXZpY2VzIjpbIldBQ09NX0FOWSJdLCJ0eXBlIjoiZXZhbCIsImxpY19uYW1lIjoiTGljZW5zZSBmb3IgSmF2YXNjcmlwdCBEZW1vIiwid2Fjb21faWQiOiIxNTNiZTg5Zi05NjM3LTRhYjQtOTk5OS05NGUwYzhlMGQyYTMiLCJsaWNfdWlkIjoiZDFmMGZmNGQtODliMy00NDFmLWI2ODYtZjk5MmEzYmEwNDg5IiwiYXBwc193aW5kb3dzIjpbXSwiYXBwc19pb3MiOltdLCJhcHBzX2FuZHJvaWQiOltdLCJtYWNoaW5lX2lkcyI6WyIwMDUwNTZDMDAwMDEiLCIwMDUwNTZDMDAwMDgiXX0.Q--Zng7BpyuDVhrcywHmiXZ60LK9picZe-AU0v7DgFfW2Qy61WRgfBApdjX68mHWLxkMhZK-ev1gInuT7RrnlBb7HIzS95NDD8nJxzeKdm_46XQyzwZIWsrOwzxXzkkdL9ruJJNmgX-56N893tnxH0_egtG5k4Tb4YoQGMqryzS7wSBpNGo-ploqOtmMVmwpX2bYh6cZoc6F4uRS5qosSGL9UEKG9O8DuWzZX7aAkVKuhom4vrFxqqJCPj06NronInKc6VOUpOS46eeARlrQekuvUdtlo177yLyEyp0HZ_HW8JT7_iwZKlgnCyQit0HsawBtIQtzvCh2yKFT7loYvw";
+			var mSigObj;		
+            var documentHash;
+			var wizCtl;		
+            var padDefs;			
+		
+		    Module.onRuntimeInitialized = _ => {	
+                document.getElementById("version_txt").innerHTML = Module.VERSION;
+				if (navigator.hid) {				
+				    document.getElementById("start_wizard").disabled = false;				    
+				}				
+				
+				documentHash = new Module.Hash(Module.HashType.None);
+				mSigObj = new Module.SigObj();	
+                mSigObj.setLicence(licence);		
+				wizCtl = new WizCtl();				
+				
+				document.getElementById("document_hash").disabled = false;
+            }	
+			
+			function openTab(evt, tabName) {
+                // Get all elements with class="tabcontent" and hide them
+                var tabcontent = document.getElementsByClassName("tabcontent");
+                for (var i = 0; i < tabcontent.length; i++) {
+                    tabcontent[i].style.display = "none";
+                }
+
+                // Get all elements with class="tablinks" and remove the class "active"
+                var tablinks = document.getElementsByClassName("tablinks");
+                for (var i = 0; i < tablinks.length; i++) {
+                    tablinks[i].className = tablinks[i].className.replace(" active", "");
+                }
+
+                // Show the current tab, and add an "active" class to the button that opened the tab
+                document.getElementById(tabName).style.display = "block";
+                evt.currentTarget.className += " active";
+            }
+			
+			async function startWizard() {
+				const options = {};
+				options.encryptionHandler = new MyEncryptionHandler();
+				options.encryptionHandler2 = new MyEncryptionHandler2();
+			    await wizCtl.padConnect(options);
+				const mirrorDiv = document.getElementById("mirror_div");
+				mirrorDiv.style.width = wizCtl.padWidth()+"px";
+				mirrorDiv.style.height = wizCtl.padHeight()+"px";
+				mirrorDiv.style.display="block";
+		        document.getElementById("signature_div").style.display="none";				
+				padDefs = new PadDefs(wizCtl.padWidth(), wizCtl.padHeight());
+				await wizard_step_init();
+				document.getElementById("start_wizard").disabled = true;
+				document.getElementById("stop_wizard").disabled = false;
+			}
+			
+			async function stopWizard() {
+			    await shutdown_step();
+				document.getElementById("start_wizard").disabled = false;
+				document.getElementById("stop_wizard").disabled = true;
+			}
+			
+			function showMirrorChanged(object) {
+			    if (object.checked) {
+			        document.getElementById("mirror_div").style.display = "block";
+				} else {
+				    document.getElementById("mirror_div").style.display = "none";
+				}
+			}
+			
+			function mirrorInputChanged(object) {
+			    wizCtl.setProperty({mirrorDiv:{enable:object.checked}});
+			}
+			
+			function encryptionChanged(object) {
+			    wizCtl.setProperty({encrypted:object.checked, sessionId:0xc0ffee});
+			}
+			
+			function monochromeChanged(object) {
+			    wizCtl.setProperty({forceMonochrome:object.checked});
+			}
+            						
+			function mmToPx(mm) {
+	            var dpr = window.devicePixelRatio;
+                var inch = 25.4; //1inch = 25.4 mm
+                var ppi = 96;	
+                return ((mm/inch)*ppi)/dpr;
+            }			
+			async function renderSignature() {
+				let renderWidth = mmToPx(mSigObj.getWidth(false)/100);
+				const renderHeight = mmToPx(mSigObj.getHeight(false)/100);				
+				renderWidth += renderWidth % 4;
+				const inkColor = "blue";
+				const inkWidth = 3.0;
+				const image = await mSigObj.renderBitmap(renderWidth, renderHeight, "image/png", inkWidth, inkColor, "white", 0, 0, 0);				
+				return image;
+			}
+				
+			async function addDocumentHash() {
+			    const reader = new FileReader();
+                reader.onload = async function() {                    
+					try {
+				        documentHash.delete();
+					    const data = reader.result;   
+                        const hashType = Module.HashType.SHA512;
+	                    documentHash = new Module.Hash(hashType);	  
+	                    var enc = new TextEncoder(); // always utf-8
+	                    if (await documentHash.add(data)) {
+						    alert("Document bounded properly");
+	                    } else {
+		                    alert("Document fails to bound");
+	                    }     
+	                } catch (e) {
+		                alert(e);
+	                }
+		        }
+                reader.readAsArrayBuffer(document.getElementById("document_hash").files[0]);		
+		    }	
+
+			var btnWaiting;
+            async function fireClick(id) {
+			    if (!btnWaiting) {
+				    btnWaiting = true;
+					await wizCtl.fireClick(id);
+					btnWaiting = false;
+				}
+			    
+			}
+		</script>
+    </head>
+	<body>	
+        <div class="wrapper">    
+	        <div id="header_container">
+                <div id="header">
+			        <a href="http://www.wacom.com/" target="_blank"><img src="../common/images/logo.png" alt="Wacom logo" class="float-left"></a>
+				    <span class="float-left" style="padding-left:20px;padding-top:20px;"><h1 style="color:#ffffff">SIGNATURE SDK Wizard JS <span id="version_txt"></span> DEMO</h1></span>
+			    </div>
+				<div class="tab">
+                    <button id="wizard_tab" class="tablinks" onclick="openTab(event, 'wizard_div')">Wizard</button>
+					<button id="settings_tab" class="tablinks" onclick="openTab(event, 'settings_div')">Settings</button>
+                </div>
+            </div>					
+		    <div id="content_container">									    
+				<div id="wizard_div" class="tabcontent">
+				    <p>This demo will go through all the optios provided by the Wizard component included in the Signature SDK JS.</p>
+				    <p>
+					    <button id="start_wizard" disabled="disabled" onClick="startWizard()">Start Wizard</button>
+						<button id="stop_wizard" disabled="disabled" onClick="stopWizard()">Stop Wizard</button>
+					</p>
+					<p>
+					    <fieldset style="border:1px solid black;display:inline">
+						    <legend>Controls</legend>
+							<div>
+							    <button id="start_btn" disabled="disabled" onClick="fireClick('start')">Start >></button>
+							    <button id="back_btn" disabled="disabled" onClick="fireClick('back')"><< Back</button>
+								<button id="next_btn" disabled="disabled" onClick="fireClick('next')">Next >></button>
+								<button id="cancel_btn" disabled="disabled" onClick="fireClick('cancel')">Cancel</button>
+								<button id="clear_btn" disabled="disabled" onClick="fireClick('clear')">Clear</button>
+								<button id="ok_btn" disabled="disabled" onClick="fireClick('ok')">Ok</button>
+								<button id="big_check_btn" disabled="disabled" onClick="fireClick('checkbox3')">Big checkbox</button>
+								<button id="big_radio_btn" disabled="disabled" onClick="fireClick('radio3')">Big radiobutton</button>
+							</div>
+						</fieldset>
+					</p>
+					<p>
+					  <input type="checkbox" id="show_wait_checkbox" checked="checked">
+					  <label for="show_wait_checkbox">Show hourglass while loading screen</label>
+					  <br>
+					  <input type="checkbox" id="show_mirror_checkbox" checked="checked" onChange="showMirrorChanged(this)">
+					  <label for="show_mirror_checkbox">Show the content of STU tablet on screen.</label>
+					  <br>
+					  <input type="checkbox" id="enable_mirror_checkbox" onChange="mirrorInputChanged(this)">
+					  <label for="enable_mirror_checkbox">Enable input from sreen.</label>
+					  <br>
+					  <input type="checkbox" id="enable_encryption_checkbox" onChange="encryptionChanged(this)">
+					  <label for="enable_encryption_checkbox">Encrypt the communication between the PC and STU Tablet</label>
+					  <br>
+					  <input type="checkbox" id="force_monochrome_checkbox" onChange="monochromeChanged(this)">
+					  <label for="force_monochrome_checkbox">Force monochrome</label>
+					</p>
+					<div id="mirror_div" style="border:1px solid black;display:none"></div>
+					<fieldset id="signature_div" style="width:0;padding:5px;margin:5px;display:none">
+		                <legend>Signature</legend>
+                        <img id="signatureImage">						
+		            </fieldset>
+				</div>
+			    <div id="settings_div" class="tabcontent">		 
+                    <fieldset style="width:400px;padding:5px;margin:5px">
+		                <legend>Signature Object</legend>
+			            <div>
+			                <p>
+			                    <label for="who">Signatory:</label><br>
+				                <input type="text" id="who" name="who" value="John Smith"><br><br>
+				                <label for="why">Reason:</label><br>
+				                <input type="text" id="why" name="why" value="I certify that the information is correct"><br><br>
+					            <p>
+					                A document can be bound to the signature, in a way that later it can be checked
+						            if the document has been changed or not.
+					            </p>
+					            <label for="document_hash">Document:</label><br>
+					            <input type="file" id="document_hash" name="document_hash" onchange="addDocumentHash()" disabled="disabled"><br><br>							                
+				            </p>
+		                </div>					    
+					</fieldset>					    
+					<fieldset style="width:400px;padding:5px;margin:5px">
+					    <legend>Input Echo Object</legend>
+						<div>
+						    <p>
+							    <input type="checkbox" id="input_echo_underscore">
+							    <label for="input_echo_underscore">Put underscore</label>
+							</p>
+						    <p>
+							    <label for="input_echo_char">Character used as input (an empty value will use the pressed value):</label><br>
+								<input type="text" id="input_echo_char">								
+							</p>
+                            <p> 
+							    <label for="input_echo_spacing">Spacing:</label>
+		                        <select id="input_echo_spacing">
+			                        <option value="no_spacing">No spacing</option>
+			                        <option value="half_spacing" selected="selected">Half spacing</option>
+			                        <option value="single_spacing">Single spacing</option>
+			                        <option value="double_spacing">Double spacing</option>
+		                        </select>
+                            </p>							
+						</div>						
+					</fieldset>
+				</div>
+		    </div>		
+        </div>		
+		<div id="footer_container">
+            <div id="footer">
+	            <a style="color:white" href="https://www.wacom.com/en-us/privacy">Wacom privacy policy</a> - 
+		        <a style="color:white" href="https://www.wacom.com/en-us/cookie-notice">Wacom cookie policy</a> - Copyright © 2021 Wacom Company, Limited. All Rights Reserved. All other trademarks are the property of their respective owners and are used with their permission. Modifications and errors excepted.
+	        </div>
+        </div>        	
+	</body>
+	<script>
+        // Get the element with id="defaultOpen" and click on it
+        document.getElementById("wizard_tab").click();
+    </script>
+</html>

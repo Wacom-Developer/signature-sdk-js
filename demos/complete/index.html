@@ -3,10 +3,10 @@
     <head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<!--meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"-->
-	    <title>Signature SDK - Complete demo</title>
-		<link href="./style/wacom.css" rel="stylesheet" type="text/css">		
-		<link href="/sigCaptDialog/style/sigCaptDialog.css" rel="stylesheet" type="text/css">		
-	    <link href="/node_modules/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" type="text/css">
+	    <title>Signature SDK Demo</title>
+		<link href="../common/style/wacom.css" rel="stylesheet" type="text/css">		
+		<link href="/sigCaptDialog/style/sigCaptDialog.css" rel="stylesheet" type="text/css">	
+		<link href="/node_modules/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" type="text/css">
 	    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
 	    <script src="/node_modules/jquery-ui-dist/jquery-ui.min.js"></script>		
 		<script src="/node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>		
@@ -19,53 +19,35 @@
 		<script src="/node_modules/gl-matrix/gl-matrix-min.js"></script>
 		<script src="/node_modules/rbush/rbush.min.js"></script>
 		<script src="/node_modules/js-ext/js-ext-min.js"></script>
-        <script src="/node_modules/digital-ink/digital-ink-min.js"></script>	
-	    <script type="text/javascript">
-		    const {
-			    fsx, Matrix,
-			    InputDevice, InputListener,
-			    SensorChannel, InkController,
-			    Brush2D, BrushPrototype, ShapeFactory,
-			    BrushGL, URIResolver,
-			    Intersector, Selector,
-			    PathPointContext, InkBuilder, Stroke,
-			    InkModel, SpatialContext, InkCodec,
-			    Color, Rect, BlendMode,
-			    InkCanvas2D, StrokeRenderer2D,
-			    InkCanvasGL, StrokeRendererGL,  
-			    PointerData, PathProducer, PipelineStage 
-		    } = DigitalInk;
-	    </script>	
-	    <script src="/sigCaptDialog/libs/will/InkCanvas.js"></script>
-	    <script src="/sigCaptDialog/libs/will/InkCanvasRaster.js"></script>	
-	    <script src="/sigCaptDialog/libs/will/ValueTransformer.js"></script>
-	    <script src="/sigCaptDialog/libs/will/URIBuilder.js"></script>
-	    <script src="/sigCaptDialog/libs/will/BrushPalette.js"></script>
-	    <script src="/sigCaptDialog/libs/will/Config.js"></script>
-	    <script src="/sigCaptDialog/libs/will/DataRepository.js"></script>
-	    <script src="/sigCaptDialog/libs/will/DataModel.js"></script>
-		<script src="/sigCaptDialog/libs/will/Extensions.js"></script>
+        <script src="/node_modules/digital-ink/digital-ink-min.js"></script>
+		<script src="../common/will/tools.js"></script>	
 		
-		<script src="/node_modules/BigInt/src/BigInt.js"></script>		
 	    <script src="/node_modules/sjcl/sjcl.js"></script>
 		<script src="/sigCaptDialog/libs/stu_capture/stu-sdk.min.js"></script> <!-- used to connect to STU devices -->        
-	    <script src="/sigCaptDialog/libs/stu_capture/stu_capture.js"></script> <!-- used for capture data from STU devices -->
 	    <script src="/sigCaptDialog/libs/stu_capture/stu_capture_encryption.js"></script> <!-- STU encryption functions -->	    
-
-        <script src="../common/libs/signature_sdk.js"></script> <!-- signature SDK -->
+	    
+		<script src="../common/libs/signature_sdk.js"></script> <!-- signature SDK -->
 		<script src="../common/libs/signature_sdk_helper.js"></script> <!-- signature SDK helper -->
-		
+				
+	    <script src="/node_modules/node-forge/dist/forge.min.js"></script>					
+				
         <script src="/sigCaptDialog/sigCaptDialog.js"></script>
 		<script src="/sigCaptDialog/stuCaptDialog.js"></script>
-		<script>
-		    const licence = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJMTVMiLCJleHAiOjE2NjczNzcxMTUsImlhdCI6MTYzNTg0NTEwOCwicmlnaHRzIjpbIlNJR19TREtfQ09SRSIsIkpTX0NPUkUiXSwiZGV2aWNlcyI6WyJXQUNPTV9BTlkiXSwidHlwZSI6ImV2YWwiLCJsaWNfbmFtZSI6IlRlc3QgbGljZW5zZSBbMTYzNTg0MTExNV0iLCJ3YWNvbV9pZCI6IjE1M2JlODlmLTk2MzctNGFiNC05OTk5LTk0ZTBjOGUwZDJhMyIsImxpY191aWQiOiI2M2IyNGU2YS05ZDI3LTQ3ZDMtODk0NS00OTkyM2FjMjA0ZTIiLCJhcHBzX3dpbmRvd3MiOltdLCJhcHBzX2lvcyI6W10sImFwcHNfYW5kcm9pZCI6W10sIm1hY2hpbmVfaWRzIjpbIjAwNTA1NkMwMDAwMSIsIjAwNTA1NkMwMDAwOCJdfQ.LKYsb6HR9K1M-69RNXhdZV_uSpxLyVgJHl0yjKlVRO0YfmNGB9sxGVIDE0ec7SDSV5417QikD8hxTyL6i5B97p7Pl99d_gvdJubW1k9oVpR1JEq3dws-whQggVpySIhBU0BGPhRQP1VzIvpsfrGcMP0-LTeOJoKCKBM9FwTbO98QAtIZq_xbqGyQjOkCQj3GXgRv8BdmGYtih7Antr7pCrVkSc3WtcDxQS3XoedNBOae4nUe2Op1Rgwhk4Oymjl_3q5z9hhoa5rYf7kwkpv5B78BbX6tGlUEFABLS0BgYdYNhUxsYuip3FnqoS543H7_q1s1CzhmREF7n1SZDS781A";
+		
+		<script>		
+		    const licence = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJMTVMiLCJleHAiOjE2NzU5NDkwOTUsImlhdCI6MTY0NDQxMzE5OCwicmlnaHRzIjpbIlNJR19TREtfQ09SRSIsIkpTX0NPUkUiLCJTSUdfU0RLX0lTTyIsIlNJR19TREtfRU5DUllQVElPTiJdLCJkZXZpY2VzIjpbIldBQ09NX0FOWSJdLCJ0eXBlIjoiZXZhbCIsImxpY19uYW1lIjoiTGljZW5zZSBmb3IgSmF2YXNjcmlwdCBEZW1vIiwid2Fjb21faWQiOiIxNTNiZTg5Zi05NjM3LTRhYjQtOTk5OS05NGUwYzhlMGQyYTMiLCJsaWNfdWlkIjoiZDFmMGZmNGQtODliMy00NDFmLWI2ODYtZjk5MmEzYmEwNDg5IiwiYXBwc193aW5kb3dzIjpbXSwiYXBwc19pb3MiOltdLCJhcHBzX2FuZHJvaWQiOltdLCJtYWNoaW5lX2lkcyI6WyIwMDUwNTZDMDAwMDEiLCIwMDUwNTZDMDAwMDgiXX0.Q--Zng7BpyuDVhrcywHmiXZ60LK9picZe-AU0v7DgFfW2Qy61WRgfBApdjX68mHWLxkMhZK-ev1gInuT7RrnlBb7HIzS95NDD8nJxzeKdm_46XQyzwZIWsrOwzxXzkkdL9ruJJNmgX-56N893tnxH0_egtG5k4Tb4YoQGMqryzS7wSBpNGo-ploqOtmMVmwpX2bYh6cZoc6F4uRS5qosSGL9UEKG9O8DuWzZX7aAkVKuhom4vrFxqqJCPj06NronInKc6VOUpOS46eeARlrQekuvUdtlo177yLyEyp0HZ_HW8JT7_iwZKlgnCyQit0HsawBtIQtzvCh2yKFT7loYvw";
 			var mSigObj;		
             var documentHash;
 			var backgroundImage;
 			var sigCaptDialog
 			var stuCapDialog;
+			
+			// This var will store the public and private keys for encryption.
+			// Please note that this is only a demostration, but on a production application
+			// for security reasons the private key should not be stored in a global variable.
+			var encryptionKeys;
 		
-		    Module.onRuntimeInitialized = _ => {		
+		    Module.onRuntimeInitialized = _ => {	
                 document.getElementById("version_txt").innerHTML = Module.VERSION;
 				if (navigator.hid) {				
 				    document.getElementById("capture_stu_btn").disabled = false;
@@ -78,7 +60,7 @@
 				
 				documentHash = new Module.Hash(Module.HashType.None);
 				mSigObj = new Module.SigObj();	
-                mSigObj.setLicence(licence);		
+                mSigObj.setLicence(licence);
             }	
 
             function generateConfig() {
@@ -149,14 +131,24 @@
 				
 				const comboTools = document.getElementById("inking_tool");	
 				const inkColor = document.getElementById("rendering_color_box").value;
-				config.will = {tool:comboTools.options[comboTools.selectedIndex].value, color:inkColor};
+				config.will = {tool:tools[comboTools.options[comboTools.selectedIndex].value], color:inkColor};
 				
+				const comboBackgroundMode = document.getElementById("background_image_mode");	
 				config.background = {color:document.getElementById("background_color_box").value, 
-				                     alpha:document.getElementById("background_opacity").value*0.01};
+				                     alpha:document.getElementById("background_opacity").value*0.01,
+									 mode:comboBackgroundMode.options[comboBackgroundMode.selectedIndex].value};
 									 
 	            if ((document.getElementById("put_background_image").checked) && (backgroundImage)) {
 				    config.background.image = backgroundImage;
 				}
+				
+				if (document.getElementById("enable_timeout").checked) {
+				    config.timeOut = {enabled:true};
+					config.timeOut.time = parseInt(document.getElementById("timeOutValue").value);
+					config.timeOut.onTimeOut = timeOutCallback;
+				}
+				
+				config.minTimeOnSurface = parseInt(document.getElementById("minTimeOnSurface").value);
 				
 				return config;
             }			
@@ -174,6 +166,8 @@
 				document.getElementById("save_image_btn").disabled = true;
 				document.getElementById("save_text_btn").disabled = true;
 				document.getElementById("save_binary_btn").disabled = true;
+				document.getElementById("save_iso_binary_btn").disabled = true;
+                document.getElementById("save_iso_xml_btn").disabled = true;
 				
 			    if (source == "STU") {
 				    captureFromSTU();
@@ -190,6 +184,7 @@
 						 		 pen:document.getElementById("allow_pen_check").checked}
 				sigCaptDialog = new SigCaptDialog(config);
                 sigCaptDialog.addEventListener("ok", function() {
+				    encryptSignature();
 				    renderSignature();
 				});		
 				sigCaptDialog.open(mSigObj, document.getElementById("who").value, document.getElementById("why").value, generateExtraData(), Module.KeyType.SHA512, documentHash);
@@ -197,9 +192,16 @@
 			}
 			
 		    function captureFromSTU() {
+			    sigCaptDialog = null;
 			    const config = generateConfig();
+				config.encryption = {
+				    sessionId: window.crypto.getRandomValues(new Uint32Array(1))[0], // 32 bits random value
+				    encryptionHandler: new MyEncryptionHandler(), // only necessary if connecting to STU-300/500/520
+				    encryptionHandler2: new MyEncryptionHandler2(), // only necessary if connection to STU-430/530/540 
+				};				
 				stuCapDialog = new StuCaptDialog(config);
 				stuCapDialog.addEventListener("ok", function() {
+				    encryptSignature();
 				    renderSignature();
 				});				
 				stuCapDialog.open(mSigObj, document.getElementById("who").value, document.getElementById("why").value, generateExtraData(), Module.KeyType.SHA512, documentHash);				
@@ -303,37 +305,10 @@
 				}
 				
 				const inkColor = document.getElementById("rendering_color_box").value;
-				const image = await new Promise(function(resolve, reject) {
-				    mSigObj.renderBitmap(renderWidth, renderHeight, "image/png", 3.0, inkColor, backgroundColor, 0, 0, renderFlags,
-					    resolve,
-						reject,
-				        async function(width, height) {
-						    if (useWILL) {
-					            const canvas = new OffscreenCanvas(width, height);
-				                const inkCanvas = await new InkCanvasRaster(canvas, canvas.width, canvas.height);
-	                            await BrushPalette.configure(inkCanvas.canvas.ctx);
-
-		                        window.WILL = inkCanvas;
-	                            WILL.type = "raster";
-								WILL.setColor(Color.fromHex(inkColor));
-	                            const comboTools = document.getElementById("inking_tool");	
-								const toolName = comboTools.options[comboTools.selectedIndex].value;
-	                            await WILL.setTool(toolName);							
-						        return inkCanvas;
-							} else {
-							    return null;
-							}
-					   }
-				    );
-				});
-				
-				if (window.WILL) {
-		            await BrushPalette.delete();
-	                await window.WILL.delete();		
-		            window.WILL = null;
-	            }
-				
-				return image;
+				const comboTools = document.getElementById("inking_tool");	
+				const inkTool = tools[comboTools.options[comboTools.selectedIndex].value];
+				const image = await mSigObj.renderBitmap(renderWidth, renderHeight, "image/png", inkTool, inkColor, backgroundColor, 0, 0, renderFlags);				
+				return image;				
 			}
 				
 			async function renderSignature() {
@@ -345,7 +320,9 @@
 				
 				document.getElementById("save_image_btn").disabled = false;
 				document.getElementById("save_text_btn").disabled = false;
-				document.getElementById("save_binary_btn").disabled = false;							
+				document.getElementById("save_binary_btn").disabled = false;
+                document.getElementById("save_iso_binary_btn").disabled = false;
+                document.getElementById("save_iso_xml_btn").disabled = false;				
 			}
 			
 			async function saveSignature(format) {
@@ -362,6 +339,25 @@
 					} else if (format == "binary") {
 					    newLink.download = "signature.fss";
 					    blob = new Blob([await mSigObj.getSigData()], { type: "application/octet-stream" });
+					} else if (format == "iso_binary") {
+					    newLink.download = "signature.iso";
+						let isoType = Module.IsoType["ISO-19794-7_BINARY"];
+						if (mSigObj.canEncrypt()) {
+						    if (document.getElementById("iso_encrypted_binary_radio").checked) {
+							    newLink.download = "signature_encrypted.iso";
+							    isoType = Module.IsoType["ISO-19794-7_ENCRYPTED_BINARY"];
+							} else {
+							    newLink.download = "signature_encrypted_iso.txt";
+							    isoType = Module.IsoType["ISO-19794-7_ENCRYPTED_TEXT"];
+							}
+						}
+						blob = new Blob([await mSigObj.exportIso(isoType)], { type: "application/octet-stream" });
+					} else if (format == "iso_xml") {
+					    newLink.download = "signature.xml";
+						if (mSigObj.canEncrypt()) {
+						    alert("XML ISO-19785-3 cannot be encrypted, it will be saved without encryption");
+						}
+						blob = new Blob([await mSigObj.exportIso(Module.IsoType["ISO-19785-3_XML"])], { type: "application/octet-stream" });
 					}
 					
 				    if (window.webkitURL != null) {
@@ -417,45 +413,61 @@
             }
 			
 			async function loadSignature() {
+			    try {
+			        //reset encryption data
+					await mSigObj.setPublicKey("");
+					await mSigObj.setPrivateKey("");
+					await mSigObj.setEncryptionPassword("");
+					await decryptSignature(mSigObj);
+				} catch (e) {
+				    console.log(e);
+				}
 			    const file = document.getElementById("load_signature").files[0];
-	            if (file) {
+	            if (file) {				
 	                // check the type	  
 	                if (("text/plain" == file.type) || ("text/xml" == file.type)) {
 		                // read the file as string
 		                const reader = new FileReader();
                         reader.onload = async function() {
                             const data = reader.result;
-			                try {
+			                //try {
 				                if ("text/plain" == file.type) {
-				                    if (await mSigObj.setTextData(data)) {
-					                    readSignature();
-				                    } else {
-						                // maybe ISO binary text encrypted
+				                    if ((!await mSigObj.setTextData(data)) || 
+									    (!await readSignature(false))) {									    
+				                        // maybe ISO binary text encrypted
 						                try {
 					                        const ad = new Module.AdditionalImportIsoData();
 		                                    ad.setWho("User imported from ISO");
 		                                    ad.setWhy("Signature imported from ISO");
-					                        ad.setWhen(new Date());
-					                        await mSigObj.importIso(data, Module.IsoType.ISO19784_7_ENCRYPTED_TEXT, ad);
-											readSignature();
+					                        //ad.setWhen(new Date());
+					                        await mSigObj.importIso(data, Module.IsoType["ISO-19794-7_ENCRYPTED_TEXT"], ad);
+											readSignature(true);
 						                } catch (e) {						
-					                        log("Incorrect signature data found");
+					                        alert(e);
 						                }
 				                    }
 				                } else {
+								    //text/xml
 		                            const ad = new Module.AdditionalImportIsoData();
 		                            ad.setWho("User imported from XML ISO");
 		                            ad.setWhy("Signature imported from XML ISO");
-					                ad.setWhen(new Date());
-					                await mSigObj.importIso(data, Module.IsoType.ISO19785_3_XML, ad);
-					                readSignature();
+									
+									const domParser = new DOMParser();
+									const xmlDocument = domParser.parseFromString(data, "text/xml");
+									const elements = xmlDocument.getElementsByTagName("CreationDate");
+									if (elements.length > 0) {
+									    ad.setWhen(new Date(elements[0].innerHTML));
+									}
+									
+					                await mSigObj.importIso(data, Module.IsoType["ISO-19785-3_XML"], ad);
+					                readSignature(true);
 				                }					
-			                } catch (e) {
-				                console.log("Error loading signature as text "+e);
-			                }
+			                //} catch (e) {
+				                //alert.log(e);
+			                //}
 		                }
                         reader.readAsText(file);
-	                } else if ((file.type == "image/png") || (file.type == "image/jpeg")) {			  
+	                } else if (file.type == "image/png") {			  
 		                const reader = new FileReader();
                         reader.onload = async function() {
                             const data = reader.result;
@@ -470,9 +482,9 @@
 			                    const imageData = ctx.getImageData(0, 0, img.width, img.height);
 			                    try {
 				                    await mSigObj.readEncodedBitmapBinary(imageData.data, imageData.width, imageData.height);
-				                    readSignature();
+				                    readSignature(true);
 			                    } catch (e) {
-				                    console.log("Error loading image "+e);
+				                    alert.log(e);
 			                    }			
                             }, false);
 		                    img.src = data;  
@@ -484,25 +496,24 @@
                         reader.onload = async function() {
                             const data = reader.result;            
 			                try {
-				                if (await mSigObj.setSigData(new Uint8Array(data))) {
-					                readSignature();
-				                } else {
+				                if ((!await mSigObj.setSigData(new Uint8Array(data))) ||
+					                 (!await readSignature(false))) {
 					                // try with iso format
 					                const ad = new Module.AdditionalImportIsoData();
 		                            ad.setWho("User imported from ISO");
 		                            ad.setWhy("Signature imported from ISO");
-					                ad.setWhen(new Date());
+					                //ad.setWhen(new Date());
 					                //ad.putExtraData("extra1", "test");
 					                //ad.putExtraData("extra2", "test2");				
-					                if (await mSigObj.importIso(new Uint8Array(data), isEncryptedBinary(data) ? Module.IsoType.ISO19784_7_ENCRYPTED_BINARY : Module.IsoType.ISO19784_7_BINARY, ad)) {
-						                readSignature();
+					                if (await mSigObj.importIso(new Uint8Array(data), isEncryptedBinary(data) ? Module.IsoType['ISO-19794-7_ENCRYPTED_BINARY'] : Module.IsoType['ISO-19794-7_BINARY'], ad)) {
+						                readSignature(true);
 					                } else {
-					                    console.log("Incorrect signature data found");
+					                    alert("Incorrect signature data found");
 										emptyLoadData();
 					                }
 				                }
 			                } catch (e) {
-				                console.log("Error loading signature as binary "+e);
+				                alert(e);
 								emptyLoadData();
 			                }
 		                }
@@ -530,49 +541,65 @@
                 document.getElementById("signatureimage_loaded_background").style.display = "block";				
 			}
 			
-			async function readSignature() {
-			    document.getElementById("load_who").innerHTML = mSigObj.getWho();
-				document.getElementById("load_why").innerHTML = mSigObj.getWhy();
-				let date = mSigObj.getWhen();
-				document.getElementById("load_when").innerHTML = "The signature was captured on "+date;
-				document.getElementById("load_extra_data").innerHTML = mSigObj.getExtraData("");
+			async function readSignature(showError) {
+				try {
+				    const image = await renderSignatureImage();
 				
-				document.getElementById("load_digitizer_type").innerHTML = mSigObj.getAdditionalData(Module.CaptureData.Digitizer);
-				document.getElementById("load_digitizer_driver").innerHTML = mSigObj.getAdditionalData(Module.CaptureData.Digitizer_Driver);
-				document.getElementById("load_operating_system").innerHTML = mSigObj.getAdditionalData(Module.CaptureData.Machine_OS);
-				document.getElementById("load_network_interface_card").innerHTML = mSigObj.getAdditionalData(Module.CaptureData.Network_Card);
-				document.getElementById("load_licence").innerHTML = mSigObj.getLicence();				
+			        document.getElementById("load_who").innerHTML = mSigObj.getWho();
+				    document.getElementById("load_why").innerHTML = mSigObj.getWhy();
+					let when = mSigObj.getWhen();
+ 					const userTimezoneOffset = when.getTimezoneOffset() * 60000;
+                    when = new Date(when.getTime() + userTimezoneOffset);
+					if (when.getTime() !== 0) {
+				        document.getElementById("load_when").innerHTML = "The signature was captured on "+mSigObj.getWhen();
+					} else {
+					    document.getElementById("load_when").innerHTML = "";
+					}
+				    document.getElementById("load_extra_data").innerHTML = mSigObj.getExtraData("");
+				
+				    document.getElementById("load_digitizer_type").innerHTML = mSigObj.getAdditionalData(Module.CaptureData.Digitizer);
+				    document.getElementById("load_digitizer_driver").innerHTML = mSigObj.getAdditionalData(Module.CaptureData.Digitizer_Driver);
+				    document.getElementById("load_operating_system").innerHTML = mSigObj.getAdditionalData(Module.CaptureData.Machine_OS);
+				    document.getElementById("load_network_interface_card").innerHTML = mSigObj.getAdditionalData(Module.CaptureData.Network_Card);
+				    document.getElementById("load_licence").innerHTML = mSigObj.getLicence();				
 								
-				const types = [Module.KeyType.MD5, 
-				               Module.KeyType.SHA1, 
-							   Module.KeyType.SHA224, 
-							   Module.KeyType.SHA256, 
-							   Module.KeyType.SHA384, 
-							   Module.KeyType.SHA512];
+				    const types = [Module.KeyType.MD5, 
+				                   Module.KeyType.SHA1, 
+						    	   Module.KeyType.SHA224, 
+							       Module.KeyType.SHA256, 
+							       Module.KeyType.SHA384, 
+							       Module.KeyType.SHA512];
 				
-				for (let i=0; i<types.length; i++) {
-				    try {				
-				        let status = await mSigObj.checkIntegrity(types[i]);
-						if (status == Module.IntegrityStatus.OK) {
-						    document.getElementById("load_integrity").innerHTML = '<span style="color:green">The signature integrity is correct.</span>';
-							break;
-						} else if (status == Module.IntegrityStatus.MISSING) {
-						    document.getElementById("load_integrity").innerHTML = '<span style="color:black">No Integrity data found.</span>';
-							break;
-						} else if (status != Module.IntegrityStatus.WRONG_TYPE) {
-						    document.getElementById("load_integrity").innerHTML = '<span style="color:red">'+integrityStatusDesc(status)+'</span>';	
-							break;
-						}                        
-				    } catch (e) {				   
-				    }
-                }		
+				    for (let i=0; i<types.length; i++) {
+				        try {				
+				            let status = await mSigObj.checkIntegrity(types[i]);
+						    if (status == Module.IntegrityStatus.OK) {
+						        document.getElementById("load_integrity").innerHTML = '<span style="color:green">The signature integrity is correct.</span>';
+							    break;
+						    } else if (status == Module.IntegrityStatus.MISSING) {
+						        document.getElementById("load_integrity").innerHTML = '<span style="color:black">No Integrity data found.</span>';
+							    break;
+						    } else if (status != Module.IntegrityStatus.WRONG_TYPE) {
+						        document.getElementById("load_integrity").innerHTML = '<span style="color:red">'+integrityStatusDesc(status)+'</span>';	
+							    break;
+						    }                        
+				        } catch (e) {				   
+				        }
+                    }		
 
-                document.getElementById("document_load").disabled = false;				
-				const image = await renderSignatureImage();
+                    document.getElementById("document_load").disabled = false;		
+								
+				    document.getElementById("signatureImage_loaded").src = image;		
+				    document.getElementById("signatureImage_loaded").style.display = "block";	
+                    document.getElementById("signatureimage_loaded_background").style.display = "none";				
+				} catch (e) {
+				    if (showError) {
+				        alert(e);
+					}
+					return false;
+				}
 				
-				document.getElementById("signatureImage_loaded").src = image;		
-				document.getElementById("signatureImage_loaded").style.display = "block";	
-                document.getElementById("signatureimage_loaded_background").style.display = "none";				
+				return true;
 			}
 			
 			async function checkDocumentHash() {
@@ -620,6 +647,16 @@
 	                    backgroundImage.src = data;  
 					}
                     reader.readAsDataURL(file);										    
+				}
+			}
+			
+			async function loadCertificate() {
+			    try {
+			        encryptionKeys = await decodePKCS12(document.getElementById("asymmetric_certificate").files[0], 
+					                       document.getElementById("asymmetric_password").value);
+				} catch (e) {
+				    document.getElementById("asymmetric_certificate").value = "";
+				    alert(e);					
 				}
 			}
 			
@@ -684,13 +721,102 @@
 				return extraData;
 			}
 			
+			function decodePKCS12(file, password) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = evt => {
+                        try {
+                            const binary = evt && evt.target ? evt.target.result : null
+                            if (!binary) {
+                                reject(new Error('No file data'))
+                            }
+                            const p12Asn1 = forge.asn1.fromDer(binary)
+                            const p12 = forge.pkcs12.pkcs12FromAsn1(p12Asn1, password)
+							
+							const bags = p12.getBags({bagType: forge.pki.oids.certBag})
+							const cert = bags[forge.pki.oids.certBag][0];
+							if (cert?.cert?.validity?.notAfter < new Date()) {
+							    reject("Certificate has expired");
+							}							
+
+                            const pkeyBags = p12.getBags({bagType: forge.pki.oids.pkcs8ShroudedKeyBag})
+                            const keybag = pkeyBags[forge.pki.oids.pkcs8ShroudedKeyBag][0];							
+
+                            const privateKey = forge.pki.privateKeyToPem(keybag.key)
+							const publicKey = forge.pki.publicKeyToPem(forge.pki.setRsaPublicKey(keybag.key.n, keybag.key.e));							
+                            resolve({publicKey, privateKey})
+                        } catch (e) {
+                            reject(e)
+                        }
+                    }
+                    reader.onerror = reject
+                    reader.readAsBinaryString(file)
+                })
+			}
+			
+			async function encryptSignature() {
+			    try {
+			        if (document.getElementById("no_encryption").checked) {
+					    await mSigObj.setPublicKey("");
+					    await mSigObj.setPrivateKey("");
+				    } else {
+ 					    if (document.getElementById("symmetric_encryption").checked) {
+				            await mSigObj.setEncryptionPassword(document.getElementById("symmetric_password").value);												
+					    } else if (document.getElementById("asymmetric_encryption").checked) {
+					        if (encryptionKeys.publicKey) {								
+						        let res = await mSigObj.setPublicKey(encryptionKeys.publicKey);
+								console.log(res);
+						    }
+						}
+						
+						if (!mSigObj.canEncrypt()) {
+						    alert("The signature cannot be encrypted");
+						}
+					}
+				} catch (e) {
+				    alert(e);
+				}
+			}	
+
+            async function decryptSignature(signature) {
+			    try {
+			        if (document.getElementById("symmetric_encryption").checked) {
+				        await signature.setEncryptionPassword(document.getElementById("symmetric_password").value);												
+					} else if (document.getElementById("asymmetric_encryption").checked) {
+					    if (encryptionKeys.privateKey) {								
+						    await signature.setPrivateKey(encryptionKeys.privateKey);								
+						}
+				    }
+				} catch (e) {
+				    alert(e);
+				}
+            }
+
+            function timeOutCallback(timeOnSurface) {
+			    const minTimeOnSurface = parseInt(document.getElementById("minTimeOnSurface").value);
+                if (minTimeOnSurface < timeOnSurface) {
+				    const actionCombo = document.getElementById("dataTimeOut");
+				    if (actionCombo.options[actionCombo.selectedIndex].value == "accept") {
+					    accept();
+					} else {
+					    cancel();
+					}
+				} else {
+				    const actionCombo = document.getElementById("emptyTimeOut");
+				    if (actionCombo.options[actionCombo.selectedIndex].value == "accept") {
+					    accept();
+					} else {
+					    cancel();
+					}				
+				}
+			}			
 		</script>
     </head>
 	<body>	
         <div class="wrapper">    
 	        <div id="header_container">
                 <div id="header">
-			        <a href="http://www.wacom.com/" target="_blank"><img src="./images/logo.png" alt="Wacom logo" class="float-left"></a>
+			        <a href="http://www.wacom.com/" target="_blank"><img src="../common/images/logo.png" alt="Wacom logo" class="float-left"></a>
 				    <span class="float-left" style="padding-left:20px;padding-top:20px;"><h1 style="color:#ffffff">SIGNATURE SDK JS <span id="version_txt"></span> DEMO</h1></span>
 			    </div>
 			    <div class="tab">
@@ -753,10 +879,13 @@
 			                <div id="captureDiv" style="width:400px;height:330px;"></div>
                             <img id="signatureImage" style="display:none">						
 		                </fieldset>
-					    <br><br>
-					    <button id="save_image_btn" onClick="saveSignature('image')" disabled="disabled">Save as Image</button>&nbsp;&nbsp;
-				        <button id="save_text_btn" onClick="saveSignature('txt')" disabled="disabled">Save as Text</button>&nbsp;&nbsp;
-					    <button id="save_binary_btn" onClick="saveSignature('binary')" disabled="disabled">Save as Binary</button>
+					    <p>
+					        <button id="save_image_btn" onClick="saveSignature('image')" disabled="disabled">Save as Image</button>&nbsp;&nbsp;
+				            <button id="save_text_btn" onClick="saveSignature('txt')" disabled="disabled">Save as Text</button>&nbsp;&nbsp;
+					        <button id="save_binary_btn" onClick="saveSignature('binary')" disabled="disabled">Save as Binary</button>
+							<button id="save_iso_binary_btn" onClick="saveSignature('iso_binary')" disabled="disabled">Save as Binary ISO</button>
+							<button id="save_iso_xml_btn" onClick="saveSignature('iso_xml')" disabled="disabled">Save as XML ISO</button>
+						</p>
 				    </p>
 		        </div>		
 			    <div id="read_signature_div" class="tabcontent">
@@ -822,15 +951,15 @@
 							<br>
                             <label for="inking_tool">Inking tool:</label>
 		                    <select name="inking_tool" id="inking_tool">
-			                    <option name="pen">pen</option>
-			                    <option name="felt">felt</option>
-			                    <option name="brush">brush</option>
-			                    <option name="marker">marker</option>
-		                        <option name="pencil">pencil</option>
-	                            <option name="waterBrush">waterBrush</option>
-	                            <option name="inkBrush">inkBrush</option>
-	                            <option name="rainbowBrush">rainbowBrush</option>
-	                            <option name="crayon">crayon</option>
+			                    <option value="pen">pen</option>
+			                    <option value="felt">felt</option>
+			                    <option value="brush">brush</option>
+			                    <option value="marker">marker</option>
+		                        <option value="pencil">pencil</option>
+	                            <option value="waterBrush">waterBrush</option>
+	                            <option value="inkBrush">inkBrush</option>
+	                            <option value="rainbowBrush">rainbowBrush</option>
+	                            <option value="crayon">crayon</option>
 		                    </select>
 			                </br></br>
 			                <label for="rendering_color_box">Ink color:</label>			
@@ -842,6 +971,14 @@
 							<input type="checkbox" name="put_background_image" id="put_background_image">
 							<label for="background_image">Use background image</label><br>
 					        <input type="file" id="background_image" name="background_image" onChange="loadBackgroundImage()" accept="image/*">
+							<br>
+							<label for="background_image_mode">Background image mode</label><br>
+							<select name="background_image_mode" id="background_image_mode">
+			                    <option value="none">None</option>
+			                    <option value="fit" selected="selected">Fit</option>
+							    <option value="center">Center</option>
+								<option value="pattern">Pattern</option>
+		                     </select>
 							<br>
 							<label for="background_opacity">Background opacity</label>
 							<input type="range" min="1" max="100" value="100" id="background_opacity">
@@ -1134,6 +1271,78 @@
 								<input type="checkbox" name="is_relative" id="is_relative">
 							    <label for="is_relative">Set as relative</label>								    								
 							</p>
+						</fieldset>
+					</div>
+					<div>
+					    <fieldset style="width:400px;padding:5px;margin:5px">
+		                    <legend>Encryption</legend>          
+							<div>
+                                <input type="radio" id="no_encryption" name="encryption_group" value="none" checked="checked">
+                                <label for="no_encryption">Without Encryption</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="symmetric_encryption" name="encryption_group" value="symmetric">
+                                <label for="symmetric_encryption">Symmetric encryption</label>
+								<br>
+								<label for"symmetric_password" style="padding-left:40px">Password: </label>
+								<input type="password" id="symmetric_password">
+                            </div>
+                            <div>
+                                <input type="radio" id="asymmetric_encryption" name="encryption_group" value="asymmetric_encryption">
+                                <label for="asymmetric_encryption">Asymmetric encryption</label>
+								<br>
+								<span style="padding-left:30px">Select key as pk12 format:</span>
+								<br>
+								<label for"asymmetric_password" style="padding-left:40px">Password: </label>
+								<input type="password" id="asymmetric_password">								
+								<br>
+								<input type="file" id="asymmetric_certificate" style="padding-left:30px" onChange="loadCertificate()">								
+                            </div>
+						</fieldset>
+					</div>
+					<div>
+					    <fieldset style="width:400px;padding:5px;margin:5px">
+		                    <legend>ISO</legend>   
+                            <div>
+							    Save encrypted ISO-19784-7 as:<br>								
+								<input type="radio" id="iso_encrypted_binary_radio" name="iso_encryption_group" value="binary" checked="checked">
+                                <label for="iso_encrypted_binary_radio">As Binary</label>
+								<br>
+								<input type="radio" id="iso_encrypted_text_radio" name="iso_encryption_group" value="text">
+                                <label for="iso_encrypted_text_radio">As Text</label>								
+                            </div>							
+						</fieldset>
+					</div>
+					<div>
+					    <fieldset style="width:400px;padding:5px;margin:5px">
+		                    <legend>Time out</legend>   
+                            <div>
+							    <input type="checkbox" name="enable_timeout" id="enable_timeout" checked="checked">
+							    <label for="enable_timeout">Enable time out</label>								    								
+								<br>
+								<label for="timeOutValue">Time out value:</label>
+							    <input type="input" name="timeOutValue" id="timeOutValue" value="10000">
+                                <br>								
+								<label for="emptyTimeOut">Action when timeout without data</label>
+								<select name="emptyTimeOut" id="emptyTimeOut">
+			                        <!--option name="accept">Accept</option-->
+			                        <option value="cancel" selected="selected">Cancel</option>
+		                        </select>
+								<br>
+								<label for="dataTimeOut">Action when timeout has data</label>
+								<select name="dataTimeOut" id="dataTimeOut">
+			                        <option value="accept" selected="selected">Accept</option>
+			                        <option value="cancel">Cancel</option>
+		                        </select>
+                            </div>							
+						</fieldset>
+						<fieldset style="width:400px;padding:5px;margin:5px">
+		                    <legend>Capture options</legend>   
+                            <div>
+								<label for="minTimeOnSurface">Minimum time that is necessary to capture a signature in milliseconds:</label>
+								<br>
+							    <input type="input" name="minTimeOnSurface" id="minTimeOnSurface" value="300">
+                            </div>							
 						</fieldset>
 					</div>
 				</div>

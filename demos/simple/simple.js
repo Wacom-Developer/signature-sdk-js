@@ -6,8 +6,9 @@ Module.onRuntimeInitialized = _ => {
     mSigObj = new Module.SigObj();	
 	mHash = new Module.Hash(Module.HashType.SHA512);	  
 	try {
-	    mSigObj.setLicence("eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJMTVMiLCJleHAiOjE2NzU5NDkwOTUsImlhdCI6MTY0NDQxMzE5OCwicmlnaHRzIjpbIlNJR19TREtfQ09SRSIsIkpTX0NPUkUiLCJTSUdfU0RLX0lTTyIsIlNJR19TREtfRU5DUllQVElPTiJdLCJkZXZpY2VzIjpbIldBQ09NX0FOWSJdLCJ0eXBlIjoiZXZhbCIsImxpY19uYW1lIjoiTGljZW5zZSBmb3IgSmF2YXNjcmlwdCBEZW1vIiwid2Fjb21faWQiOiIxNTNiZTg5Zi05NjM3LTRhYjQtOTk5OS05NGUwYzhlMGQyYTMiLCJsaWNfdWlkIjoiZDFmMGZmNGQtODliMy00NDFmLWI2ODYtZjk5MmEzYmEwNDg5IiwiYXBwc193aW5kb3dzIjpbXSwiYXBwc19pb3MiOltdLCJhcHBzX2FuZHJvaWQiOltdLCJtYWNoaW5lX2lkcyI6WyIwMDUwNTZDMDAwMDEiLCIwMDUwNTZDMDAwMDgiXX0.Q--Zng7BpyuDVhrcywHmiXZ60LK9picZe-AU0v7DgFfW2Qy61WRgfBApdjX68mHWLxkMhZK-ev1gInuT7RrnlBb7HIzS95NDD8nJxzeKdm_46XQyzwZIWsrOwzxXzkkdL9ruJJNmgX-56N893tnxH0_egtG5k4Tb4YoQGMqryzS7wSBpNGo-ploqOtmMVmwpX2bYh6cZoc6F4uRS5qosSGL9UEKG9O8DuWzZX7aAkVKuhom4vrFxqqJCPj06NronInKc6VOUpOS46eeARlrQekuvUdtlo177yLyEyp0HZ_HW8JT7_iwZKlgnCyQit0HsawBtIQtzvCh2yKFT7loYvw");   
-		document.getElementById("myfile").disabled=false;
+	    //mSigObj.setLicence("PUT HERE YOUR LICENCE STRING");   
+		mSigObj.setLicence("eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJMTVMiLCJleHAiOjE2NjczNzcxMTUsImlhdCI6MTYzNTg0NTEwOCwicmlnaHRzIjpbIlNJR19TREtfQ09SRSIsIkpTX0NPUkUiXSwiZGV2aWNlcyI6WyJXQUNPTV9BTlkiXSwidHlwZSI6ImV2YWwiLCJsaWNfbmFtZSI6IlRlc3QgbGljZW5zZSBbMTYzNTg0MTExNV0iLCJ3YWNvbV9pZCI6IjE1M2JlODlmLTk2MzctNGFiNC05OTk5LTk0ZTBjOGUwZDJhMyIsImxpY191aWQiOiI2M2IyNGU2YS05ZDI3LTQ3ZDMtODk0NS00OTkyM2FjMjA0ZTIiLCJhcHBzX3dpbmRvd3MiOltdLCJhcHBzX2lvcyI6W10sImFwcHNfYW5kcm9pZCI6W10sIm1hY2hpbmVfaWRzIjpbIjAwNTA1NkMwMDAwMSIsIjAwNTA1NkMwMDAwOCJdfQ.LKYsb6HR9K1M-69RNXhdZV_uSpxLyVgJHl0yjKlVRO0YfmNGB9sxGVIDE0ec7SDSV5417QikD8hxTyL6i5B97p7Pl99d_gvdJubW1k9oVpR1JEq3dws-whQggVpySIhBU0BGPhRQP1VzIvpsfrGcMP0-LTeOJoKCKBM9FwTbO98QAtIZq_xbqGyQjOkCQj3GXgRv8BdmGYtih7Antr7pCrVkSc3WtcDxQS3XoedNBOae4nUe2Op1Rgwhk4Oymjl_3q5z9hhoa5rYf7kwkpv5B78BbX6tGlUEFABLS0BgYdYNhUxsYuip3FnqoS543H7_q1s1CzhmREF7n1SZDS781A");		
+        document.getElementById("myfile").disabled=false;
 		
 		if (navigator.hid) {
 		    document.getElementById("capture_stu_device").disabled=false;
@@ -102,35 +103,53 @@ async function renderSignature() {
 	let canvas;
 	const inkColor = "#000F55";
 	try {
-	    const image = await new Promise(function(resolve, reject) {
-	        mSigObj.renderBitmap(renderWidth, renderHeight, "image/png", 3.0, inkColor, "#ffffff", 0, 0, 0x400000,
-	            resolve,
-		        reject,
-		        async function(width, height) {
-		            canvas = new OffscreenCanvas(width, height);
-			        const inkCanvas = await new InkCanvasRaster(canvas, canvas.width, canvas.height);
-	                await BrushPalette.configure(inkCanvas.canvas.ctx);
+		const inkTool = {
+			brush: BrushPalette.circle,
+			dynamics: {
+				size: {
+					value: {
+						min: 0.5,
+						max: 1.6,
+						remap: v => ValueTransformer.sigmoid(v, 0.62)
+					},
+					velocity: {
+						min: 5,
+						max: 210
+					}
+				},
+				rotation: {
+					dependencies: [window.DigitalInk.SensorChannel.Type.ROTATION, window.DigitalInk.SensorChannel.Type.AZIMUTH]
+				},
+				scaleX: {
+					dependencies: [window.DigitalInk.SensorChannel.Type.RADIUS_X, window.DigitalInk.SensorChannel.Type.ALTITUDE],
+					value: {
+						min: 1,
+						max: 3
+					}
+				},
+				scaleY: {
+					dependencies: [window.DigitalInk.SensorChannel.Type.RADIUS_Y],
+					value: {
+						min: 1,
+						max: 3
+					}
+				},
+				offsetX: {
+					dependencies: [window.DigitalInk.SensorChannel.Type.ALTITUDE],
 
-		            window.WILL = inkCanvas;
-	                WILL.type = "raster";
-					WILL.setColor(Color.fromHex(inkColor));
-	                await WILL.setTool("pen");							
-			        return inkCanvas;
-		        }
-	        );
-	    });		
-	
+					value: {
+						min: 2,
+						max: 5
+					}
+				}
+			}
+		};
+		const image = await mSigObj.renderBitmap(renderWidth, renderHeight, "image/png", inkTool, inkColor, "white", 0, 0, 0x400000);					
 	    document.getElementById("sig_image").src = image;	
         document.getElementById("sig_text").value = await mSigObj.getTextData(Module.TextFormat.BASE64);	
 	} catch (e) {
 		alert(e);
-	}
-				
-
-	await BrushPalette.delete();
-	await window.WILL.delete();		
-	window.WILL = null;
-	delete canvas;
+	}				
 }
 
 function captureFromCanvas() {	

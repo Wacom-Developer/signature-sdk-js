@@ -4,8 +4,9 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	    <title>Signature SDK - Simple demo</title>
-	    <link href="/sigCaptDialog/style/sigCaptDialog.css" rel="stylesheet" type="text/css">		
-	    <link href="/node_modules/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" type="text/css">
+	    <link href="../common/style/wacom.css" rel="stylesheet" type="text/css">		
+		<link href="/sigCaptDialog/style/sigCaptDialog.css" rel="stylesheet" type="text/css">	
+		<link href="/node_modules/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" type="text/css">
 	    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
 	    <script src="/node_modules/jquery-ui-dist/jquery-ui.min.js"></script>		
 		<script src="/node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>		
@@ -18,41 +19,13 @@
 		<script src="/node_modules/gl-matrix/gl-matrix-min.js"></script>
 		<script src="/node_modules/rbush/rbush.min.js"></script>
 		<script src="/node_modules/js-ext/js-ext-min.js"></script>
-        <script src="/node_modules/digital-ink/digital-ink-min.js"></script>	
-	    <script type="text/javascript">
-		    const {
-			    fsx, Matrix,
-			    InputDevice, InputListener,
-			    SensorChannel, InkController,
-			    Brush2D, BrushPrototype, ShapeFactory,
-			    BrushGL, URIResolver,
-			    Intersector, Selector,
-			    PathPointContext, InkBuilder, Stroke,
-			    InkModel, SpatialContext, InkCodec,
-			    Color, Rect, BlendMode,
-			    InkCanvas2D, StrokeRenderer2D,
-			    InkCanvasGL, StrokeRendererGL,  
-			    PointerData, PathProducer, PipelineStage 
-		    } = DigitalInk;
-	    </script>	
-	    <script src="/sigCaptDialog/libs/will/InkCanvas.js"></script>
-	    <script src="/sigCaptDialog/libs/will/InkCanvasRaster.js"></script>	
-	    <script src="/sigCaptDialog/libs/will/ValueTransformer.js"></script>
-	    <script src="/sigCaptDialog/libs/will/URIBuilder.js"></script>
-	    <script src="/sigCaptDialog/libs/will/BrushPalette.js"></script>
-	    <script src="/sigCaptDialog/libs/will/Config.js"></script>
-	    <script src="/sigCaptDialog/libs/will/DataRepository.js"></script>
-	    <script src="/sigCaptDialog/libs/will/DataModel.js"></script>
-		<script src="/sigCaptDialog/libs/will/Extensions.js"></script>
+        <script src="/node_modules/digital-ink/digital-ink-min.js"></script>
 		
-		<script src="/node_modules/BigInt/src/BigInt.js"></script>		
-	    <script src="/node_modules/sjcl/sjcl.js"></script>
+		<script src="/node_modules/sjcl/sjcl.js"></script>
 		<script src="/sigCaptDialog/libs/stu_capture/stu-sdk.min.js"></script> <!-- used to connect to STU devices -->        
-	    <script src="/sigCaptDialog/libs/stu_capture/stu_capture.js"></script> <!-- used for capture data from STU devices -->
 	    <script src="/sigCaptDialog/libs/stu_capture/stu_capture_encryption.js"></script> <!-- STU encryption functions -->	    
-
-        <script src="../common/libs/signature_sdk.js"></script> <!-- signature SDK -->
-		<script src="../common/libs/signature_sdk_helper.js"></script> <!-- signature SDK helper -->
+		
+		<script src="../common/libs/signature_sdk.js"></script> <!-- signature SDK -->
 		
         <script src="/sigCaptDialog/sigCaptDialog.js"></script>
 		<script src="/sigCaptDialog/stuCaptDialog.js"></script>
@@ -92,7 +65,7 @@
 			    </div>
 		    </li>
 	    </ul>
-	    <fieldset id="signature_image" style="width:310px;height:210px;display: flex;justify-content: center;align-items: center;">
+	    <fieldset id="signature_image" style="width:310px;height:210pxdisplay: flex;justify-content: center;align-items: center;">
 	        <legend>Signature image:</legend>
 		    <img id="sig_image" style="display:block;margin: auto;">
 	    </fieldset>

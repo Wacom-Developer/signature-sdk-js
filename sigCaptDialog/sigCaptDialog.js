@@ -148,6 +148,72 @@ function getLocateString(string) {
 	
 }
 
+function getPenOrientation(event) {
+    
+    // Pointer Events for a stylus currently use tiltX, tiltY and twist to give the orientation of the stylus in space. 
+	// However there is an experimental API that include the altitudeAngle and azimuthAngle, so before check if these values exists
+	let altitudeAngle = 0;
+	let azimuthAngle = 0;
+	if (event.altitudeAngle !== undefined && event.azimuthAngle !== undefined) {
+		altitudeAngle = event.altitudeAngle;
+		azimuthAngle = event.azimuthAngle;
+	} else {
+	    let params = tilt2spherical(event.tiltX, event.tiltY);	
+		altitudeAngle = params.altitudeAngle;
+		azimuthAngle = params.azimuthAngle;
+	}
+	
+	return {"altitude":altitudeAngle, "azimuth":azimuthAngle, "twist":event.twist};
+	
+    function tilt2spherical(tiltX, tiltY){
+        const tiltXrad = tiltX * Math.PI/180;
+        const tiltYrad = tiltY * Math.PI/180;
+
+        // calculate azimuth angle
+        let azimuthAngle = 0;
+
+        if(tiltX == 0){
+            if(tiltY > 0){
+                azimuthAngle = Math.PI/2;
+            } else if(tiltY < 0) {
+                azimuthAngle = 3*Math.PI/2;
+            }
+        } else if(tiltY == 0){
+            if(tiltX < 0){
+                azimuthAngle = Math.PI;
+            }
+        } else if(Math.abs(tiltX) == 90 || Math.abs(tiltY) == 90){
+            // not enough information to calculate azimuth
+            azimuthAngle = 0;
+        } else {
+            // Non-boundary case: neither tiltX nor tiltY is equal to 0 or +-90
+            const tanX = Math.tan(tiltXrad);
+            const tanY = Math.tan(tiltYrad);
+
+            azimuthAngle = Math.atan2(tanY, tanX);
+            if(azimuthAngle < 0){
+                azimuthAngle += 2*Math.PI;
+            }
+        }
+
+        // calculate altitude angle
+        let altitudeAngle = 0;
+
+        if (Math.abs(tiltX) == 90 || Math.abs(tiltY) == 90){
+            altitudeAngle = 0
+        } else if (tiltX == 0){
+            altitudeAngle = Math.PI/2 - Math.abs(tiltYrad);
+        } else if(tiltY == 0){
+            altitudeAngle = Math.PI/2 - Math.abs(tiltXrad);
+        } else {
+            // Non-boundary case: neither tiltX nor tiltY is equal to 0 or +-90
+            altitudeAngle =  Math.atan(1.0/Math.sqrt(Math.pow(Math.tan(tiltXrad),2) + Math.pow(Math.tan(tiltYrad),2)));
+        }
+
+        return {"altitudeAngle":altitudeAngle, "azimuthAngle":azimuthAngle};
+    }
+}
+
 class SigCaptDialog {	 
 
   mapConfig(config) {	    
@@ -190,6 +256,9 @@ class SigCaptDialog {
 		  }
 		  if (config.background.image) {
 			  this.config.background.image = config.background.image;
+		  }
+		  if (config.background.mode) {
+			  this.config.background.mode = config.background.mode;
 		  }
 	  }
 	  if (config.reason) {
@@ -313,9 +382,23 @@ class SigCaptDialog {
 	  if (config.buttons) {
 		  this.config.buttons = config.buttons;
 	  }
+	  
+	  if (config.timeOut) {
+		  this.config.timeOut = config.timeOut;
+	  }
+	  
+	  if (config.minTimeOnSurface) {
+		  this.config.minTimeOnSurface = config.minTimeOnSurface;
+	  }
   }
 	
-  constructor(config) {
+  constructor(config) {	  
+	const supportsPointerEvents = typeof document.defaultView.PointerEvent !== undefined;  
+	const supportsCoalescedEvents = supportsPointerEvents ? document.defaultView.PointerEvent.prototype.getCoalescedEvents : undefined;  
+	if (!supportsCoalescedEvents) {
+		console.warn("This web browser does not support getCoalescedEvents, the captured data won't be precisse enough for signature verification.");
+	}
+	
 	this.config = {
 	  width: 400,
 	  height: 300,
@@ -330,15 +413,58 @@ class SigCaptDialog {
 	            {text: "*cancel", textColor: "black", backgroundColor: "lightgrey", borderWidth: 0, borderColor: "black", onClick: this.btnCancelClick.bind(this)}, 
 				{text: "*ok", textColor: "black", backgroundColor: "lightgrey", borderWidth: 0, borderColor: "black", onClick: this.btnOkClick.bind(this)}],
 	  buttonsFont: "Arial",
-	  background: {alpha: 1.0, color: "white"},
+	  background: {alpha: 1.0, color: "white", mode:"fit"},
 	  reason: {visible:true, fontFace:"Arial", fontSize:16, color:"black", offsetY:10, offsetX:5},
 	  signatory: {visible:true, fontFace:"Arial", fontSize:16, color:"black", offsetY:5, offsetX:30},
 	  date: {visible:true, fontFace:"Arial", fontSize:16, color:"black", offsetY:20, offsetX:30},
 	  signingLine: {visible:true, left:30, right:30, width:2, color:"grey", offsetY:5},
 	  source: {mouse:true, touch:true, pen:true, stu:true},
-	  will: {tool:"pen", color:"#000F55"},
+	  will: {color:"#000F55",
+	    tool: {
+			brush: BrushPalette.circle,
+			dynamics: {
+				size: {
+					value: {
+						min: 0.5,
+						max: 1.6,
+						remap: v => ValueTransformer.sigmoid(v, 0.62)
+					},
+					velocity: {
+						min: 5,
+						max: 210
+					}
+				},
+				rotation: {
+					dependencies: [window.DigitalInk.SensorChannel.Type.ROTATION, window.DigitalInk.SensorChannel.Type.AZIMUTH]
+				},
+				scaleX: {
+					dependencies: [window.DigitalInk.SensorChannel.Type.RADIUS_X, window.DigitalInk.SensorChannel.Type.ALTITUDE],
+					value: {
+						min: 1,
+						max: 3
+					}
+				},
+				scaleY: {
+					dependencies: [window.DigitalInk.SensorChannel.Type.RADIUS_Y],
+					value: {
+						min: 1,
+						max: 3
+					}
+				},
+				offsetX: {
+					dependencies: [window.DigitalInk.SensorChannel.Type.ALTITUDE],
+
+					value: {
+						min: 2,
+						max: 5
+					}
+				}
+			}
+		}  
+	  },
 	  modal: true,
-	  draggable: true
+	  draggable: true,
+	  timeOut: {enabled:false, time:10000, onTimeOut:null}
     };  
 	  
 	if (config) {
@@ -349,6 +475,8 @@ class SigCaptDialog {
 	this.onClearListeners = new Array();
 	this.onCancelListeners = new Array();
 	this.onOkListeners = new Array();
+
+	this.timeOnSurface = 0;
   }
   
   /**
@@ -458,6 +586,7 @@ class SigCaptDialog {
 		  this.willCanvas.addEventListener("pointerleave", this.onUp.bind(this), false);
 		  this.isCapturing = true;
 		  this.showLoadingScreen(false);
+		  this.startTimeOut();
 	  }
   }
   
@@ -472,6 +601,7 @@ class SigCaptDialog {
 	  this.willCanvas.removeEventListener("pointerleave", this.onUp.bind(this), false);
 	  this.isCapturing = false;
 	  this.showLoadingScreen(true);
+	  this.stopTimeOut();	 
   }
   
   /**
@@ -646,7 +776,7 @@ class SigCaptDialog {
 	  this.mLoadingImageDiv.style.backgroundColor="white";
 	  this.mLoadingImageDiv.style.width = "100%";
 	  this.mLoadingImageDiv.style.height = "100%";
-	  this.mLoadingImageDiv.innerHTML = '<div id="loadingDiv" style="padding-left:10px;display:table-cell;vertical-align:middle;"><table><tr><td><img src="../../sigCaptDialog/images/loading.gif"></td><td>Loading the image, this could take a few seconds...</td></tr></div>';
+	  this.mLoadingImageDiv.innerHTML = '<div id="loadingDiv" style="padding-left:10px;display:table-cell;vertical-align:middle;"><table><tr><td><div class="loader"></div></td><td>Loading the image, this could take a few seconds...</td></tr></div>';
 	  this.mFormDiv.appendChild(this.mLoadingImageDiv);
   }
 	
@@ -662,11 +792,23 @@ class SigCaptDialog {
     // draw background
 	//ctx.globalAlpha = this.config.background.alpha;
 	
+	ctx.fillStyle = useColor ? this.config.background.color : "#ffffff";
+	ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);	
+	
 	if (this.config.background.image) {
-        ctx.drawImage(this.config.background.image, 0, 0, canvas.width, canvas.height);
-	} else {
-	    ctx.fillStyle = useColor ? this.config.background.color : "#ffffff";
-	    ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);	
+		if (this.config.background.mode == "none") {
+			ctx.drawImage(this.config.background.image, 0, 0);
+		} else if (this.config.background.mode == "fit") {
+			ctx.drawImage(this.config.background.image, 0, 0, canvas.width, canvas.height);
+		} else if (this.config.background.mode == "center") {			
+			ctx.drawImage(this.config.background.image, 
+			              canvas.width/2 - this.config.background.image.width / 2, 
+						  canvas.height/2 - this.config.background.image.height / 2);
+		} else if (this.config.background.mode == "pattern") {			
+		    const pattern = ctx.createPattern(this.config.background.image, 'repeat');
+			ctx.fillStyle = pattern;
+			ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);	
+		}
 	}		
 	  
 	let minFontSize = Number.MAX_SAFE_INTEGER;  
@@ -790,9 +932,11 @@ class SigCaptDialog {
 	}
 	
     this.capturedPoints = new Array();
+	this.clearTimeOnSurface();
   }
   
   async closeWindow() {	
+    this.stopCapture();
 	await this.deleteInkCanvas();
 	this.mSignatureWindow.remove();
 	
@@ -814,9 +958,16 @@ class SigCaptDialog {
   }
 	
   async btnOkClick() {
-      this.getCaptureData();
-	  await this.close();
-	  this.onOkListeners.forEach(listener => listener());
+	  let minTimeOnSurface = 0;
+	  if (this.config.minTimeOnSurface) {
+		  minTimeOnSurface = this.config.minTimeOnSurface;
+	  }
+
+      if (this.timeOnSurface > minTimeOnSurface) {	  
+          await this.getCaptureData();
+	      await this.close();
+	      this.onOkListeners.forEach(listener => listener());
+	  }
   }
   
   async btnClearClick() {
@@ -833,17 +984,32 @@ class SigCaptDialog {
   }
   
   async initInkController() {
-	let inkCanvas = await new InkCanvasRaster(this.willCanvas, this.willCanvas.width, this.willCanvas.height);
-	await BrushPalette.configure(inkCanvas.canvas.ctx);
-
+	const inkCanvas = await new InkCanvas(this.willCanvas.width, this.willCanvas.height, this.willCanvas);
 	window.WILL = inkCanvas;
-	WILL.setColor(Color.fromHex(this.config.will.color));
-	WILL.type = "raster";
-	await WILL.setTool(this.config.will.tool);
+	
+	if (this.config.will.tool.brush instanceof window.DigitalInk.BrushGL) {
+		await this.config.will.tool.brush.configure(window.WILL.canvas.ctx);
+	}
+	
+	WILL.setColor(this.config.will.color);
+	WILL.setTool(this.config.will.tool);			
   }
   
   async deleteInkCanvas() {
-	  await BrushPalette.delete();
+	 if (this.config.will.tool.brush instanceof window.DigitalInk.BrushGL) {
+		const brush = this.config.will.tool.brush;
+		//await brush.delete(); this is not working
+		if (brush.shapeTexture) {
+		    await brush.ctx.deleteTexture(brush.shapeTexture.texture);
+		    delete brush.shapeTexture;
+		}
+		if (brush.fillTexture) {
+		    await brush.ctx.deleteTexture(brush.fillTexture.texture);
+		    delete brush.fillTexture;
+		}
+		
+		delete brush.ctx;
+	  }
 	  await window.WILL.delete();
 	  window.WILL = null;	
   }  
@@ -903,25 +1069,42 @@ class SigCaptDialog {
                              });  	  
 		
       downEvent.timestamp = time;
-	  window.WILL.begin(InkBuilder.createPoint(downEvent, {x:event.offsetX, y:event.offsetY}));
+	  window.WILL.begin(window.DigitalInk.InkBuilder.createPoint(downEvent, {x:event.offsetX, y:event.offsetY}));
 	  
+	  const orientation = getPenOrientation(event);
 	  var point = {
 		    'type': 'down',
             'x': event.offsetX > 0 ? event.offsetX : 0,
             'y': event.offsetY > 0 ? event.offsetY : 0,
             'p': pressure,
             't': time,
-			'tilt': event.tiltX,
-			'twist': event.tiltY,
+			'azimuth': orientation.azimuth,
+			'altitude': orientation.altitude,
+			'twist': orientation.twist,
             'isDown': true,
             'stroke_id': this.currentStrokeID
       };
       this.capturedPoints.push(point);
+	  this.stopTimeOut();
+	  this.startDown = Date.now();
   }
   
-  onMove(event) {
+  onMove(event) {	  
+	  if (typeof event.getCoalescedEvents === "function") {
+	      const events = event.getCoalescedEvents();
+          for (const myEvent of events) {
+			  this.onMoveInternal(myEvent);
+		  }
+		  
+	  } else {
+		  this.onMoveInternal(event);
+	  }
+	  
+  }
+  
+  onMoveInternal(event) {
 	  //if ((event.buttons != 1) || (event.pointerType != this.currentEventType)) return;
-	  if (event.pointerType != this.currentEventType) return;	 
+	  if (event.pointerType != this.currentEventType) return;	 	  	  
 	  
 	  switch (event.pointerType) {
 	      case "mouse" : if (!this.config.source.mouse) return; break;
@@ -955,7 +1138,7 @@ class SigCaptDialog {
 		      this.isOut = false;
 		  }
 	  }
-	  
+	  	  
 	  let time = Math.floor(event.timeStamp);	  
 	  const moveEvent = new PointerEvent(pointerType, {
 			                   pointerId: 1,
@@ -972,16 +1155,18 @@ class SigCaptDialog {
 		  case "pointerdown" : window.WILL.begin(InkBuilder.createPoint(moveEvent, {x:event.offsetX, y:event.offsetY}));  pointType="down"; break;
 	  }*/
 	  
-	  window.WILL.move(InkBuilder.createPoint(moveEvent, {x:event.offsetX, y:event.offsetY}));
+	  window.WILL.move(window.DigitalInk.InkBuilder.createPoint(moveEvent, {x:event.offsetX, y:event.offsetY}));
 	  
+	  const orientation = getPenOrientation(event);
 	  var point = {
 		    'type': pointType,
             'x': event.offsetX > 0 ? event.offsetX : 0,
             'y': event.offsetY > 0 ? event.offsetY : 0,
             'p': pressure,
             't': time,
-			'tilt': event.tiltX,
-			'twist': event.tiltY,
+			'azimuth': orientation.azimuth,
+			'altitude': orientation.altitude,
+			'twist': orientation.twist,
             'isDown': event.buttons == 1 && !this.isOut,
             'stroke_id': this.currentStrokeID
       };
@@ -1019,21 +1204,26 @@ class SigCaptDialog {
                                isPrimary: true
                              });
 	  upEvent.timestamp = time;
-	  window.WILL.end(InkBuilder.createPoint(upEvent, {x:event.offsetX, y:event.offsetY}));
+	  window.WILL.end(window.DigitalInk.InkBuilder.createPoint(upEvent, {x:event.offsetX, y:event.offsetY}));
 	  this.currentEventType = null;
 	  
+	  const orientation = getPenOrientation(event);
 	  var point = {
 		    'type': 'up',
             'x': event.offsetX > 0 ? event.offsetX : 0,
             'y': event.offsetY > 0 ? event.offsetY : 0,
             'p': pressure, 
             't': time,
-			'tilt': event.tiltX,
-			'twist': event.tiltY,
+			'azimuth': orientation.azimuth,
+			'altitude': orientation.altitude,
+			'twist': orientation.twist,
             'isDown': false,
             'stroke_id': this.currentStrokeID
       };
-      this.capturedPoints.push(point);	  
+      this.capturedPoints.push(point);	
+      this.startTimeOut();	  
+	  this.addTimeOnSurface(Date.now() - this.startDown);
+	  
   }  
   
    /**
@@ -1047,16 +1237,7 @@ class SigCaptDialog {
         let currentStrokeID = 0;
         let isDown = true;
 	    let hasDown = false;
-		let hasTilt = false;
-		let hasTwist = false;
-		let hasPressure = false;
 		
-		for (let index = 0; index < this.capturedPoints.length; index++) {
-			if (this.capturedPoints[index].p > 0 && this.capturedPoints[index].p != 0.5) {
-				hasPressure = true;
-			}
-		}
-
         for (let index = 0; index < this.capturedPoints.length; index++) {
 		    if (!this.capturedPoints[index].isDown && !hasDown) {
 				// the signature starts with the first pen down, so the hover
@@ -1075,28 +1256,13 @@ class SigCaptDialog {
                 currentStrokeID++;
             }	
 			
-			if (this.capturedPoints[index].tilt) {
-				hasTilt = true;
-				if (this.capturedPoints[index].tilt < 0) {
-					this.capturedPoints[index].tilt += 360;
-				}
-				this.capturedPoints[index].tilt = Math.floor(this.capturedPoints[index].tilt*1000);				
-			}
-			
-			if (this.capturedPoints[index].twist) {
-				hasTwist = true;
-				if (this.capturedPoints[index].twist < 0) {
-					this.capturedPoints[index].twist += 360;
-				}
-				this.capturedPoints[index].twist = Math.floor(this.capturedPoints[index].twist*1000);
-			}
-			
             var point = {
                 'x': Math.floor(this.capturedPoints[index].x),
                 'y': Math.floor(this.capturedPoints[index].y),
-                'p': hasPressure ? Math.floor(this.capturedPoints[index].p*1000) : 0,
+                'p': Math.floor(this.capturedPoints[index].p*1000), // convert from 0-1 range to 0-1000 without decimals
                 't': this.capturedPoints[index].t,
-			    'tilt': this.capturedPoints[index].tilt,
+			    'azimuth': this.capturedPoints[index].azimuth,
+				'altitude': this.capturedPoints[index].altitude,
 			    'twist': this.capturedPoints[index].twist,			
                 'is_down': (this.capturedPoints[index].type == "down" || this.capturedPoints[index].type == "move"),
                 'stroke_id': currentStrokeID
@@ -1116,10 +1282,8 @@ class SigCaptDialog {
             'device_pixels_per_m_x': Math.trunc(this.mmToPx(1000)),
 		    'device_pixels_per_m_y': Math.trunc(this.mmToPx(1000)),
             'device_origin_X': 0,
-            'device_origin_Y': 1,
-			'has_tilt': hasTilt,
-			'has_twist': hasTwist
-        }	
+            'device_origin_Y': 1
+		}	
 
         var digitizerInfo = "Javascript-Demo";
         var nicInfo = "";
@@ -1178,5 +1342,32 @@ class SigCaptDialog {
         context.rotate(-angle);
         context.fillText(evaluationString, -textMetrics.width/2, (textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent)/2);
         context.restore();
-    }	
+    }
+	
+	startTimeOut() {
+		if ((this.config.timeOut) && (this.config.timeOut.enabled) && (this.config.timeOut.onTimeOut)) {
+	        this.timeOutInterval = setInterval(this.timeOutCallback.bind(this), this.config.timeOut.time);
+	    }
+	}
+	
+	stopTimeOut() {
+		if (this.timeOutInterval) {
+		    clearInterval(this.timeOutInterval);
+		    this.timeOutInterval = null;
+	    }
+	}
+	
+	timeOutCallback() {
+		clearInterval(this.timeOutInterval);
+		this.config.timeOut.onTimeOut(this.timeOnSurface);
+	}
+	
+	addTimeOnSurface(time) {
+		this.timeOnSurface += time;
+	}
+	
+	clearTimeOnSurface() {
+		this.timeOnSurface = 0;
+	}
+	
 }

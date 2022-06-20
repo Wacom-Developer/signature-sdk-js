@@ -4,18 +4,23 @@
 class StuCaptDialog {
 	
     constructor(config) {
-		if (this.config) {
+		if (config) {
 		    this.config = config;		
 				
-		    if (this.config.encrypt == undefined) {
-		        this.config.encrypt = true;	
+		    if (this.config.encryption) {
+		        if (!this.config.encryption.sessionID) {
+					this.config.encryption.sessionID = 0xc0ffee;
+				}
 		    }
 		
 		    if (this.config.sizeMode == undefined) {
 			    this.config.sizeMode = "stu";
 		    }
+			
+			this.config.showWait = config.showWait ?? true;
+			
 		} else {
-			this.config = {};
+			this.config = {showWait:true, sizeMode:"stu"};
 		}
 	    
 		this.mPenData = Array();
@@ -73,9 +78,13 @@ class StuCaptDialog {
 	    this.mTablet = new com.WacomGSS.STU.Tablet();		
 		this.mTablet.addTabletHandler(this);
 		
-		if (this.config.encrypt) {
-			this.mTablet.setEncryptionHandler(new MyEncryptionHandler());
-	        this.mTablet.setEncryptionHandler2(new MyEncryptionHandler2());
+		if (this.config.encryption) {
+			if (this.config.encryption.encryptionHandler) {
+			    this.mTablet.setEncryptionHandler(this.config.encryption.encryptionHandler);	
+			}
+			if (this.config.encryption.encryptionHandler2) {
+	            this.mTablet.setEncryptionHandler2(this.config.encryption.encryptionHandler2);
+			}
 		}
 				
 	    await this.mTablet.usbConnect(this.currentDevice);	
@@ -144,9 +153,10 @@ class StuCaptDialog {
 		this.config.width = canvasWidth;
 		this.config.height = canvasHeight;
 		this.config.title = this.mInformation.modelName;
-		this.config.borderColor = "#cccccc";
+		//this.config.borderColor = "#cccccc";
 		this.config.source = {mouse:false, touch:false, pen:false, stu:true},
 		this.sigCaptDialog = new SigCaptDialog(this.config);		
+		this.config.will = this.sigCaptDialog.config.will;
 		this.sigCaptDialog.addEventListener("clear", this.onClearBtn.bind(this));
 		this.sigCaptDialog.addEventListener("cancel", this.onCancelBtn.bind(this));
 		this.sigCaptDialog.addEventListener("ok", this.onOkBtn.bind(this));
@@ -161,16 +171,39 @@ class StuCaptDialog {
 		// Initialize the screen
 		await this.clearScreen();			
 		
-		if (this.config.encrypt) {
+		if (this.config.encryption) {
 			if ((this.mTablet.isSupported(com.WacomGSS.STU.Protocol.ReportId.EncryptionStatus)) ||
 	           (await com.WacomGSS.STU.Protocol.ProtocolHelper.supportsEncryption(this.mTablet.getProtocol()))) {						   
-				await this.mTablet.startCapture(0xc0ffee);
+				await this.mTablet.startCapture(this.config.encryption.sessionID);
                 this.mIsEncrypted = true;
 			}
 		}
+		
+		// put color ink
+		if (useColor) {						
+		    let htc = await this.mTablet.getHandwritingThicknessColor();
+		
+            let components = this.hexToRgb(this.config.will.color);			
+            htc.penColor = this.rgb3216(components.r, components.g, components.b);			
+			await this.mTablet.setHandwritingThicknessColor(htc);
+		}
+		
 
 	    // Enable the pen data on the screen (if not already)
 	    await this.mTablet.setInkingMode(com.WacomGSS.STU.Protocol.InkingMode.On);	  	  
+    }
+	
+	rgb3216(r, g, b) {
+		return ((r & 0xf8) << 8) | ((g & 0xfc) << 3) | ((b & 0xf8) >> 3);
+	}
+	
+	hexToRgb(hex) {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+        } : null;
     }
 	
 	/**
@@ -186,9 +219,53 @@ class StuCaptDialog {
 	    }
     }
 	
+	async drawWait() {	
+        const canvas = document.createElement("canvas");
+		canvas.width = this.mCapability.screenWidth;
+		canvas.height = this.mCapability.screenHeight;
+		
+		const ctx = canvas.getContext("2d");	
+	    ctx.font = "60pt Wingdings";	
+        const hourglass = String.fromCharCode(0x36);		
+		const metrics = ctx.measureText(hourglass);
+		const width = metrics.width;
+		const height = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
+		const size = Math.max(width, height);
+		const lineWidth = 3;		        
+		
+		canvas.width = size;
+		canvas.height = size;
+		
+		ctx.fillStyle = "white";
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		
+		ctx.fillStyle = "black";
+		ctx.font = "60pt Wingdings";	
+		ctx.fillText(hourglass, (width/2)-lineWidth, ((height+metrics.fontBoundingBoxAscent)/2)-lineWidth);
+		
+		ctx.strokeStyle = "black";
+		ctx.lineWidth = lineWidth;
+		ctx.beginPath();
+		ctx.arc(size/2, size/2, (size-lineWidth*2)/2, 0, 2 * Math.PI);
+		ctx.stroke();		
+				
+		const x = Math.floor(this.mCapability.screenWidth/2 - size/2);
+		const y = Math.floor(this.mCapability.screenHeight/2 - size/2);
+		const image = com.WacomGSS.STU.Protocol.ProtocolHelper.resizeAndFlatten(canvas, 0, 0, canvas.width, canvas.height, 
+	                                                                            canvas.width, canvas.height, this.mEncodingMode, 
+		  																	    0, "white", false, false);																																				  		    
+		
+		const rect = new com.WacomGSS.STU.Protocol.Rectangle(x, y, x+canvas.width-1, y+canvas.height-1);
+		await this.mTablet.writeImageArea(this.mEncodingMode, rect, image);				
+	}
+	
 	async clearScreen() {	    
         this.sigCaptDialog.stopCapture();
-		//await this.mTablet.setClearScreen();
+		
+		if ((this.config.showWait) &&
+		   (this.mTablet.isSupported(com.WacomGSS.STU.Protocol.ReportId.StartImageDataArea_$LI$()))) {
+		       await this.drawWait();		
+		}
 	    await this.mTablet.writeImage(this.mEncodingMode, this.mDeviceBackgroundImage);		
 	    this.sigCaptDialog.startCapture();
     }
@@ -210,7 +287,7 @@ class StuCaptDialog {
 	
 	tabletToScreen(penData) {
         // Screen means LCD screen of the tablet.
-        return new Point(penData.x * this.mScaleX, penData.y * this.mScaleY);
+        return {x:penData.x * this.mScaleX, y:penData.y * this.mScaleY};
     }
 	
 	clear() {
@@ -236,18 +313,17 @@ class StuCaptDialog {
 		    this.mPenData = new Array();
 		    this.clearScreen();
 		}
+		this.sigCaptDialog.clearTimeOnSurface();
 	}
 
     onCancelBtn() {
 		this.disconnect();
 	}		
 	
-	onOkBtn() {
-		if (this.mPenData.length > 0) {
-		    this.getCaptureData();
-		    this.disconnect();
-			this.onOkListeners.forEach(listener => listener());
-		}
+	async onOkBtn() {
+	    await this.getCaptureData();
+	    await this.disconnect();
+		this.onOkListeners.forEach(listener => listener());
 	}
 	
 	onPenDataOption(penData, time) {	
@@ -300,9 +376,11 @@ class StuCaptDialog {
 							   pressure: penData.pressure/this.mCapability.tabletMaxPressure
                              });
 							 
-					const point = InkBuilder.createPoint(downEvent);
+					const point = window.DigitalInk.InkBuilder.createPoint(downEvent);
                     point.timestamp = penData.timeCount;		 
-					this.sigCaptDialog.draw("begin", point);		 							 
+					this.sigCaptDialog.draw("begin", point);	
+                    this.sigCaptDialog.stopTimeOut();
+					this.startDown = Date.now();
                 }
             } else {
 		        // hover point
@@ -326,10 +404,12 @@ class StuCaptDialog {
 							   pressure: penData.pressure/this.mCapability.tabletMaxPressure
                              });
 							                    						
-                    const point = InkBuilder.createPoint(upEvent);
+                    const point = window.DigitalInk.InkBuilder.createPoint(upEvent);
                     point.timestamp = penData.timeCount;		 
 					this.sigCaptDialog.draw("end", point);		 							 																		
-					this.mPenData.push(penData);	
+					this.mPenData.push(penData);
+                    this.sigCaptDialog.startTimeOut();
+					this.sigCaptDialog.addTimeOnSurface(Date.now() - this.startDown);
 				}					
             } else {
 				// continue inking
@@ -342,7 +422,7 @@ class StuCaptDialog {
 							   pressure: penData.pressure/this.mCapability.tabletMaxPressure,
                              });
 							 
-				const point = InkBuilder.createPoint(moveEvent);
+				const point = window.DigitalInk.InkBuilder.createPoint(moveEvent);
                 point.timestamp = penData.timeCount;		 
 				this.sigCaptDialog.draw("move", point);		 
 				this.mPenData.push(penData);	
@@ -387,7 +467,8 @@ class StuCaptDialog {
                 'y': this.mPenData[index].y,
                 'p': this.mPenData[index].pressure,
                 't': this.mPenData[index].timeCount,
-			    'tilt': 0, // STU has no tilt
+			    'azimuth': 0, // STU has no azimuth
+				'altitude': 0, // STU has no altitude
 			    'twist': 0,	// STU has no twist		
                 'is_down': this.mPenData[index].sw,
                 'stroke_id': currentStrokeID
@@ -404,9 +485,7 @@ class StuCaptDialog {
             'device_pixels_per_m_x': 100000, 
 		    'device_pixels_per_m_y': 100000,
             'device_origin_X': 0,
-            'device_origin_Y': 1,
-		    'has_tilt': false,
-		    'has_twist': false
+            'device_origin_Y': 1
         }	
 	
 	    var uid2;
@@ -430,7 +509,13 @@ class StuCaptDialog {
 	
         await this.sigObj.generateSignature(who, why, where, this.integrityType, this.documentHash, strokeVector, device, digitizerInfo, nicInfo, timeResolution);
 	
-        //this.hash.delete();
+	    // put the extra data
+		if (this.extraData) {
+		    for (const data of this.extraData) {
+		        this.sigObj.setExtraData(data.name, data.value);
+		    }
+		}
+	
         strokeVector.delete();
         currentStroke.delete();	
     }
@@ -449,7 +534,6 @@ class StuCaptDialog {
             img.onerror = reject;
             img.src = src;
         })
-    }
-	
+    }		
 }
 

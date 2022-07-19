@@ -75,9 +75,8 @@ The demonstration must be run from an http server. localhost servers are accepta
 To summarize the Node.js server setup:
 
 - install Node.js from https://nodejs.org/en/download/
-- create a folder e.g. `c:\myserver`
-- start a command prompt, `cd \myserver`
-- install the server components: `npm install http-server -g`
+- start a command prompt within the project folder
+- download the missing libraries
 - start the local server: `http-server`
 - copy the SDK simple and common folders to `\myserver`
 - browse to the start page: `http://localhost:8080/demos/complete_demo/index.html`

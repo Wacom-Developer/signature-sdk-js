@@ -4,8 +4,12 @@
   - [Setting up the Demo application](#setting-up-the-demo-application)
     - [How to use](#how-to-use)
   - [Installation](#installation)
+    - [Web Development Environment](#web-development-environment)
+    - [Download Signature SDK for JavaScript.](#download-signature-sdk-for-javascript)
+    - [WILL Ink SDK  for Web](#will-ink-sdk--for-web)
+      - [Download WILL Ink SDK](#download-will-ink-sdk)
+    - [SDK License](#sdk-license)
     - [Using the Signature SDK Sample Code](#using-the-signature-sdk-sample-code)
-      - [Using WILL Ink SDK for Web](#using-will-ink-sdk-for-web)
   - [Licensing](#licensing)
     - [Setting up the license](#setting-up-the-license)
       - [Simple demo - in demos/simple/simple.js](#simple-demo---in-demossimplesimplejs)
@@ -66,29 +70,66 @@ For example, use Node.js with http-server, then launch the demo code from the lo
 
 ## Installation
 
-### Using the Signature SDK Sample Code
+### Web Development Environment
 
-No installation of the JS SDK is required. Unzip the downloaded SDK files and copy them into the sample's "demos/common/libs" folder.
+To run the sample code first ensure you have installed the following:
 
-The demonstration must be run from an http server. localhost servers are acceptable. Examples of a suitable local server include IIS, Python or Node.js. This guide will briefly go over setting up a local server in Node.js and Python.
-
-To summarize the Node.js server setup:
-
-- install Node.js from https://nodejs.org/en/download/
-- start a command prompt within the project folder
-- download the missing libraries
-- start the local server: `http-server`
-- copy the SDK simple and common folders to `\myserver`
-- browse to the start page: `http://localhost:8080/demos/complete_demo/index.html`
-- click a button for the required operation e.g. `Capture signature from STU tablet`
-
-For more information regarding using Node.js, see: https://www.npmjs.com/package/http-server
-
-Python's `SimpleHTTPServer` provides an easy way to get started. To run the sample code with Python, first ensure you have installed the following:
-
-- python e.g. [python 3.8.3](https://www.python.org/downloads/release/python-383/)
+* node.js e.g. download from [node.js](https://nodejs.org/en/download/)
+* python e.g. [python 3.8.3](https://www.python.org/downloads/release/python-383/)
   (check that Python has been added to the Windows path variable)
 
+### Download Signature SDK for JavaScript.
+
+Download the SDK from https://developer.wacom.com/developer-dashboard
+
+* Login using your Wacom ID
+* Select **Downloads for signature**
+* Download **Wacom Ink SDK for signatures for JavaScript**
+* Accept the End User License Agreement to use the SDK
+
+The downloaded Zip file contains the Signature SDK for JavaScript.
+
+    
+### WILL Ink SDK  for Web
+
+**Wacom Ink Layer Language (WILL™)** is a cross-platform digital ink technology.
+It is based on the needs of the end-user and Wacom's experience with different domains.
+WILL allows you to include premium digital inking features in your applications.
+It uses a modularized pipeline allowing each module to be configured, replaced, or omitted as required by the specific application, providing you with superior flexibility.
+
+Using Will Ink SDK library it is optional for Signature SDK for JavaScript, 
+however it is highlight recommended as improved the quality of the captured signature inking.
+
+#### Download WILL Ink SDK
+
+Download the SDK from https://developer.wacom.com/developer-dashboard
+
+* Login using your Wacom ID
+* Select **Downloads for ink**
+* Download **WILL SDK for ink for Web (version 3)**
+* Accept the End User License Agreement to use the SDK
+
+The downloaded Zip file contains the SDK ink engine accessed by the sample code.
+
+
+### SDK License
+
+A valid licence it is needed for using Signature SDK for JavaScript, the demo code
+include an evaluation licence.
+
+---
+
+### Using the Signature SDK Sample Code
+
+* copy the files *signature_sdk.js* and *signature_sdk.wasm* from the Signature SDK for JavaScript zip file into the folder */demos/common/libs/*
+* create a folder called *digital-ink* within */sigCaptDialog/libs/will/*. 
+* copy the folder from the downloaded WILL Ink SDK to the created above folder
+    * */sigCaptDialog/libs/will/digital-ink*
+* start a command prompt in the root folder
+* use the command ```npm install``` to create the node_modules folder with all the dependencies
+
+The web based app needs a web server.
+Python's `SimpleHTTPServer` provides an easy way to get started.
 To start the web server, start a command prompt in the project root folder and run:
 
 ```
@@ -101,34 +142,9 @@ python -m http.server 8080
 
 Now you can access the web-demos via:
 
-`http://localhost:8080/demos/index.html`
+```http://localhost:8080/demos/index.html```
 
-#### Using WILL Ink SDK for Web
 
-**Wacom Ink Layer Language (WILL™)** is a cross-platform digital ink technology.
-It is based on the needs of the end-user and Wacom's experience with different domains.
-WILL allows you to include premium digital inking features in your applications.
-It uses a modularized pipeline allowing each module to be configured, replaced, or omitted as required by the specific application, providing you with superior flexibility.
-
-Using Will Ink SDK library is optional for Signature SDK for JavaScript.
-However, it is highly recommended as it improves the quality of the captured signature inking.
-To use the WILL Ink SDK: 
-
-Download the SDK from https://developer.wacom.com/developer-dashboard
-
-- Login using your Wacom ID
-- Select **Downloads for ink**
-- Download **WILL SDK for ink for Web (version 3)**
-- Accept the End User License Agreement to use the SDK
-
-The downloaded Zip file contains the SDK ink engine accessed by the sample code. Then:
-
-- copy the files *signature_sdk.js* and *signature_sdk.wasm* from the Signature SDK for JavaScript zip file into the folder /demos/common/libs/
-- create a folder called _digital-ink_ within _/sigCaptDialog/libs/will/_.
-- copy the folder from the downloaded WILL Ink SDK to the created above folder
-  - _/sigCaptDialog/libs/will/digital-ink_
-- start a command prompt in the root folder
-- use the command `npm install` to create the node_modules folder with all the dependencies
 
 ## Licensing
 

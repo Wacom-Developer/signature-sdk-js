@@ -97,8 +97,7 @@ It is based on the needs of the end-user and Wacom's experience with different d
 WILL allows you to include premium digital inking features in your applications.
 It uses a modularized pipeline allowing each module to be configured, replaced, or omitted as required by the specific application, providing you with superior flexibility.
 
-Using Will Ink SDK library it is optional for Signature SDK for JavaScript, 
-however it is highlight recommended as improved the quality of the captured signature inking.
+Using Will Ink SDK library is optional for Signature SDK for JavaScript. However, it is highly recommended as it improves the quality of the captured signature inking.
 
 #### Download WILL Ink SDK
 
@@ -114,15 +113,15 @@ The downloaded Zip file contains the SDK ink engine accessed by the sample code.
 
 ### SDK License
 
-A valid licence it is needed for using Signature SDK for JavaScript, the demo code
-include an evaluation licence.
+A valid licence is needed for using Signature SDK for JavaScript, the demo code
+includes an evaluation licence.
 
 ---
 
 ### Using the Signature SDK Sample Code
 
 * copy the files *signature_sdk.js* and *signature_sdk.wasm* from the Signature SDK for JavaScript zip file into the folder */demos/common/libs/*
-* create a folder called *digital-ink* within */sigCaptDialog/libs/will/*. 
+* create a folder called *will* within */sigCaptDialog/libs/*. Within */will/*, create a new folder called *digital-ink*. 
 * copy the folder from the downloaded WILL Ink SDK to the created above folder
     * */sigCaptDialog/libs/will/digital-ink*
 * start a command prompt in the root folder

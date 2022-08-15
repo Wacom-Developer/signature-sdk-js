@@ -120,12 +120,25 @@ includes an evaluation licence.
 
 ### Using the Signature SDK Sample Code
 
-* copy the files *signature_sdk.js* and *signature_sdk.wasm* from the Signature SDK for JavaScript zip file into the folder */demos/common/libs/*
-* create a folder called *will* within */sigCaptDialog/libs/*. Within */will/*, create a new folder called *digital-ink*. 
-* copy the folder from the downloaded WILL Ink SDK to the created above folder
+* copy the files *signature_sdk.js* and *signature_sdk.wasm* from the Signature SDK for JavaScript zip file into the folder: 
+    * */demos/common/libs/*
+    * NB: Be sure to copy and paste the contents of the folder, and not the folder itself, so the directory looks like this:
+
+![JavaScript SDK sample placement](media/sdk-js-location.png)
+
+* create a folder called *will* within */sigCaptDialog/libs/*. Within */will/*, create a new folder called *digital-ink*
+* copy the contents of the folder from the downloaded WILL Ink SDK and put them into the created above folder:
     * */sigCaptDialog/libs/will/digital-ink*
+    * NB: Be sure to copy and paste the contents of the folder, and not the folder itself, so the directory looks like this:
+
+![WILL Web SDK sample placement](media/sdk-web-location.png)
+
+
 * start a command prompt in the root folder
 * use the command ```npm install``` to create the node_modules folder with all the dependencies
+* after installation, the root should look like this: 
+
+![Root](media/root.png)
 
 The web based app needs a web server.
 Python's `SimpleHTTPServer` provides an easy way to get started.

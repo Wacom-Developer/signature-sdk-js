@@ -370,6 +370,15 @@ class SigCaptDialog {
 			  this.config.source.stu = config.source.stu;
 		  }
 	  }
+	  if (config.useWill != undefined) {
+		  this.config.useWill = config.useWill;
+	  }
+	  if (config.strokeColor != undefined) {
+		  this.config.strokeColor = config.strokeColor;
+	  }
+	  if (config.strokeSize != undefined) {
+		  this.config.strokeSize = config.strokeSize;
+	  }
 	  if (config.will) {
 		  if (config.will.tool) {
 			  this.config.will.tool = config.will.tool;
@@ -418,54 +427,62 @@ class SigCaptDialog {
 	  signatory: {visible:true, fontFace:"Arial", fontSize:16, color:"black", offsetY:5, offsetX:30},
 	  date: {visible:true, fontFace:"Arial", fontSize:16, color:"black", offsetY:20, offsetX:30},
 	  signingLine: {visible:true, left:30, right:30, width:2, color:"grey", offsetY:5},
-	  source: {mouse:true, touch:true, pen:true, stu:true},
-	  will: {color:"#000F55",
-	    tool: {
-			brush: BrushPalette.circle,
-			dynamics: {
-				size: {
-					value: {
-						min: 0.5,
-						max: 1.6,
-						remap: v => ValueTransformer.sigmoid(v, 0.62)
-					},
-					velocity: {
-						min: 5,
-						max: 210
-					}
-				},
-				rotation: {
-					dependencies: [window.DigitalInk.SensorChannel.Type.ROTATION, window.DigitalInk.SensorChannel.Type.AZIMUTH]
-				},
-				scaleX: {
-					dependencies: [window.DigitalInk.SensorChannel.Type.RADIUS_X, window.DigitalInk.SensorChannel.Type.ALTITUDE],
-					value: {
-						min: 1,
-						max: 3
-					}
-				},
-				scaleY: {
-					dependencies: [window.DigitalInk.SensorChannel.Type.RADIUS_Y],
-					value: {
-						min: 1,
-						max: 3
-					}
-				},
-				offsetX: {
-					dependencies: [window.DigitalInk.SensorChannel.Type.ALTITUDE],
-
-					value: {
-						min: 2,
-						max: 5
-					}
-				}
-			}
-		}  
-	  },
+	  source: {mouse:true, touch:true, pen:true, stu:true},	 
+	  strokeColor:"#000F55",
+	  strokeSize:"2",	  
 	  modal: true,
 	  draggable: true,
 	  timeOut: {enabled:false, time:10000, onTimeOut:null}
     };  
+	
+	if (window.DigitalInk) {
+		this.config.useWill = true;
+		this.config.will = {color:"#000F55",
+	        tool: {
+			    brush: BrushPalette.circle,
+			    dynamics: {
+				    size: {
+					    value: {
+						    min: 0.5,
+						    max: 1.6,
+						    remap: v => ValueTransformer.sigmoid(v, 0.62)
+					    },
+					    velocity: {
+						    min: 5,
+						    max: 210
+					    }
+				    },
+				    rotation: {
+					    dependencies: [window.DigitalInk.SensorChannel.Type.ROTATION, window.DigitalInk.SensorChannel.Type.AZIMUTH]
+				    },
+				    scaleX: {
+					    dependencies: [window.DigitalInk.SensorChannel.Type.RADIUS_X, window.DigitalInk.SensorChannel.Type.ALTITUDE],
+					    value: {
+						    min: 1,
+						    max: 3
+					    }
+				    },
+				    scaleY: {
+					    dependencies: [window.DigitalInk.SensorChannel.Type.RADIUS_Y],
+					    value: {
+						    min: 1,
+						    max: 3
+					    }
+				    },
+				    offsetX: {
+					    dependencies: [window.DigitalInk.SensorChannel.Type.ALTITUDE],
+
+					    value: {
+						    min: 2,
+						    max: 5
+					    }
+				    }
+			    }
+		    }  
+	    };
+	} else {
+		this.config.useWill = false;
+	}
 	  
 	if (config) {
 	    this.mapConfig(config);
@@ -528,7 +545,16 @@ class SigCaptDialog {
 	  }
     
 	  this.createWindow(parseInt(this.config.width), parseInt(this.config.height));
-	  await this.initInkController();	  	  
+	  
+	  if (this.config.useWill) {
+	      await this.initInkController();	  	  
+	  } else {
+		  this.drawingCtx = this.drawingCanvas.getContext("2d");
+		  this.drawingCtx.lineWidth = this.config.strokeSize;
+		  this.drawingCtx.lineCap = 'round';
+	      this.drawingCtx.fillStyle = this.config.strokeColor;
+		  this.drawingCtx.strokeStyle = this.config.strokeColor;
+	  }
 	  
 	  this.mBtns = new Array(this.config.buttons.length);
 	  if (this.config.buttons.length > 0) {
@@ -579,11 +605,11 @@ class SigCaptDialog {
    **/
   startCapture() {
 	  if (!this.isCapturing) {
-	      this.willCanvas.addEventListener("pointerdown", this.onDown.bind(this), false);
-	      this.willCanvas.addEventListener("pointermove", this.onMove.bind(this), false);
-	      this.willCanvas.addEventListener("pointerup", this.onUp.bind(this), false);
-		  this.willCanvas.addEventListener("pointerenter", this.onDown.bind(this), false);
-		  this.willCanvas.addEventListener("pointerleave", this.onUp.bind(this), false);
+	      this.drawingCanvas.addEventListener("pointerdown", this.onDown.bind(this), false);
+	      this.drawingCanvas.addEventListener("pointermove", this.onMove.bind(this), false);
+	      this.drawingCanvas.addEventListener("pointerup", this.onUp.bind(this), false);
+		  this.drawingCanvas.addEventListener("pointerenter", this.onDown.bind(this), false);
+		  this.drawingCanvas.addEventListener("pointerleave", this.onUp.bind(this), false);
 		  this.isCapturing = true;
 		  this.showLoadingScreen(false);
 		  this.startTimeOut();
@@ -594,11 +620,11 @@ class SigCaptDialog {
    * Stop capturing data
    **/   
   stopCapture() {
-	  this.willCanvas.removeEventListener("pointerdown", this.onDown.bind(this), false);
-	  this.willCanvas.removeEventListener("pointermove", this.onMove.bind(this), false);
-	  this.willCanvas.removeEventListener("pointerup", this.onUp.bind(this), false);
-	  this.willCanvas.removeEventListener("pointerenter", this.onDown.bind(this), false);
-	  this.willCanvas.removeEventListener("pointerleave", this.onUp.bind(this), false);
+	  this.drawingCanvas.removeEventListener("pointerdown", this.onDown.bind(this), false);
+	  this.drawingCanvas.removeEventListener("pointermove", this.onMove.bind(this), false);
+	  this.drawingCanvas.removeEventListener("pointerup", this.onUp.bind(this), false);
+	  this.drawingCanvas.removeEventListener("pointerenter", this.onDown.bind(this), false);
+	  this.drawingCanvas.removeEventListener("pointerleave", this.onUp.bind(this), false);
 	  this.isCapturing = false;
 	  this.showLoadingScreen(true);
 	  this.stopTimeOut();	 
@@ -696,14 +722,14 @@ class SigCaptDialog {
 	      this.ctx = this.canvas.getContext("2d");
           this.mFormDiv.appendChild(this.canvas);
 	
-	      this.willCanvas = document.createElement("canvas");
-	      this.willCanvas.id = "willCanvas";
-	      this.willCanvas.style.position = "absolute";
-	      this.willCanvas.style.top = this.canvas.style.top;
-	      this.willCanvas.style.left = this.canvas.style.left;
-          this.willCanvas.height = this.canvas.height;
-          this.willCanvas.width = this.canvas.width;
-          this.mFormDiv.appendChild(this.willCanvas);      
+	      this.drawingCanvas = document.createElement("canvas");
+	      this.drawingCanvas.id = "drawingCanvas";
+	      this.drawingCanvas.style.position = "absolute";
+	      this.drawingCanvas.style.top = this.canvas.style.top;
+	      this.drawingCanvas.style.left = this.canvas.style.left;
+          this.drawingCanvas.height = this.canvas.height;
+          this.drawingCanvas.width = this.canvas.width;
+          this.mFormDiv.appendChild(this.drawingCanvas);      
 	  } else {		  	  
 	      let titleBarHeight = this.config.hasTitle ? 25 : 0;
 	      let margin = 0;
@@ -755,14 +781,14 @@ class SigCaptDialog {
 	      this.ctx = this.canvas.getContext("2d");
           this.mFormDiv.appendChild(this.canvas);
 		  
-	      this.willCanvas = document.createElement("canvas");
-	      this.willCanvas.id = "willCanvas";
-	      this.willCanvas.style.position = "absolute";
-	      this.willCanvas.style.top = this.canvas.style.top;
-	      this.willCanvas.style.left = this.canvas.style.left;
-          this.willCanvas.height = this.canvas.height;
-          this.willCanvas.width = this.canvas.width;
-          this.mFormDiv.appendChild(this.willCanvas);  
+	      this.drawingCanvas = document.createElement("canvas");
+	      this.drawingCanvas.id = "drawingCanvas";
+	      this.drawingCanvas.style.position = "absolute";
+	      this.drawingCanvas.style.top = this.canvas.style.top;
+	      this.drawingCanvas.style.left = this.canvas.style.left;
+          this.drawingCanvas.height = this.canvas.height;
+          this.drawingCanvas.width = this.canvas.width;
+          this.mFormDiv.appendChild(this.drawingCanvas);  
 
 	      if (this.config.draggable) {
 	          $("#signatureWindow").draggable({handle:"#titleBar"});
@@ -929,6 +955,8 @@ class SigCaptDialog {
   async clearScreen() {	
     if (window.WILL) {
 		window.WILL.clear();	
+	} else {
+		this.drawingCtx.clearRect(0, 0, this.drawingCanvas.width, this.drawingCanvas.height);
 	}
 	
     this.capturedPoints = new Array();
@@ -937,7 +965,10 @@ class SigCaptDialog {
   
   async closeWindow() {	
     this.stopCapture();
-	await this.deleteInkCanvas();
+	
+	if (this.config.useWill) {
+	    await this.deleteInkCanvas();
+	}
 	this.mSignatureWindow.remove();
 	
 	if (this.mModalBackground) {
@@ -984,7 +1015,7 @@ class SigCaptDialog {
   }
   
   async initInkController() {
-	const inkCanvas = await new InkCanvas(this.willCanvas.width, this.willCanvas.height, this.willCanvas);
+	const inkCanvas = await new InkCanvas(this.drawingCanvas.width, this.drawingCanvas.height, this.drawingCanvas);
 	window.WILL = inkCanvas;
 	
 	if (this.config.will.tool.brush instanceof window.DigitalInk.BrushGL) {
@@ -1069,7 +1100,10 @@ class SigCaptDialog {
                              });  	  
 		
       downEvent.timestamp = time;
-	  window.WILL.begin(window.DigitalInk.InkBuilder.createPoint(downEvent, {x:event.offsetX, y:event.offsetY}));
+	  
+	  if (window.WILL) {
+	      window.WILL.begin(window.DigitalInk.InkBuilder.createPoint(downEvent, {x:event.offsetX, y:event.offsetY}));
+	  }
 	  
 	  const orientation = getPenOrientation(event);
 	  var point = {
@@ -1122,8 +1156,8 @@ class SigCaptDialog {
 		  pressure = 0;
 	  }
 	  
-	  if (event.offsetX > this.willCanvas.width || 
-	      event.offsetY > this.willCanvas.height ||
+	  if (event.offsetX > this.drawingCanvas.width || 
+	      event.offsetY > this.drawingCanvas.height ||
 		  event.offsetX < 0 ||
 		  event.offsetY < 0) {
 			  
@@ -1155,7 +1189,17 @@ class SigCaptDialog {
 		  case "pointerdown" : window.WILL.begin(InkBuilder.createPoint(moveEvent, {x:event.offsetX, y:event.offsetY}));  pointType="down"; break;
 	  }*/
 	  
-	  window.WILL.move(window.DigitalInk.InkBuilder.createPoint(moveEvent, {x:event.offsetX, y:event.offsetY}));
+	  if (window.WILL) {
+	      window.WILL.move(window.DigitalInk.InkBuilder.createPoint(moveEvent, {x:event.offsetX, y:event.offsetY}));
+	  } else {
+		  const lastPoint = this.capturedPoints[this.capturedPoints.length -1];
+		  this.drawingCtx.beginPath();
+		  this.drawingCtx.moveTo(lastPoint.x, lastPoint.y);
+          this.drawingCtx.lineTo(event.offsetX > 0 ? event.offsetX : 0, event.offsetY > 0 ? event.offsetY : 0);
+          this.drawingCtx.fill();
+		  this.drawingCtx.stroke();
+          this.drawingCtx.closePath();
+	  }
 	  
 	  const orientation = getPenOrientation(event);
 	  var point = {
@@ -1204,7 +1248,10 @@ class SigCaptDialog {
                                isPrimary: true
                              });
 	  upEvent.timestamp = time;
-	  window.WILL.end(window.DigitalInk.InkBuilder.createPoint(upEvent, {x:event.offsetX, y:event.offsetY}));
+	  
+	  if (window.WILL) {
+	      window.WILL.end(window.DigitalInk.InkBuilder.createPoint(upEvent, {x:event.offsetX, y:event.offsetY}));
+	  }
 	  this.currentEventType = null;
 	  
 	  const orientation = getPenOrientation(event);

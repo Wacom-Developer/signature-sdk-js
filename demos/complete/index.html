@@ -65,6 +65,9 @@
 
             function generateConfig() {
 			    const config = {};
+				config.useWill = document.getElementById("use_will").checked;
+				config.strokeSize = document.getElementById("ink_width").value;
+				config.strokeColor = document.getElementById("rendering_color_box").value;
 				config.width = document.getElementById("dialog_width").value;
 				config.height = document.getElementById("dialog_height").value;
 				config.left = document.getElementById("dialog_left").value + "px";
@@ -131,7 +134,9 @@
 				
 				const comboTools = document.getElementById("inking_tool");	
 				const inkColor = document.getElementById("rendering_color_box").value;
-				config.will = {tool:tools[comboTools.options[comboTools.selectedIndex].value], color:inkColor};
+				if (document.getElementById("use_will").checked) {
+				    config.will = {tool:tools[comboTools.options[comboTools.selectedIndex].value], color:inkColor};
+				}
 				
 				const comboBackgroundMode = document.getElementById("background_image_mode");	
 				config.background = {color:document.getElementById("background_color_box").value, 
@@ -265,7 +270,6 @@
 				let renderWidth = parseInt(document.getElementById("render_width").value);
 				let renderHeight = parseInt(document.getElementById("render_height").value);
 				const isRelative = document.getElementById("is_relative").checked;
-				const useWILL = true;//document.getElementById("use_will").checked;
 				
 				let renderFlags = 0x400000;
 				if (isRelative) {				
@@ -305,8 +309,8 @@
 				}
 				
 				const inkColor = document.getElementById("rendering_color_box").value;
-				const comboTools = document.getElementById("inking_tool");	
-				const inkTool = tools[comboTools.options[comboTools.selectedIndex].value];
+				const comboTools = document.getElementById("inking_tool");					
+				const inkTool = document.getElementById("use_will").checked ? tools[comboTools.options[comboTools.selectedIndex].value] : parseInt(document.getElementById("ink_width").value);
 				const image = await mSigObj.renderBitmap(renderWidth, renderHeight, "image/png", inkTool, inkColor, backgroundColor, 0, 0, renderFlags);				
 				return image;				
 			}
@@ -809,6 +813,11 @@
 					    cancel();
 					}				
 				}
+			}		
+
+            function useWillCheck() {
+			    document.getElementById("inking_tool").disabled = !document.getElementById("use_will").checked;
+				document.getElementById("ink_width").disabled = document.getElementById("use_will").checked;
 			}			
 		</script>
     </head>
@@ -946,9 +955,12 @@
 					<div>
 		                <fieldset style="width:400px;padding:5px;margin:5px">
 		                    <legend>Ink</legend>
-							<!--input type="checkbox" name="use_will" id="use_will" checked="checked">
-							<label for="use_will">use WILL</label-->							
-							<br>
+							<input type="checkbox" name="use_will" id="use_will" checked="checked" onchange="useWillCheck()">
+							<label for="use_will">use WILL</label>							
+							<br><br>
+							<label for="ink_width">Ink width:</label>
+							<input type="input" name="ink_width" id="ink_width" value="2" disabled="disabled">
+							<br><br>
                             <label for="inking_tool">Inking tool:</label>
 		                    <select name="inking_tool" id="inking_tool">
 			                    <option value="pen">pen</option>

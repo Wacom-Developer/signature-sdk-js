@@ -2650,8 +2650,9 @@ class WizCtl {
                 'y': this.mPenData[index].y,
                 'p': this.mPenData[index].pressure,
                 't': this.mPenData[index].timeCount,
-			    'tilt': 0, // STU has no tilt
-			    'twist': 0,	// STU has no twist		
+				'azimuth': 0, // STU has no azimuth
+				'altitude': 0, // STU has no altitude
+			    'twist': 0,	// STU has no twist				    
                 'is_down': this.mPenData[index].sw,
                 'stroke_id': currentStrokeID
             };

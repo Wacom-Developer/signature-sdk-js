@@ -13,7 +13,7 @@
   - [Licensing](#licensing)
     - [Setting up the license](#setting-up-the-license)
       - [Simple demo - in demos/simple/simple.js](#simple-demo---in-demossimplesimplejs)
-      - [Complete demo - in demos/complete_demo/index.html](#complete-demo---in-demoscomplete_demoindexhtml)
+      - [Complete demo - in demos/complete\_demo/index.html](#complete-demo---in-demoscomplete_demoindexhtml)
   - [Operate the Demo application](#operate-the-demo-application)
     - [Capture Signature](#capture-signature)
       - [Choose file](#choose-file)
@@ -169,7 +169,7 @@ You may obtain either an evaluation license or commercial license at: https://de
 
 An evaluation license is also available here:
 
-`eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJiMzNhYWUyODA0NmM0MmE5OTgyY2E1NTdkZjhmY2YxOCIsImV4cCI6MTY3NDM3NTI3MiwiaWF0IjoxNjY2MzQwMDk2LCJzZWF0cyI6MCwicmlnaHRzIjpbIkpTX0NPUkUiLCJTSUdfU0RLX0NPUkUiLCJTSUdfU0RLX0lTTyIsIlNJR19TREtfRU5DUlBZVElPTiJdLCJkZXZpY2VzIjpbIldBQ09NX0FOWSJdLCJ0eXBlIjoiZXZhbCIsImxpY19uYW1lIjpudWxsLCJ3YWNvbV9pZCI6ImIzM2FhZTI4MDQ2YzQyYTk5ODJjYTU1N2RmOGZjZjE4IiwibGljX3VpZCI6IjIyYTZkNDMzLTg3MzctNGFiZS04ZWFiLTcyYjJhODM5ZjJiYyIsImFwcHNfd2luZG93cyI6W10sImFwcHNfaW9zIjpbXSwiYXBwc19hbmRyb2lkIjpbXSwibWFjaGluZV9pZHMiOltdfQ.Rbn4WX93pIG-r3rhJkZ0tdiuOZuueEwrJUm-X8Y8H8WdEu5zYmYHRWE4UCJVqXOd-0-YuWFNuCKut0SrZBMjsxrUUGyU30LjfEQjTgFFDW2EXXL0qUwbasTliG0JRlb8Ue8kod_o2rRAARqg-wWMNPqjRgVPkKVB7LUQ7towPF7pMmWXVc1zxrzQZO5RnPREyonDIYdWHMJJT5gKB0-Jsk_pe6ztX_Lm30b8RTM-VISxmFWQOEcDUBxRorFuQBS51IVr6wTvjkxJ-iMsfq96Ps0_yVOlQRZQFC5L9bjY-MQvwqZf4BEbN4PPtrVwA272KwL0UHIi2dGwpyKM11SfAg`
+`eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJiMzNhYWUyODA0NmM0MmE5OTgyY2E1NTdkZjhmY2YxOCIsImV4cCI6MTY3ODk1OTEwNCwiaWF0IjoxNjcxMTgzMTMyLCJzZWF0cyI6MCwicmlnaHRzIjpbIkpTX0NPUkUiLCJTSUdfU0RLX0NPUkUiLCJTSUdfU0RLX0lTTyIsIlNJR19TREtfRU5DUlBZVElPTiJdLCJkZXZpY2VzIjpbIldBQ09NX0FOWSJdLCJ0eXBlIjoiZXZhbCIsImxpY19uYW1lIjpudWxsLCJ3YWNvbV9pZCI6ImIzM2FhZTI4MDQ2YzQyYTk5ODJjYTU1N2RmOGZjZjE4IiwibGljX3VpZCI6ImFmYzkyNGIyLTBiZTItNDAyZC1hYTA0LWRiZDY0MDdlYTc4MCIsImFwcHNfd2luZG93cyI6W10sImFwcHNfaW9zIjpbXSwiYXBwc19hbmRyb2lkIjpbXSwibWFjaGluZV9pZHMiOltdfQ.M2Cphus6EWDxKlwQspqtDjlAUPu_aXZ2SjyEPVqtw6iLlwCizyg9-2oPVGvEy5-h-Mr1oFzzOe4IvWhwYDaCRj1llvRaZmbWplXD0iyVrMp4RLhVV1MsLt4MUvWMj9yJDEs5Q1UP6bBr0A3PXwL2r1jho-jUiNWjqmPbWt_ER92MPzsKtxunfxEvvstDJKT8VXpVGdBmu2Qqv__QROPfJRo_DvR9tPP1HCk8HJJCvfqHcKuiFecoqhm1hZFiwSb0Upg5Ei4T1aT4kVH_py8sZ_54HQJjgLzNRvFmm0RHXbUVe-pcuChclJW0EH_fGKjQL3VCWjrU8YXX7howXTlYZA`
 
 NB: this particular license is only valid for a limited time.
 

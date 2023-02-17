@@ -25,8 +25,8 @@
   - [Operate the Simple Demo application](#operate-the-simple-demo-application)
   - [Known issues](#known-issues)
 
-The **Wacom Signature SDK for JavaScript** is intended to generate signature objects for the user. It provides the documentation and tools to create signature enabled applications.
-The JavaScript SDK implements the functionality in browser ready script. No component installations are required and the SDK is platform independent.
+The **Wacom Signature SDK for JavaScript** is intended to generate signature objects for the user. It provides the documentation and tools to create signature-enabled applications.
+The JavaScript SDK implements the functionality in browser-ready script. No component installations are required and the SDK is platform-independent.
 It does, however, require a browser that supports **WebAssembly** primarily, and **WebHID** when using an STU tablet for pen input.
 
 Please view the README for additional information on WebHID and WebAssembly.
@@ -60,9 +60,9 @@ Only the JavaScript file needs to be included & imported on the HTML page:
 ```
 
 Due to WebAssembly security restrictions, the demo page must be opened on a web server and not directly from a local file system.
-For initial development it is convenient to use localhost for this purpose.
+For initial development, it is convenient to use localhost for this purpose.
 
-For example, use Node.js with http-server, then launch the demo code from the local server as:
+For example, use Node.js with `http-server`, then launch the demo code from the local server as:
 
 ```
   http://localhost:8080/demos/complete_demo/index.html
@@ -97,7 +97,7 @@ It is based on the needs of the end-user and Wacom's experience with different d
 WILL allows you to include premium digital inking features in your applications.
 It uses a modularized pipeline allowing each module to be configured, replaced, or omitted as required by the specific application, providing you with superior flexibility.
 
-Using Will Ink SDK library is optional for Signature SDK for JavaScript. However, it is highly recommended as it improves the quality of the captured signature inking.
+Using the WILL Ink SDK library is optional for Signature SDK for JavaScript. However, it is highly recommended as it improves the quality of the captured signature inking.
 
 #### Download WILL Ink SDK
 
@@ -113,8 +113,8 @@ The downloaded Zip file contains the SDK ink engine accessed by the sample code.
 
 ### SDK License
 
-A valid licence is needed for using Signature SDK for JavaScript, the demo code
-includes an evaluation licence.
+A valid license is needed for using Signature SDK for JavaScript, the demo code
+includes an evaluation license.
 
 ---
 
@@ -140,7 +140,7 @@ includes an evaluation licence.
 
 ![Root](media/root.png)
 
-The web based app needs a web server.
+The web-based app needs a web server.
 Python's `SimpleHTTPServer` provides an easy way to get started.
 To start the web server, start a command prompt in the project root folder and run:
 
@@ -152,7 +152,7 @@ python -m SimpleHTTPServer 8080
 python -m http.server 8080
 ```
 
-Now you can access the web-demos via:
+Now you can access the web demos via:
 
 ```http://localhost:8080/demos/index.html```
 
@@ -165,7 +165,7 @@ includes an evaluation license.
 
 ### Setting up the license
 
-You may obtain either an evaluation license or commercial license at: https://developer.wacom.com/en-us/developer-dashboard/license-keys.
+You may obtain either an evaluation license or a commercial license at: https://developer.wacom.com/en-us/developer-dashboard/license-keys.
 
 An evaluation license is also available here:
 
@@ -230,7 +230,7 @@ The main functionalities of this page are:
 - Capture signature from STU tablet: With an attached STU, capture a new signature.
 - Capture signature from Generic device: With an attached integrated pen device, capture a new signature.
 
-In the case of the latter two options, the user will have the option to save the signature as a .png, .txt on in Wacom's .fss (Forensic Signature Stream) format.
+In the case of the latter two options, the user will have the option to save the signature as a .png, .txt or in Wacom's .fss (Forensic Signature Stream) format.
 
 After using all three sections, the signature image will appear at the bottom.
 
@@ -324,9 +324,19 @@ Another acceptable format for input in the SDK is a .txt file, provided the .txt
 
 ![Example FSS](media/read-file-3.png)
 
-The FSS displayed on screen will yield the same signature in the previous image.
+The FSS displayed on-screen will yield the same signature in the previous image.
 
-From the loaded signature, the following data can be extracted such as the signatory name, reason for signing, date/time signed and additional data the user may have previously added.
+From the loaded signature, the following data can be extracted: 
+
+- Signatory name: the name of the signer 
+- Reason for signing: a motive or purpose for creating the signature
+- Date and time signed: when the signature was captured
+- Extra data: additional data the user may have previously added
+- Digitizer type: the device used to capture the signature
+- Digitizer driver: the driver being used to capture the signature
+- Operating System: the data returned by [Navigator.userAgent](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/userAgent), including the operating system being used and the browser version. Its specification requirements mean that the information browsers can return here is restricted. Users may hard code this information themselves if they have a better understanding of this information
+- Network Interface Card: information regarding the network interface card
+- Licence: the license ID
 
 ### Settings
 
@@ -350,3 +360,6 @@ A simplified version of the JS demo exists within demos/simple/index.html, with 
 - On a Motorola G30, the signature area is not loaded and trace is unable to be added. This is an issue with the installed web browser, rather than an issue with the Signature SDK. 
 - On Chrome 101 with older Windows 10 (or Windows 7) versions, it will not be possible to add STU or Generic signatures. This is a web browser issue that would, were a fix to be made, introduce further problems. 
 - On iOS 15, when adding strokes, occasionally a dot artifact is created at the end point of the stroke when signing. When pressing OK to complete the signature, the dot artifact is no longer visible and the signature renders correctly.
+- Some users may experience delayed rendering of ink when creating a signature. This is a result of the limitations of the WILL Ink SDK alongside low-powered PC hardware.
+- When capturing with a Generic device, pressing the pen's lower button (this is by default the scroll function) will cause air input (i.e when the pen is detected to be hovering above the screen, but not making contact) to be rendered. This is a result of driver configurations and how the OS manages the pen. This lower pen button's functionality can be configured by driver configurations. 
+- When capturing with a Generic device, rendering may stop if the strokes go over the edges of the canvas. Note that this is a result of driver configurations and how the OS manages the pen. 

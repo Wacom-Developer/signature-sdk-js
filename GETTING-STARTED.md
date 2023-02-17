@@ -326,17 +326,8 @@ Another acceptable format for input in the SDK is a .txt file, provided the .txt
 
 The FSS displayed on-screen will yield the same signature in the previous image.
 
-From the loaded signature, the following data can be extracted: 
+From the loaded signature, the following data can be extracted such as the signatory name, reason for signing, date/time signed and additional data the user may have previously added.
 
-- Signatory name: the name of the signer 
-- Reason for signing: a motive or purpose for creating the signature
-- Date and time signed: when the signature was captured
-- Extra data: additional data the user may have previously added
-- Digitizer type: the device used to capture the signature
-- Digitizer driver: the driver being used to capture the signature
-- Operating System: the data returned by [Navigator.userAgent](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/userAgent), including the operating system being used and the browser version. Its specification requirements mean that the information browsers can return here is restricted. Users may hard code this information themselves if they have a better understanding of this information
-- Network Interface Card: information regarding the network interface card
-- Licence: the license ID
 
 ### Settings
 
@@ -356,10 +347,7 @@ A simplified version of the JS demo exists within demos/simple/index.html, with 
 
 ## Known issues
 
-- On Android and iOS, performing two point touch over the signature capture area (e.g zooming in or out) will produce a defaced signature trace on the canvas. 
-- On a Motorola G30, the signature area is not loaded and trace is unable to be added. This is an issue with the installed web browser, rather than an issue with the Signature SDK. 
-- On Chrome 101 with older Windows 10 (or Windows 7) versions, it will not be possible to add STU or Generic signatures. This is a web browser issue that would, were a fix to be made, introduce further problems. 
+- On Android and iOS, performing two point touch over the signature capture area (e.g zooming in or out) will produce a defaced signature trace on the canvas.
+- On a Motorola G30, the signature area is not loaded and trace is unable to be added. This is an issue with the installed web browser, rather than an issue with the Signature SDK.
+- On Chrome 101 with older Windows 10 (or Windows 7) versions, it will not be possible to add STU or Generic signatures. This is a web browser issue that would, were a fix to be made, introduce further problems.
 - On iOS 15, when adding strokes, occasionally a dot artifact is created at the end point of the stroke when signing. When pressing OK to complete the signature, the dot artifact is no longer visible and the signature renders correctly.
-- Some users may experience delayed rendering of ink when creating a signature. This is a result of the limitations of the WILL Ink SDK alongside low-powered PC hardware.
-- When capturing with a Generic device, pressing the pen's lower button (this is by default the scroll function) will cause air input (i.e when the pen is detected to be hovering above the screen, but not making contact) to be rendered. This is a result of driver configurations and how the OS manages the pen. This lower pen button's functionality can be configured by driver configurations. 
-- When capturing with a Generic device, rendering may stop if the strokes go over the edges of the canvas. Note that this is a result of driver configurations and how the OS manages the pen. 

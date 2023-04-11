@@ -315,7 +315,7 @@ A simplified version of the JS demo exists within demos/simple/index.html, with 
 
 ## Known issues
 
-- On Android and iOS, performing two point touch over the signature capture area (e.g zooming in or out) will produce a defaced signature trace on the canvas.
+- On Android and iOS, performing two-point touch over the signature capture area (e.g zooming in or out) will produce a defaced signature trace on the canvas.
 - On a Motorola G30, the signature area is not loaded and trace is unable to be added. This is an issue with the installed web browser, rather than an issue with the Signature SDK.
 - On Chrome 101 with older Windows 10 (or Windows 7) versions, it will not be possible to add STU or Generic signatures. This is a web browser issue that would, were a fix to be made, introduce further problems.
 - On iOS 15, when adding strokes, occasionally a dot artifact is created at the end point of the stroke when signing. When pressing OK to complete the signature, the dot artifact is no longer visible and the signature renders correctly.

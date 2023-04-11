@@ -6,8 +6,6 @@
   - [Installation](#installation)
     - [Web Development Environment](#web-development-environment)
     - [Download Signature SDK for JavaScript.](#download-signature-sdk-for-javascript)
-    - [WILL Ink SDK  for Web](#will-ink-sdk--for-web)
-      - [Download WILL Ink SDK](#download-will-ink-sdk)
     - [SDK License](#sdk-license)
     - [Using the Signature SDK Sample Code](#using-the-signature-sdk-sample-code)
   - [Licensing](#licensing)
@@ -89,28 +87,6 @@ Download the SDK from https://developer.wacom.com/developer-dashboard
 
 The downloaded Zip file contains the Signature SDK for JavaScript.
 
-    
-### WILL Ink SDK  for Web
-
-**Wacom Ink Layer Language (WILL™)** is a cross-platform digital ink technology.
-It is based on the needs of the end-user and Wacom's experience with different domains.
-WILL allows you to include premium digital inking features in your applications.
-It uses a modularized pipeline allowing each module to be configured, replaced, or omitted as required by the specific application, providing you with superior flexibility.
-
-Using the WILL Ink SDK library is optional for Signature SDK for JavaScript. However, it is highly recommended as it improves the quality of the captured signature inking.
-
-#### Download WILL Ink SDK
-
-Download the SDK from https://developer.wacom.com/developer-dashboard
-
-* Login using your Wacom ID
-* Select **Downloads for ink**
-* Download **WILL SDK for ink for Web (version 3)**
-* Accept the End User License Agreement to use the SDK
-
-The downloaded Zip file contains the SDK ink engine accessed by the sample code.
-
-
 ### SDK License
 
 A valid license is needed for using Signature SDK for JavaScript, the demo code
@@ -125,14 +101,6 @@ includes an evaluation license.
     * NB: Be sure to copy and paste the contents of the folder, and not the folder itself, so the directory looks like this:
 
 ![JavaScript SDK sample placement](media/sdk-js-location.png)
-
-* create a folder called *will* within */sigCaptDialog/libs/*. Within */will/*, create a new folder called *digital-ink*
-* copy the contents of the folder from the downloaded WILL Ink SDK and put them into the created above folder:
-    * */sigCaptDialog/libs/will/digital-ink*
-    * NB: Be sure to copy and paste the contents of the folder, and not the folder itself, so the directory looks like this:
-
-![WILL Web SDK sample placement](media/sdk-web-location.png)
-
 
 * start a command prompt in the root folder
 * use the command ```npm install``` to create the node_modules folder with all the dependencies

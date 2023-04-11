@@ -78,17 +78,19 @@ In the examples below, two different ways of capturing a signature are described
 
 ### Problems
 
-When collecting pen data from a device other than an STU, HTML5 pointer events for these devices are captured using JavaScript point events. Due to limitations of certain browsers, the sample rates may be limited when running these point events. 
+When collecting pen data from a device other than an STU, HTML5 pointer events for these devices are captured using JavaScript point events. Due to limitations on certain browsers, the sample rates may be limited when running these point events. 
 
 Firefox supports pen pressure since Firefox 59. This however needs to be activated. On Windows, you may need to toggle a browser setting to get pen pressure to function.
 
 For Firefox:
 
 1. Enter "about:config" into your address bar and press enter.
-2. Type "w3c" in the search box, then double click on "dom.w3c_pointer_events_dispatch_by_pointer_messages". Change its value column to "true".
+2. Type "w3c" in the search box, then double-click on "dom.w3c_pointer_events_dispatch_by_pointer_messages". Change its value column to "true".
 3. Make sure "dom.w3c_pointer_events.enabled" is also set to "true". This is the default for this version of Firefox.
 
-NB: In the Windows version, capturing a signature would lead to the PC's Network Card ID being saved as signature property. In the JavaScript version, this field is not mandatory anymore. 
+**NB: In the Windows version, capturing a signature would lead to the PC's Network Card ID being saved as signature property. In the JavaScript version, this field is not mandatory anymore.**
+
+On the latest version of Firefox, running an incognito window will disable the use of internal storage, preventing users from capturing a signature from a generic device. It is important that if capturing with Firefox, users run their application in a normal window. 
 
 ## About the content of this folder
 

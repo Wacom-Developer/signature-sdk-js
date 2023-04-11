@@ -26,7 +26,7 @@ The **Signature SDK for JavaScript** is based on WebAssembly, a binary instructi
 
 Additional information about WebAssembly compatibility can be viewed [here.](https://caniuse.com/wasm)
 
-For using Wacom STU tablets all the browsers that implement WebHID should be supported. Thus, at the moment it is supported as a feature on:
+For using Wacom STU tablets*, all the browsers that implement WebHID should be supported. Thus, at the moment it is supported as a feature on:
 
 - Chromium
 - Google Chrome
@@ -34,6 +34,8 @@ For using Wacom STU tablets all the browsers that implement WebHID should be sup
 - Opera
 
 Firefox and Safari have refused to implement this feature on the basis of security reasons, so it won't be supported.
+
+***NB: The STU-541 features TLS encryption, which is not compatible with the JS SDK at this time.**
 
 
 | Browser        | Canvas support | WebHID support |

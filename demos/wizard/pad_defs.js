@@ -1,3 +1,8 @@
+/**
+ * Copyright (C) 2023 Wacom.
+ * Use of this source code is governed by the MIT License that can be found in the LICENSE file.
+ */
+ 
 class PadDefs {
 
 	static STU430 = {
@@ -154,7 +159,7 @@ class PadDefs {
 			    // stu 500 not supported yet
 				break;
 			case 800:
-			    // for the moment only stu 540 supported
+			    // for the moment only stu 540 is supported
 				this.stu = PadDefs.STU5X0;
 				break;
 			case 396:

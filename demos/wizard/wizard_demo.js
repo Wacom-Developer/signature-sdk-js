@@ -1,3 +1,8 @@
+/**
+ * Copyright (C) 2023 Wacom.
+ * Use of this source code is governed by the MIT License that can be found in the LICENSE file.
+ */
+
 async function reset_wizard() {
 	await wizCtl.reset();
 	if (document.getElementById("show_mirror_checkbox").checked) {

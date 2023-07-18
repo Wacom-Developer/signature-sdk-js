@@ -1,20 +1,28 @@
+<!--
+    Copyright (C) 2023 Wacom.
+	Use of this source code is governed by the MIT License that can be found in the LICENSE file.
+-->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<!--meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"-->
 	    <title>Signature SDK Wizard Demo</title>
-		<link href="../common/style/wacom.css" rel="stylesheet" type="text/css">	
-        <script src="/node_modules/sjcl/sjcl.js"></script>
-		<script src="/sigCaptDialog/libs/stu_capture/stu-sdk.min.js"></script> <!-- used to connect to STU devices -->        
-	    <script src="/sigCaptDialog/libs/stu_capture/stu_capture_encryption.js"></script> <!-- STU encryption functions -->	    		
-		<script src="../common/libs/signature_sdk.js"></script> <!-- signature SDK -->
-				
-		<script src="/wizard/wizard.js"></script>
+		<link href="../common/style/wacom.css" rel="stylesheet" type="text/css">		
+		<link href="../../sigCaptDialog/style/sigCaptDialog.css" rel="stylesheet" type="text/css">		
+		
+		<script src="../common/libs/signature_sdk/stu-sdk.min.js"></script> <!-- used to connect to STU devices -->
+	    <script src="../../sigCaptDialog/stu_capture/aes-ecb.js"></script> <!-- utility for STU encryption -->
+		<script src="../../sigCaptDialog/stu_capture/stu_capture_encryption.js"></script> <!-- STU encryption functions -->
+			    
+	    
+		<script src="../common/libs/signature_sdk/signature_sdk.js"></script> <!-- signature SDK -->			
+        <script src="../common/browser-report.js"></script> <!-- for getting web browser information -->
+		
+		<script src="../../wizard/wizard.js"></script>
         <script src="./pad_defs.js"></script>		
 		<script src="./wizard_demo.js"></script>		
 		<script>		
-		    const licence = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJiMzNhYWUyODA0NmM0MmE5OTgyY2E1NTdkZjhmY2YxOCIsImV4cCI6MTcwODE3ODg3NCwiaWF0IjoxNjgxNzI2MjY3LCJzZWF0cyI6MCwicmlnaHRzIjpbIkpTX0NPUkUiLCJTSUdfU0RLX0NPUkUiLCJTSUdfU0RLX0lTTyIsIlNJR19TREtfRU5DUllQVElPTiJdLCJkZXZpY2VzIjpbIldBQ09NX0FOWSJdLCJ0eXBlIjoiZXZhbCIsImxpY19uYW1lIjoiTGljZW5zZSBmb3IgSmF2YXNjcmlwdCBEZW1vIiwid2Fjb21faWQiOiJiMzNhYWUyODA0NmM0MmE5OTgyY2E1NTdkZjhmY2YxOCIsImxpY191aWQiOiI1MDU3Mzk4My05MDgzLTRjZjUtOGM5Yy0yNTMwNjc0ZWFmMmIiLCJhcHBzX3dpbmRvd3MiOltdLCJhcHBzX2lvcyI6W10sImFwcHNfYW5kcm9pZCI6W10sIm1hY2hpbmVfaWRzIjpbXX0.inGHe6CM3FexchESeu5mlPccOzrbTeZ_goMxRPppmHEqMcKz8DplC0IHOhjPvfV5c1giHsj_OctuomKWAsqt_lqo9ml4QAmnRiBYhE_itq1UdemIYusaHxapU3CL1Nr3ed9g-2Wq9Dducl-d7jCMNVnvmYM7fexIQAEV6soXBnJbdY4YXCznFftcA2jj2YI6Nz6f9ya-C9R1skQ0xuCEkkESWZ9NC_CSbu4I9h_Uv_X-0voY89H046F7wM1t61JGYMfIYwaDcJGazgD8_71OsRfOf5cUKDYsE0c-gH8vUUbbIMRO6i6zICwgEj2FAki9Rf23blPmvk8ijhBU0ZE_Hg";
 			var mSigObj;		
             var documentHash;
 			var wizCtl;		
@@ -22,16 +30,31 @@
 		
 		    Module.onRuntimeInitialized = _ => {	
                 document.getElementById("version_txt").innerHTML = Module.VERSION;
-				if (navigator.hid) {				
-				    document.getElementById("start_wizard").disabled = false;				    
-				}				
-				
-				documentHash = new Module.Hash(Module.HashType.None);
 				mSigObj = new Module.SigObj();	
-                mSigObj.setLicence(licence);		
-				wizCtl = new WizCtl();				
 				
-				document.getElementById("document_hash").disabled = false;
+				// Here we need to set the licence. The easiest way is directly using
+				// const promise = mSigObj.setLicence(key, secret);
+				// however here the problem it is that we expose the key and secret publically.
+				// if we want to hide the licence we can get the licence from an external server.				
+				// there is a php demo file in /common/licence_proxy.php
+                //const promise = mSigObj.setLicenceProxy("url from where to get the licence");
+				const promise = mSigObj.setLicence("key", "secret");
+				promise.then(value => {
+				    if (value) {
+					    if (navigator.hid) {				
+				            document.getElementById("start_wizard").disabled = false;
+				        }
+				
+				        documentHash = new Module.Hash(Module.HashType.None);				                
+				        wizCtl = new WizCtl();				
+				
+				        document.getElementById("document_hash").disabled = false;
+						document.getElementById("initializeBanground").style.display = "none";
+					}
+				});
+				promise.catch(error => {
+				    alert(error);
+				});
             }	
 			
 			function openTab(evt, tabName) {
@@ -143,6 +166,11 @@
 		</script>
     </head>
 	<body>	
+	    <div id="initializeBanground" class="active" style="width:100%;height:100%;position:fixed;background:#cccccccc;">
+		    <div style="position:absolute;left:50%;top:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);">
+			    <table><tr><td><div class="loader"></div></td><td>Initializing, this could take a few seconds...</td></tr></table>
+			</div>
+		</div>
         <div class="wrapper">    
 	        <div id="header_container">
                 <div id="header">
@@ -184,7 +212,7 @@
 					  <label for="show_mirror_checkbox">Show the content of STU tablet on screen.</label>
 					  <br>
 					  <input type="checkbox" id="enable_mirror_checkbox" onChange="mirrorInputChanged(this)">
-					  <label for="enable_mirror_checkbox">Enable input from sreen.</label>
+					  <label for="enable_mirror_checkbox">Enable input from screen.</label>
 					  <br>
 					  <input type="checkbox" id="enable_encryption_checkbox" onChange="encryptionChanged(this)">
 					  <label for="enable_encryption_checkbox">Encrypt the communication between the PC and STU Tablet</label>

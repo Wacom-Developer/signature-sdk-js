@@ -1,22 +1,43 @@
+/**
+ * Copyright (C) 2023 Wacom.
+ * Use of this source code is governed by the MIT License that can be found in the LICENSE file.
+ */
+
 var mSigObj;
 var mHash;
+
+Module.onAbort = _ => {
+    alert("Web browser not supported");
+ 	document.getElementById("initializeBanground").style.display = "none";
+}
 
 Module.onRuntimeInitialized = _ => {		
     document.getElementById("version_txt").innerHTML = Module.VERSION;
     mSigObj = new Module.SigObj();	
 	mHash = new Module.Hash(Module.HashType.SHA512);	  
-	try {
-	    //mSigObj.setLicence("PUT HERE YOUR LICENCE STRING");   
-		mSigObj.setLicence("eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJiMzNhYWUyODA0NmM0MmE5OTgyY2E1NTdkZjhmY2YxOCIsImV4cCI6MTcwODE3ODg3NCwiaWF0IjoxNjgxNzI2MjY3LCJzZWF0cyI6MCwicmlnaHRzIjpbIkpTX0NPUkUiLCJTSUdfU0RLX0NPUkUiLCJTSUdfU0RLX0lTTyIsIlNJR19TREtfRU5DUllQVElPTiJdLCJkZXZpY2VzIjpbIldBQ09NX0FOWSJdLCJ0eXBlIjoiZXZhbCIsImxpY19uYW1lIjoiTGljZW5zZSBmb3IgSmF2YXNjcmlwdCBEZW1vIiwid2Fjb21faWQiOiJiMzNhYWUyODA0NmM0MmE5OTgyY2E1NTdkZjhmY2YxOCIsImxpY191aWQiOiI1MDU3Mzk4My05MDgzLTRjZjUtOGM5Yy0yNTMwNjc0ZWFmMmIiLCJhcHBzX3dpbmRvd3MiOltdLCJhcHBzX2lvcyI6W10sImFwcHNfYW5kcm9pZCI6W10sIm1hY2hpbmVfaWRzIjpbXX0.inGHe6CM3FexchESeu5mlPccOzrbTeZ_goMxRPppmHEqMcKz8DplC0IHOhjPvfV5c1giHsj_OctuomKWAsqt_lqo9ml4QAmnRiBYhE_itq1UdemIYusaHxapU3CL1Nr3ed9g-2Wq9Dducl-d7jCMNVnvmYM7fexIQAEV6soXBnJbdY4YXCznFftcA2jj2YI6Nz6f9ya-C9R1skQ0xuCEkkESWZ9NC_CSbu4I9h_Uv_X-0voY89H046F7wM1t61JGYMfIYwaDcJGazgD8_71OsRfOf5cUKDYsE0c-gH8vUUbbIMRO6i6zICwgEj2FAki9Rf23blPmvk8ijhBU0ZE_Hg");		
-        document.getElementById("myfile").disabled=false;
-		
-		if (navigator.hid) {
-		    document.getElementById("capture_stu_device").disabled=false;
-		}
-		document.getElementById("canvas_capture_btn").disabled=false;	
-	} catch (e) {
-		alert(e);
-	}
+	
+	// Here we need to set the licence. The easiest way is directly using
+	// const promise = mSigObj.setLicence(key, secret);
+	// however here the problem it is that we expose the key and secret publically.
+	// if we want to hide the licence we can get the licence from an external server.				
+	// there is a php demo file in /common/licence_proxy.php
+    //const promise = mSigObj.setLicenceProxy("url from where to get the licence");
+	const promise = mSigObj.setLicence("key", "secret");
+	promise.then(value => {
+	    if (value) {
+	        if (navigator.hid) {				
+		        document.getElementById("capture_stu_device").disabled = false;
+		    }
+				
+		    document.getElementById("canvas_capture_btn").disabled = false;
+		    document.getElementById("initializeBanground").style.display = "none";
+			document.getElementById("myfile").disabled=false;
+	    }
+	});
+	promise.catch(error => {
+		alert(error);
+		document.getElementById("initializeBanground").style.display = "none";
+	});
 }
 
 async function loadFromFile() {
@@ -102,49 +123,8 @@ async function renderSignature() {
 	
 	let canvas;
 	const inkColor = "#000F55";
-	try {
-		const inkTool = {
-			brush: BrushPalette.circle,
-			dynamics: {
-				size: {
-					value: {
-						min: 0.5,
-						max: 1.6,
-						remap: v => ValueTransformer.sigmoid(v, 0.62)
-					},
-					velocity: {
-						min: 5,
-						max: 210
-					}
-				},
-				rotation: {
-					dependencies: [window.DigitalInk.SensorChannel.Type.ROTATION, window.DigitalInk.SensorChannel.Type.AZIMUTH]
-				},
-				scaleX: {
-					dependencies: [window.DigitalInk.SensorChannel.Type.RADIUS_X, window.DigitalInk.SensorChannel.Type.ALTITUDE],
-					value: {
-						min: 1,
-						max: 3
-					}
-				},
-				scaleY: {
-					dependencies: [window.DigitalInk.SensorChannel.Type.RADIUS_Y],
-					value: {
-						min: 1,
-						max: 3
-					}
-				},
-				offsetX: {
-					dependencies: [window.DigitalInk.SensorChannel.Type.ALTITUDE],
-
-					value: {
-						min: 2,
-						max: 5
-					}
-				}
-			}
-		};
-		const image = await mSigObj.renderBitmap(renderWidth, renderHeight, "image/png", inkTool, inkColor, "white", 0, 0, 0x400000);					
+	try {		
+		const image = await mSigObj.renderBitmap(renderWidth, renderHeight, "image/png", 4, inkColor, "white", 0, 0, 0x400000);					
 	    document.getElementById("sig_image").src = image;	
         document.getElementById("sig_text").value = await mSigObj.getTextData(Module.TextFormat.BASE64);	
 	} catch (e) {
@@ -164,7 +144,7 @@ function captureFromCanvas() {
 	    renderSignature();
 	});
 	
-	sigCaptDialog.open(mSigObj, null, null, null, Module.KeyType.SHA512, mHash);
+	sigCaptDialog.open(mSigObj, null, null, null, null, Module.KeyType.SHA512, mHash);
 	sigCaptDialog.startCapture();			
 }
 
@@ -173,5 +153,5 @@ function captureFromSTU() {
 	stuCapDialog.addEventListener("ok", function() {
 	    renderSignature();
 	});				
-	stuCapDialog.open(mSigObj, null, null, null, Module.KeyType.SHA512, mHash);					
+	stuCapDialog.open(mSigObj, null, null, null, null, Module.KeyType.SHA512, mHash);					
 }

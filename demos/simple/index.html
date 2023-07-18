@@ -1,3 +1,7 @@
+<!--
+    Copyright (C) 2023 Wacom.
+	Use of this source code is governed by the MIT License that can be found in the LICENSE file.
+-->
 <!DOCTYPE html>
 <html>
     <head>
@@ -5,34 +9,26 @@
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	    <title>Signature SDK - Simple demo</title>
 	    <link href="../common/style/wacom.css" rel="stylesheet" type="text/css">		
-		<link href="/sigCaptDialog/style/sigCaptDialog.css" rel="stylesheet" type="text/css">	
-		<link href="/node_modules/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" type="text/css">
-	    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
-	    <script src="/node_modules/jquery-ui-dist/jquery-ui.min.js"></script>		
-		<script src="/node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>		
-		<script src="/node_modules/clipper-lib/clipper.js"></script>
-	    <script src="/node_modules/js-md5/build/md5.min.js"></script>
-	    <script src="/node_modules/poly2tri/dist/poly2tri.min.js"></script>
-	    <script src="/node_modules/long/dist/long.js"></script>
-	    <script src="/node_modules/protobufjs/dist/protobuf.min.js"></script>
-		<script src="/node_modules/jszip/dist/jszip.min.js"></script>
-		<script src="/node_modules/gl-matrix/gl-matrix-min.js"></script>
-		<script src="/node_modules/rbush/rbush.min.js"></script>
-		<script src="/node_modules/js-ext/js-ext-min.js"></script>
-        <script src="/node_modules/digital-ink/digital-ink-min.js"></script>
+	    <link href="../../sigCaptDialog/style/sigCaptDialog.css" rel="stylesheet" type="text/css">		
 		
-		<script src="/node_modules/sjcl/sjcl.js"></script>
-		<script src="/sigCaptDialog/libs/stu_capture/stu-sdk.min.js"></script> <!-- used to connect to STU devices -->        
-	    <script src="/sigCaptDialog/libs/stu_capture/stu_capture_encryption.js"></script> <!-- STU encryption functions -->	    
+		<!-- files for connection to STU tablets devices, if you don't need to connect to STU devices you don't have to include these files -->
+		<script src="../common/libs/signature_sdk/stu-sdk.min.js"></script> <!-- used to connect to STU devices -->
+	    <script src="../../sigCaptDialog/stu_capture/aes-ecb.js"></script> <!-- utility for STU encryption -->
+		<script src="../../sigCaptDialog/stu_capture/stu_capture_encryption.js"></script> <!-- STU encryption functions -->
 		
-		<script src="../common/libs/signature_sdk.js"></script> <!-- signature SDK -->
+		<script src="../common/libs/signature_sdk/signature_sdk.js"></script> <!-- signature SDK -->
 		
-        <script src="/sigCaptDialog/sigCaptDialog.js"></script>
-		<script src="/sigCaptDialog/stuCaptDialog.js"></script>
+        <script src="../../sigCaptDialog/sigCaptDialog.js"></script>
+		<script src="../../sigCaptDialog/stuCaptDialog.js"></script>
 		
 	    <script src="simple.js"></script>
     </head>
     <body>
+	    <div id="initializeBanground" class="active" style="width:100%;height:100%;position:fixed;background:#cccccccc;">
+		    <div style="position:absolute;left:50%;top:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);">
+			    <table><tr><td><div class="loader"></div></td><td>Initializing, this could take a few seconds...</td></tr></table>
+			</div>
+		</div>
         <h1>Signature SDK <span id="version_txt"></span>- Simple demo</h1>
 	    <p>This is a pure javascript version of Signature SDK, using WebAssembly. This version it is supported by the major web browsers, you can see <a href="https://caniuse.com/?search=webassembly">here the list of compatible browsers</a>.</p>
 	    With the SDK you can:

@@ -87,7 +87,7 @@
  * @property {string} id - Optional object's id.
  * @property {string} type - The type of the object, in this case the string "ObjectButton".
  * @property {Rectangle} rect - The displayed area.
- * @property {function} onClick - Defines a function to be called with the button is clicked. The function has the object as paremeter an return a boolean.
+ * @property {function} onClick - Defines a function to be called with the button is clicked. The function has the object as parameter an return a boolean.
  *                                When returns true the Wizard stops capturing points, otherwise continues capturing points.
  */ 
  
@@ -2247,18 +2247,28 @@ class WizCtl {
 	async #onOk() {
 		if (this.mPadMode == WizCtl.#PadMode.PadSigning) {
 			if (this.#hasPenData()) {
-			    await this.#generateSignature();			
-			    this.#onCancel();
+			    const promise = this.#generateSignature();			
+				promise.then(value => {
+					if (value) {
+			            this.#onCancel();
 				
-				let signObject;
-				for (var i=this.objects.length-1; i>-1; i--) {
-			        if (this.objects[i].type == WizCtl.ObjectType.ObjectSignature) {
-					    signObject = this.objects[i];
-				    }
-				}
-				if (signObject && signObject.onSignatureCaptured) {
-				    return signObject.onSignatureCaptured(this.mSigObj);	
-				}
+				        let signObject;
+				        for (var i=this.objects.length-1; i>-1; i--) {
+			                if (this.objects[i].type == WizCtl.ObjectType.ObjectSignature) {
+					            signObject = this.objects[i];
+				            }
+				        }
+				        if (signObject && signObject.onSignatureCaptured) {
+				            return signObject.onSignatureCaptured(this.mSigObj);	
+				        }
+					} else {
+						alert("Error");
+					}						
+				});
+				promise.catch(error => {
+					alert(error);
+					
+				});
 			}
 		} else if (this.mPadMode == WizCtl.#PadMode.PadInking) {
 			if (this.#hasPenData() > 0) {
@@ -2629,7 +2639,7 @@ class WizCtl {
         for (let index = 0; index < this.mPenData.length; index++) {
 		    if (this.mPenData[index].sw == 0 && !hasDown) {
 				// the signature starts with the first pen down, so the hover
-				// points before first down are ingnored.
+				// points before first down are ignored.
 			    continue;
 		    }
 		
@@ -2650,11 +2660,11 @@ class WizCtl {
                 'y': this.mPenData[index].y,
                 'p': this.mPenData[index].pressure,
                 't': this.mPenData[index].timeCount,
-				'azimuth': 0, // STU has no azimuth
-				'altitude': 0, // STU has no altitude
-			    'twist': 0,	// STU has no twist				    
+				'azimuth': 0, // STU has not azimuth
+			    'altitude': 0, // STU has not altitude
+			    'twist': 0,	// STU has no twist		
                 'is_down': this.mPenData[index].sw,
-                'stroke_id': currentStrokeID
+                'stroke_id': currentStrokeID				
             };
 		
             currentStroke.push_back(point);			
@@ -2669,13 +2679,12 @@ class WizCtl {
 		    'device_pixels_per_m_y': 100000,
             'device_origin_X': 0,
             'device_origin_Y': 1,
-		    'has_tilt': false,
-		    'has_twist': false
+			'device_unit_pixels': false
         }	
 	
 	    var uid2;
 	    try {
-            // getUid2 will throw if pad doesn't support Uid2
+            // getUid2 will throw if the pad doesn't support Uid2
             uid2 = await mTablet.getUid2();
         }
         catch (e) {
@@ -2685,12 +2694,16 @@ class WizCtl {
 		    uid2 = 0;
 	    }
 
-        var digitizerInfo = "STU;'"+this.mInformation.modelName+"';"+this.mInformation.firmwareMajorVersion+"."+((parseInt(this.mInformation.firmwareMinorVersion) >> 4) & 0x0f)+"."+(parseInt(this.mInformation.firmwareMinorVersion) & 0x0f)+";"+uid2;
-        var nicInfo = "";
-        var timeResolution = 1000;
-        var who = this.who;
-        var why = this.why;
-	    var where = "";
+        //in this demo we use https://github.com/keithws/browser-report library for getting 
+		//information about the os.
+		const webBrowserData = browserReportSync();		
+		const osInfo = webBrowserData.os.name + " " + webBrowserData.os.version;
+        const nicInfo = "";
+        const digitizerInfo = "STU;'"+this.mInformation.modelName+"';"+this.mInformation.firmwareMajorVersion+"."+((parseInt(this.mInformation.firmwareMinorVersion) >> 4) & 0x0f)+"."+(parseInt(this.mInformation.firmwareMinorVersion) & 0x0f)+";"+uid2;
+        const timeResolution = 1000;
+        const who = this.who;
+        const why = this.why;
+	    const where = "";
 		
 		let integrityKey = Module.KeyType.SHA512;
 		let documentHash;
@@ -2709,13 +2722,37 @@ class WizCtl {
 			deleteHash = true;
 		}
 	
-        await this.mSigObj.generateSignature(this.who?this.who:"", this.why?this.why:"", where, integrityKey, documentHash, strokeVector, device, digitizerInfo, nicInfo, timeResolution);
-	
-	    if (deleteHash) {
-            documentHash.delete();
-		}
-        strokeVector.delete();
-        currentStroke.delete();			
+        const myPromise = new Promise((resolve, reject) => {
+			try {
+				const promise = this.mSigObj.generateSignature(this.who?this.who:"", this.why?this.why:"", where, integrityKey, documentHash, strokeVector, device, osInfo, digitizerInfo, nicInfo, timeResolution);
+				promise.then(value => {
+					if (deleteHash) {
+                        documentHash.delete();
+		            }
+                    strokeVector.delete();
+                    currentStroke.delete();						
+					resolve(value);
+				});
+				promise.catch(error => {
+					if (deleteHash) {
+                        documentHash.delete();
+		            }
+                    strokeVector.delete();
+                    currentStroke.delete();						
+				    reject(error);
+				});
+				
+			} catch (exception) {
+	            if (deleteHash) {
+                    documentHash.delete();
+		        }
+                strokeVector.delete();
+                currentStroke.delete();						
+				reject(exception);
+			}
+		});	
+
+        return myPromise;		
 	}
 	
 	#getFirstLineWidth(text, width) {

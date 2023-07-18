@@ -1,3 +1,7 @@
+<!--
+    Copyright (C) 2023 Wacom.
+	Use of this source code is governed by the MIT License that can be found in the LICENSE file.
+-->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -5,37 +9,22 @@
 		<!--meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"-->
 	    <title>Signature SDK Demo</title>
 		<link href="../common/style/wacom.css" rel="stylesheet" type="text/css">		
-		<link href="/sigCaptDialog/style/sigCaptDialog.css" rel="stylesheet" type="text/css">	
-		<link href="/node_modules/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" type="text/css">
-	    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
-	    <script src="/node_modules/jquery-ui-dist/jquery-ui.min.js"></script>		
-		<script src="/node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>		
-		<script src="/node_modules/clipper-lib/clipper.js"></script>
-	    <script src="/node_modules/js-md5/build/md5.min.js"></script>
-	    <script src="/node_modules/poly2tri/dist/poly2tri.min.js"></script>
-	    <script src="/node_modules/long/dist/long.js"></script>
-	    <script src="/node_modules/protobufjs/dist/protobuf.min.js"></script>
-		<script src="/node_modules/jszip/dist/jszip.min.js"></script>
-		<script src="/node_modules/gl-matrix/gl-matrix-min.js"></script>
-		<script src="/node_modules/rbush/rbush.min.js"></script>
-		<script src="/node_modules/js-ext/js-ext-min.js"></script>
-        <script src="/node_modules/digital-ink/digital-ink-min.js"></script>
-		<script src="../common/will/tools.js"></script>	
+	    <link href="../../sigCaptDialog/style/sigCaptDialog.css" rel="stylesheet" type="text/css">		
 		
-	    <script src="/node_modules/sjcl/sjcl.js"></script>
-		<script src="/sigCaptDialog/libs/stu_capture/stu-sdk.min.js"></script> <!-- used to connect to STU devices -->        
-	    <script src="/sigCaptDialog/libs/stu_capture/stu_capture_encryption.js"></script> <!-- STU encryption functions -->	    
+		<!-- files for connection to STU tablets devices, if you don't need to connect to STU devices you don't have to include these files -->
+		<script src="../common/libs/signature_sdk/stu-sdk.min.js"></script> <!-- used to connect to STU devices -->
+		<script src="../../sigCaptDialog/stu_capture/aes-ecb.js"></script> <!-- utility for STU encryption -->
+		<script src="../../sigCaptDialog/stu_capture/stu_capture_encryption.js"></script> <!-- STU encryption functions -->			   
 	    
-		<script src="../common/libs/signature_sdk.js"></script> <!-- signature SDK -->
-		<script src="../common/libs/signature_sdk_helper.js"></script> <!-- signature SDK helper -->
+		<script src="../common/libs/signature_sdk/signature_sdk.js"></script> <!-- signature SDK -->
+		<script src="../common/signature_sdk_helper.js"></script> <!-- signature SDK helper -->
 				
-	    <script src="/node_modules/node-forge/dist/forge.min.js"></script>					
+        <script src="../common/browser-report.js"></script> <!-- for getting web browser information -->
 				
-        <script src="/sigCaptDialog/sigCaptDialog.js"></script>
-		<script src="/sigCaptDialog/stuCaptDialog.js"></script>
-		
-		<script>		
-		    const licence = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJiMzNhYWUyODA0NmM0MmE5OTgyY2E1NTdkZjhmY2YxOCIsImV4cCI6MTcwODE3ODg3NCwiaWF0IjoxNjgxNzI2MjY3LCJzZWF0cyI6MCwicmlnaHRzIjpbIkpTX0NPUkUiLCJTSUdfU0RLX0NPUkUiLCJTSUdfU0RLX0lTTyIsIlNJR19TREtfRU5DUllQVElPTiJdLCJkZXZpY2VzIjpbIldBQ09NX0FOWSJdLCJ0eXBlIjoiZXZhbCIsImxpY19uYW1lIjoiTGljZW5zZSBmb3IgSmF2YXNjcmlwdCBEZW1vIiwid2Fjb21faWQiOiJiMzNhYWUyODA0NmM0MmE5OTgyY2E1NTdkZjhmY2YxOCIsImxpY191aWQiOiI1MDU3Mzk4My05MDgzLTRjZjUtOGM5Yy0yNTMwNjc0ZWFmMmIiLCJhcHBzX3dpbmRvd3MiOltdLCJhcHBzX2lvcyI6W10sImFwcHNfYW5kcm9pZCI6W10sIm1hY2hpbmVfaWRzIjpbXX0.inGHe6CM3FexchESeu5mlPccOzrbTeZ_goMxRPppmHEqMcKz8DplC0IHOhjPvfV5c1giHsj_OctuomKWAsqt_lqo9ml4QAmnRiBYhE_itq1UdemIYusaHxapU3CL1Nr3ed9g-2Wq9Dducl-d7jCMNVnvmYM7fexIQAEV6soXBnJbdY4YXCznFftcA2jj2YI6Nz6f9ya-C9R1skQ0xuCEkkESWZ9NC_CSbu4I9h_Uv_X-0voY89H046F7wM1t61JGYMfIYwaDcJGazgD8_71OsRfOf5cUKDYsE0c-gH8vUUbbIMRO6i6zICwgEj2FAki9Rf23blPmvk8ijhBU0ZE_Hg";
+        <script src="../../sigCaptDialog/sigCaptDialog.js"></script>
+		<script src="../../sigCaptDialog/stuCaptDialog.js"></script>
+
+		<script>	
 			var mSigObj;		
             var documentHash;
 			var backgroundImage;
@@ -46,27 +35,54 @@
 			// Please note that this is only a demostration, but on a production application
 			// for security reasons the private key should not be stored in a global variable.
 			var encryptionKeys;
+
+            //to remove 300 ms wait for second tap on touch screen			
+			if ('addEventListener' in document) {
+	            document.addEventListener('DOMContentLoaded', function() {
+				    const captureBtn = document.getElementById("capture_canvas_btn");
+				    captureBtn.addEventListener("touchend", function(e) {event.preventDefault(); captureBtn.click(); return false;}, false);		
+	            }, false);
+			}
+			
+			Module.onAbort = _ => {
+			    alert("Web browser not supported");
+ 			    document.getElementById("initializeBanground").style.display = "none";
+			}
 		
 		    Module.onRuntimeInitialized = _ => {	
-                document.getElementById("version_txt").innerHTML = Module.VERSION;
-				if (navigator.hid) {				
-				    document.getElementById("capture_stu_btn").disabled = false;
-				}
-				
-				document.getElementById("capture_canvas_btn").disabled = false;
-				document.getElementById("document").disabled = false;
-				
-				document.getElementById("load_signature").disabled = false;
-				
+                document.getElementById("version_txt").innerHTML = Module.VERSION;								
 				documentHash = new Module.Hash(Module.HashType.None);
 				mSigObj = new Module.SigObj();	
-                mSigObj.setLicence(licence);
+				
+				// Here we need to set the licence. The easiest way is directly using
+				// const promise = mSigObj.setLicence(key, secret);
+				// however here the problem it is that we expose the key and secret publically.
+				// if we want to hide the licence we can get the licence from an external server.				
+				// there is a php demo file in /common/licence_proxy.php
+                //const promise = mSigObj.setLicenceProxy("url from where to get the licence");
+				const promise = mSigObj.setLicence("put your key licence here", "put your secret licence here");
+				promise.then(value => {
+				    if (value) {
+					    if (navigator.hid) {				
+				            document.getElementById("capture_stu_btn").disabled = false;
+				        }
+				
+				        document.getElementById("capture_canvas_btn").disabled = false;
+				        document.getElementById("document").disabled = false;				
+				        document.getElementById("load_signature").disabled = false;
+						document.getElementById("initializeBanground").style.display = "none";
+						setDeviceName();						
+					}
+				});
+				promise.catch(error => {
+				    alert(error);
+					document.getElementById("initializeBanground").style.display = "none";
+				});
             }	
 
             function generateConfig() {
 			    const config = {};
-				config.useWill = document.getElementById("use_will").checked;
-				config.strokeSize = document.getElementById("ink_width").value;
+				config.strokeSize = parseInt(document.getElementById("ink_width").value);
 				config.strokeColor = document.getElementById("rendering_color_box").value;
 				config.width = document.getElementById("dialog_width").value;
 				config.height = document.getElementById("dialog_height").value;
@@ -133,11 +149,7 @@
 				config.draggable = document.getElementById("is_draggable").checked;
 				
 				const comboTools = document.getElementById("inking_tool");	
-				const inkColor = document.getElementById("rendering_color_box").value;
-				if (document.getElementById("use_will").checked) {
-				    config.will = {tool:tools[comboTools.options[comboTools.selectedIndex].value], color:inkColor};
-				}
-				
+				const inkColor = document.getElementById("rendering_color_box").value;				
 				const comboBackgroundMode = document.getElementById("background_image_mode");	
 				config.background = {color:document.getElementById("background_color_box").value, 
 				                     alpha:document.getElementById("background_opacity").value*0.01,
@@ -154,6 +166,17 @@
 				}
 				
 				config.minTimeOnSurface = parseInt(document.getElementById("minTimeOnSurface").value);
+				
+				if (!document.getElementById("allowOutSide").checked) {
+				    const self = this;
+				    config.onOutSide = function() {
+					    alert("OutSide stroke is not allowed. Please sign again");
+					    self.clear();
+					    return true; // for stop capturing
+					}
+				}
+				
+				config.allowZeroPressure = document.getElementById("allowZeroPressure").checked;
 				
 				return config;
             }			
@@ -192,24 +215,80 @@
 				    encryptSignature();
 				    renderSignature();
 				});		
-				sigCaptDialog.open(mSigObj, document.getElementById("who").value, document.getElementById("why").value, generateExtraData(), Module.KeyType.SHA512, documentHash);
+				
+				//in this demo we use https://github.com/keithws/browser-report library for getting 
+				//information about the os.
+				const webBrowserData = browserReportSync();		
+				const osInfo = webBrowserData.os.name + " " + webBrowserData.os.version;
+                const digitizerInfo = webBrowserData.browser.name + " " + webBrowserData.browser.version;
+                const nicInfo = "";
+		        const where = "";
+				sigCaptDialog.open(mSigObj, document.getElementById("who").value, document.getElementById("why").value, where, generateExtraData(), Module.KeyType.SHA512, documentHash, osInfo, digitizerInfo, nicInfo);
 				sigCaptDialog.startCapture();
 			}
 			
-		    function captureFromSTU() {
+		    async function captureFromSTU() {
 			    sigCaptDialog = null;
 			    const config = generateConfig();
 				config.encryption = {
 				    sessionId: window.crypto.getRandomValues(new Uint32Array(1))[0], // 32 bits random value
 				    encryptionHandler: new MyEncryptionHandler(), // only necessary if connecting to STU-300/500/520
 				    encryptionHandler2: new MyEncryptionHandler2(), // only necessary if connection to STU-430/530/540 
-				};				
+				};
+
+                const stuDeviceStr = localStorage.getItem("stuDevice");
+				let stuDevice;
+			    if (!stuDeviceStr) {
+				    const devices = await com.WacomGSS.STU.UsbDevice.requestDevices();
+	                if (devices.length > 0) {
+		                stuDevice = devices[0];                        					
+						localStorage.setItem("stuDevice", JSON.stringify({"vendorId":stuDevice.vendorId,
+						                                   "productName":stuDevice.productName,
+														   "productId":stuDevice.productId}));
+		                setDeviceName();
+	                } else {
+		                throw "No STU devices found";
+	                }				
+				} else {
+				    stuDevice = JSON.parse(stuDeviceStr);
+				    // get all the devices that we have permissions to connect
+				    await navigator.hid.getDevices().then(devices => {
+	                    devices.forEach(device => {							
+					        if (stuDevice.vendorId === device.vendorId && stuDevice.productId === device.productId && stuDevice.productName === device.productName) {
+						        stuDevice = device;
+						    }
+	                    });							
+	                });
+				}
+				
+				config.stuDevice = stuDevice;				
 				stuCapDialog = new StuCaptDialog(config);
 				stuCapDialog.addEventListener("ok", function() {
 				    encryptSignature();
 				    renderSignature();
-				});				
-				stuCapDialog.open(mSigObj, document.getElementById("who").value, document.getElementById("why").value, generateExtraData(), Module.KeyType.SHA512, documentHash);				
+				});		
+				
+				//in this demo we use https://github.com/keithws/browser-report library for getting 
+				//information about the os.
+				const webBrowserData = browserReportSync();		
+				const osInfo = webBrowserData.os.name + " " + webBrowserData.os.version;
+                const nicInfo = "";
+		        const where = "";
+				stuCapDialog.open(mSigObj, document.getElementById("who").value, document.getElementById("why").value, where, generateExtraData(), Module.KeyType.SHA512, documentHash, osInfo, nicInfo);								
+			}
+			
+			function setDeviceName() {
+			    const stuDeviceStr = localStorage.getItem("stuDevice");
+				if (stuDeviceStr) {
+				    document.getElementById("selectedStuDevice").innerHTML = JSON.parse(stuDeviceStr).productName;
+				} else {
+				    document.getElementById("selectedStuDevice").innerHTML = "None";
+				}
+			}
+			
+			function removeDevice() {
+			    localStorage.removeItem("stuDevice");
+				setDeviceName();
 			}
 			
 			function clear() {
@@ -309,9 +388,8 @@
 				}
 				
 				const inkColor = document.getElementById("rendering_color_box").value;
-				const comboTools = document.getElementById("inking_tool");					
-				const inkTool = document.getElementById("use_will").checked ? tools[comboTools.options[comboTools.selectedIndex].value] : parseInt(document.getElementById("ink_width").value);
-				const image = await mSigObj.renderBitmap(renderWidth, renderHeight, "image/png", inkTool, inkColor, backgroundColor, 0, 0, renderFlags);				
+				const inkWidth = parseInt(document.getElementById("ink_width").value);
+				const image = await mSigObj.renderBitmap(renderWidth, renderHeight, "image/png", inkWidth, inkColor, backgroundColor, 0, 0, renderFlags);				
 				return image;				
 			}
 				
@@ -654,16 +732,6 @@
 				}
 			}
 			
-			async function loadCertificate() {
-			    try {
-			        encryptionKeys = await decodePKCS12(document.getElementById("asymmetric_certificate").files[0], 
-					                       document.getElementById("asymmetric_password").value);
-				} catch (e) {
-				    document.getElementById("asymmetric_certificate").value = "";
-				    alert(e);					
-				}
-			}
-			
 			function removeButton(button) {
 			    document.getElementById(button).remove();
 			}
@@ -724,40 +792,7 @@
 				
 				return extraData;
 			}
-			
-			function decodePKCS12(file, password) {
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = evt => {
-                        try {
-                            const binary = evt && evt.target ? evt.target.result : null
-                            if (!binary) {
-                                reject(new Error('No file data'))
-                            }
-                            const p12Asn1 = forge.asn1.fromDer(binary)
-                            const p12 = forge.pkcs12.pkcs12FromAsn1(p12Asn1, password)
-							
-							const bags = p12.getBags({bagType: forge.pki.oids.certBag})
-							const cert = bags[forge.pki.oids.certBag][0];
-							if (cert?.cert?.validity?.notAfter < new Date()) {
-							    reject("Certificate has expired");
-							}							
-
-                            const pkeyBags = p12.getBags({bagType: forge.pki.oids.pkcs8ShroudedKeyBag})
-                            const keybag = pkeyBags[forge.pki.oids.pkcs8ShroudedKeyBag][0];							
-
-                            const privateKey = forge.pki.privateKeyToPem(keybag.key)
-							const publicKey = forge.pki.publicKeyToPem(forge.pki.setRsaPublicKey(keybag.key.n, keybag.key.e));							
-                            resolve({publicKey, privateKey})
-                        } catch (e) {
-                            reject(e)
-                        }
-                    }
-                    reader.onerror = reject
-                    reader.readAsBinaryString(file)
-                })
-			}
-			
+						
 			async function encryptSignature() {
 			    try {
 			        if (document.getElementById("no_encryption").checked) {
@@ -767,9 +802,9 @@
  					    if (document.getElementById("symmetric_encryption").checked) {
 				            await mSigObj.setEncryptionPassword(document.getElementById("symmetric_password").value);												
 					    } else if (document.getElementById("asymmetric_encryption").checked) {
-					        if (encryptionKeys.publicKey) {								
-						        let res = await mSigObj.setPublicKey(encryptionKeys.publicKey);
-								console.log(res);
+					        const pubKey = document.getElementById("public_key").value;
+                            if (pubKey !== "") {								
+						        await mSigObj.setPublicKey(pubKey);								
 						    }
 						}
 						
@@ -787,8 +822,14 @@
 			        if (document.getElementById("symmetric_encryption").checked) {
 				        await signature.setEncryptionPassword(document.getElementById("symmetric_password").value);												
 					} else if (document.getElementById("asymmetric_encryption").checked) {
-					    if (encryptionKeys.privateKey) {								
-						    await signature.setPrivateKey(encryptionKeys.privateKey);								
+					    const privKey = document.getElementById("private_key").value;
+					    if (privKey !== "") {		
+                            const privKeyPassword = document.getElementById("private_key_password").value;
+							if (privKeyPassword !== "") {
+							    // add the password to the end of the key
+		                        privKey += ","+privKeyPassword;
+							}
+						    await signature.setPrivateKey(privKey);								
 						}
 				    }
 				} catch (e) {
@@ -815,13 +856,14 @@
 				}
 			}		
 
-            function useWillCheck() {
-			    document.getElementById("inking_tool").disabled = !document.getElementById("use_will").checked;
-				document.getElementById("ink_width").disabled = document.getElementById("use_will").checked;
-			}			
 		</script>
     </head>
 	<body>	
+	    <div id="initializeBanground" class="active" style="width:100%;height:100%;position:fixed;background:#cccccccc;">
+		    <div style="position:absolute;left:50%;top:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);">
+			    <table><tr><td><div class="loader"></div></td><td>Initializing, this could take a few seconds...</td></tr></table>
+			</div>
+		</div>
         <div class="wrapper">    
 	        <div id="header_container">
                 <div id="header">
@@ -866,7 +908,10 @@
 					    <label for="document">Document:</label><br>
 					    <input type="file" id="document" name="document" onchange="addDocumentHash()" disabled="disabled"><br><br>
 					
-			            <button id="capture_stu_btn" onClick="capture('STU')" disabled="disabled">Capture signature from STU tablet</button><br><br>				    
+			            <p>
+						    Selected STU device: <span id="selectedStuDevice"></span>-<a name="removeDevice" href="#removeDevice" onClick="removeDevice()">Remove</a><br>
+			                <button id="capture_stu_btn" onClick="capture('STU')" disabled="disabled">Capture signature from STU tablet</button><br><br>				    
+						</p>
 					    <p>
 					        The input data for the signature can be taken from different sources:
 					        <fieldset style="width:400px;height:40px;padding:5px;margin:5px">
@@ -881,10 +926,10 @@
 		                        <label for="allow_pen_check">Allow pen</label>			
 		                    </fieldset>
 					    </p>
-					    <button id="capture_canvas_btn" onClick="capture('Canvas')">Capture signature from Generic device</button>
+					    <button id="capture_canvas_btn" onClick="capture('Canvas')" disabled="disabled">Capture signature from Generic device</button>
 		                <br><br>
-		                <fieldset style="width:0;padding:5px;margin:5px;">
-		                    <legend>Signature</legend>
+		                <p>Signature:</p>
+						<fieldset style="width:0;padding:0;margin:0;">		                    
 			                <div id="captureDiv" style="width:400px;height:330px;"></div>
                             <img id="signatureImage" style="display:none">						
 		                </fieldset>
@@ -955,27 +1000,11 @@
 					<div>
 		                <fieldset style="width:400px;padding:5px;margin:5px">
 		                    <legend>Ink</legend>
-							<input type="checkbox" name="use_will" id="use_will" checked="checked" onchange="useWillCheck()">
-							<label for="use_will">use WILL</label>							
-							<br><br>
 							<label for="ink_width">Ink width:</label>
-							<input type="input" name="ink_width" id="ink_width" value="2" disabled="disabled">
-							<br><br>
-                            <label for="inking_tool">Inking tool:</label>
-		                    <select name="inking_tool" id="inking_tool">
-			                    <option value="pen">pen</option>
-			                    <option value="felt">felt</option>
-			                    <option value="brush">brush</option>
-			                    <option value="marker">marker</option>
-		                        <option value="pencil">pencil</option>
-	                            <option value="waterBrush">waterBrush</option>
-	                            <option value="inkBrush">inkBrush</option>
-	                            <option value="rainbowBrush">rainbowBrush</option>
-	                            <option value="crayon">crayon</option>
-		                    </select>
+							<input type="number" name="ink_width" id="ink_width" value="6">
 			                </br></br>
 			                <label for="rendering_color_box">Ink color:</label>			
-			                <input type="color" name="rendering_color_box" id="rendering_color_box" value="#000F55">
+			                <input type="color" name="rendering_color_box" id="rendering_color_box" value="#0202FE">
 							<br>
 							<label for="background_color_box">Background color</label>			
 			                <input type="color" name="background_color_box" id="background_color_box" value="#ffffff">							
@@ -994,6 +1023,11 @@
 							<br>
 							<label for="background_opacity">Background opacity</label>
 							<input type="range" min="1" max="100" value="100" id="background_opacity">
+							<br>
+							<input type="checkbox" name="allowOutSide" id="allowOutSide" checked="checked">
+							<label for="allowOutSide">Allow outside inking</label><br>
+							<input type="checkbox" name="allowZeroPressure" id="allowZeroPressure" checked="checked">
+							<label for="allowZeroPressure">Allow zero pressure</label><br>
 		                </fieldset>
 				    </div>
 					<div>
@@ -1303,12 +1337,18 @@
                                 <input type="radio" id="asymmetric_encryption" name="encryption_group" value="asymmetric_encryption">
                                 <label for="asymmetric_encryption">Asymmetric encryption</label>
 								<br>
-								<span style="padding-left:30px">Select key as pk12 format:</span>
+								<label for="public_key" style="padding-left:40px">Public Key (used for encryption):</label>
 								<br>
-								<label for"asymmetric_password" style="padding-left:40px">Password: </label>
-								<input type="password" id="asymmetric_password">								
+								<textarea name="public_key" id="public_key" style="margin-left:40px"></textarea>
 								<br>
-								<input type="file" id="asymmetric_certificate" style="padding-left:30px" onChange="loadCertificate()">								
+								<span style="padding-left:30px">Private key (used for decryption):</span>
+								<br>								
+								<label for="private_key_password" style="padding-left:40px">Private key password: </label>
+								<input type="password" id="private_key_password">								
+								<br>
+								<label for="private_key" style="padding-left:40px">Private key:</label>
+								<br>
+								<textarea name="private_key" id="private_key" style="margin-left:40px"></textarea>
                             </div>
 						</fieldset>
 					</div>

@@ -1,24 +1,22 @@
 # Wacom Signature SDK for JavaScript
 
 - [Wacom Signature SDK for JavaScript](#wacom-signature-sdk-for-javascript)
-	- [Introduction](#introduction)
-		- [Supported web browsers](#supported-web-browsers)
-		- [Creating the Signature Object](#creating-the-signature-object)
-	- [SigCaptDialog for Wacom Signature SDK](#sigcaptdialog-for-wacom-signature-sdk)
-		- [How to use SigCaptDialog library](#how-to-use-sigcaptdialog-library)
-			- [Generic functionality libraries](#generic-functionality-libraries)
-			- [Libraries necessary when using STU Devices](#libraries-necessary-when-using-stu-devices)
-			- [Libraries used for WILL Ink SDK](#libraries-used-for-will-ink-sdk)
-		- [Configure the library](#configure-the-library)
-			- [Signature Capture Dialog](#signature-capture-dialog)
-			- [STU Capture Dialog](#stu-capture-dialog)
-	- [Ways of capturing a signature](#ways-of-capturing-a-signature)
-		- [Using Wacom STU tablet](#using-wacom-stu-tablet)
-		- [Using HTML5 canvas](#using-html5-canvas)
-		- [Problems](#problems)
-	- [About the content of this folder](#about-the-content-of-this-folder)
-		- [Documentation](#documentation)
-		- [Demos](#demos)
+  - [Introduction](#introduction)
+    - [Supported web browsers](#supported-web-browsers)
+    - [Creating the Signature Object](#creating-the-signature-object)
+  - [SigCaptDialog for Wacom Signature SDK](#sigcaptdialog-for-wacom-signature-sdk)
+    - [How to use SigCaptDialog library](#how-to-use-sigcaptdialog-library)
+      - [Generic functionality libraries](#generic-functionality-libraries)
+    - [Configure the library](#configure-the-library)
+      - [Signature Capture Dialog](#signature-capture-dialog)
+      - [STU Capture Dialog](#stu-capture-dialog)
+  - [Ways of capturing a signature](#ways-of-capturing-a-signature)
+    - [Using Wacom STU tablet](#using-wacom-stu-tablet)
+    - [Using HTML5 canvas](#using-html5-canvas)
+    - [Problems](#problems)
+  - [About the content of this folder](#about-the-content-of-this-folder)
+    - [Documentation](#documentation)
+    - [Demos](#demos)
 
 ## Introduction
 
@@ -34,7 +32,7 @@ The **Signature SDK for JavaScript** is based on WebAssembly, a binary instructi
 
 Additional information about WebAssembly compatibility can be viewed [here.](https://caniuse.com/wasm)
 
-For using Wacom STU tablets all the browsers that implement WebHID should be supported. Thus, at the moment it is supported as a feature on:
+For using Wacom STU tablets*, all the browsers that implement WebHID should be supported. Thus, at the moment it is supported as a feature on:
 
 - Chromium
 - Google Chrome
@@ -42,6 +40,8 @@ For using Wacom STU tablets all the browsers that implement WebHID should be sup
 - Opera
 
 Firefox and Safari have refused to implement this feature on the basis of security reasons, so it won't be supported.
+
+***NB: The STU-541 features TLS encryption, which is not compatible with the JS SDK at this time.**
 
 
 | Browser        | Canvas support | WebHID support |
@@ -106,7 +106,7 @@ sigCaptDialog.startCapture();
 ```
 
 With the default library, we are able to capture pointer events from JavaScript such as mouse, touch or pen data.
-In Web Browsers that supports WebHID, it is also possible to connect to Wacom STU devices using **stuCaptDialog.js**. This is based on Wacom STU SDK for JavaScript.
+In Web Browsers that support WebHID, it is also possible to connect to Wacom STU devices using **stuCaptDialog.js**. This is based on Wacom STU SDK for JavaScript.
 
 The usage is similar to SigCaptDialog:
  
@@ -136,79 +136,70 @@ stuCaptDialog.open(sigObj, "Signatory", "Reason for signing", null, Module.KeyTy
 
 ``` 
 
-Apart from **signCaptDialog.js** and **stuCaptDialog.js**, some third-party licences need to be added to the project:
+Apart from **signCaptDialog.js** and **stuCaptDialog.js**, some third-party licenses need to be added to the project:
 
 ####  Generic functionality libraries
-- **jquery.min.js** and **jquery-ui.min.js** are used for implementing dragging into the canvas dialog.
-- **jquery.ui.touch-punch.min.js** is used for implementing dragging with touch into the canvas dialog.
 
-#### Libraries necessary when using STU Devices
-- **BigInt.js**, **md5.min.js** and **sjcl.js**. These libraries are necessary when implementing encryption
-on STU device connections.
-
-#### Libraries used for WILL Ink SDK
-Although it is possible to use Signature SDK JS without WILL Ink SDK, it is used by default. In order to use it
-we need to include these third party libraries:
-- **clipper.js**
-- **long.js**
-- **md5.min.js** 
-- **poly2tri.min.js**
-- **protobuf.min.js**
+- **aes.js**
+- **browser-report.js**
 
 ### Configure the library 
 
 #### Signature Capture Dialog
 A JSON config string that is passed by the constructor can be used to configure the dialog appearance.
 
-The default values for SigCapDialog looks like:
+The default values for SigCapDialog look like:
 
 ```js
-const config = {
+	this.config = {
 	  width: 400,
 	  height: 300,
 	  left: 0,
 	  top:0,
-	  centered:false,
+	  centered:true,
 	  title: "My Tittle",
 	  borderColor: "#0097d4",
-	  borderWidth: "1",
+	  borderWidth: "1p",
 	  hasTitle: true,
 	  buttons: [{
-	             text: "*clear", 
-	             textColor: "black", 
-				 backgroundColor: "lightgrey", 
-				 borderWidth: 0, 
-				 borderColor: "black", 
-				 onClick: this.btnClearClick.bind(this)
-				},
+                text: "*clear", 
+                textColor: "black", 
+                backgroundColor: "lightgrey", 
+                borderWidth: 0, 
+                borderColor: "black", 
+                onClick: this.btnClearClick.bind(this)
+                }, 
+	            {
+                text: "*cancel", 
+                textColor: "black", 
+                backgroundColor: "lightgrey", 
+                borderWidth: 0, 
+                borderColor: "black", 
+                onClick: this.btnCancelClick.bind(this)
+                }, 
 				{
-				 text: "*cancel", 
-				 textColor: "black", 
-				 backgroundColor: "lightgrey", 
-				 borderWidth: 0, 
-				 borderColor: "black", 
-				 onClick: this.btnCancelClick.bind(this)
-				}, 
-				{
-				 text: "*ok", 
-				 textColor: "black", 
-				 backgroundColor: "lightgrey", 
-				 borderWidth: 0, 
-				 borderColor: "black", 
-				 onClick: this.btnOkClick.bind(this)
-				}
-			   ],
+                text: "*ok", 
+                textColor: "black", 
+                backgroundColor: "lightgrey", 
+                borderWidth: 0, 
+                borderColor: "black", 
+                onClick: this.btnOkClick.bind(this)
+            }
+            ],
 	  buttonsFont: "Arial",
-	  background: {alpha: 1.0, color: "white"},
+	  background: {alpha: 1.0, color: "white", mode:"fit"},
 	  reason: {visible:true, fontFace:"Arial", fontSize:16, color:"black", offsetY:10, offsetX:5},
 	  signatory: {visible:true, fontFace:"Arial", fontSize:16, color:"black", offsetY:5, offsetX:30},
 	  date: {visible:true, fontFace:"Arial", fontSize:16, color:"black", offsetY:20, offsetX:30},
 	  signingLine: {visible:true, left:30, right:30, width:2, color:"grey", offsetY:5},
-	  source: {mouse:true, touch:true, pen:true, stu:true},
-	  will: {tool:"pen", color:"#000F55"},
+	  source: {mouse:true, touch:true, pen:true, stu:true},	 
+	  strokeColor:"#0202FE",
+	  strokeSize:6,	  
 	  modal: true,
-	  draggable: true
-    };  
+	  draggable: true,
+	  timeOut: {enabled:false, time:10000, onTimeOut:null},
+	  allowZeroPressure: true
+    }; 
 	
 ``` 
 
@@ -227,7 +218,13 @@ Where the meaning of each field is:
 * **modal**: Boolean indicating that the dialog will be opened as modal or not. A modal dialog is one that blocks the rest of the screen's content, disabling other form controls.
 * **draggable**: When the dialog is shown as a float dialog and has a title bar. This Boolean value indicates if the dialog can be moved when dragging the title bar.
 * **source**: Indicates what kind of event if accepted. The possible values are: mouse, touch, pen and stu in the format of source:{mouse:true, touch:true, pen:true, stu:true}; if one value is missing or false, this source won’t be captured. For example, if we defined mouse as false, the mouse won’t be valid for signature capturing. NB: When capturing signatures with mouse or touch for forensic validation, not all the necessary data (such as pen pressure) can be provided.
-* **will**: This library uses Wacom WILL Ink SDK for inking. Here we can pass an object indicating the tool type to use for drawing and the color of the inking. For example will:{tool:”pen”, color:”#0000F55”} will draw simulating a blue pen.
+* **strokeColor**: Color of the ink strokes. 
+* **strokeSize**: Size of the ink strokes. 
+* **timeOut**: A timeout can be set if users wish to apply a limited period to the signing.
+    * **enabled**: Boolean value that indicates if timeout is enabled or not. 
+    * **time**: Time in milliseconds before timeout.
+    * **onTimeOut**: Effect to be had upon timeout. 
+* **allowZeroPressure**: Boolean value that indicates if zero pressure is valid. 
 * **buttons**: By default, the dialog will show three buttons at the bottom for aceptance, cancel or clear. With this configuration we can adjust the buttons to display, their appearance and the action to be executed when selected.
 The order indicates the order in which it will be displayed from left to right.
     * **text**: Button text. If the text of the button starts with *, this indicates that it will use translation strings, given that they exist.
@@ -241,6 +238,7 @@ The order indicates the order in which it will be displayed from left to right.
     * **color**: String with the background color to be applied.
 	* **alpha**: Float number between 0 (transparent) to 1 (opaque).
     * **image**: Image object with the image to be set as the background.
+    * **mode**: Value setting the way the background is applied. Values are `center`, `fit`, `none` and `pattern`.
 * **reason**: Object with the metrics to show the reason for signing.
     * **visible**: Boolean indicating if the reason for signing should be shown.
     * **fontFace**: String with the name of the font.
@@ -298,17 +296,19 @@ In the examples below, two different ways of capturing a signature are described
 
 ### Problems
 
-When collecting pen data from a device other than an STU, HTML5 pointer events for these devices are captured using JavaScript point events. Due to limitations of certain browsers, the sample rates may be limited when running these point events. 
+When collecting pen data from a device other than an STU, HTML5 pointer events for these devices are captured using JavaScript point events. Due to limitations on certain browsers, the sample rates may be limited when running these point events. 
 
 Firefox supports pen pressure since Firefox 59. This however needs to be activated. On Windows, you may need to toggle a browser setting to get pen pressure to function.
 
 For Firefox:
 
 1. Enter "about:config" into your address bar and press enter.
-2. Type "w3c" in the search box, then double click on "dom.w3c_pointer_events_dispatch_by_pointer_messages". Change its value column to "true".
+2. Type "w3c" in the search box, then double-click on "dom.w3c_pointer_events_dispatch_by_pointer_messages". Change its value column to "true".
 3. Make sure "dom.w3c_pointer_events.enabled" is also set to "true". This is the default for this version of Firefox.
 
-NB: In the Windows version, capturing a signature would lead to the PC's Network Card ID being saved as signature property. In the JavaScript version, this field is not mandatory anymore. 
+**NB: In the Windows version, capturing a signature would lead to the PC's Network Card ID being saved as signature property. In the JavaScript version, this field is not mandatory anymore.**
+
+On the latest version of Firefox, running an incognito window will disable the use of internal storage, preventing users from capturing a signature from a generic device. It is important that if capturing with Firefox, users run their application in a normal window. 
 
 ## About the content of this folder
 

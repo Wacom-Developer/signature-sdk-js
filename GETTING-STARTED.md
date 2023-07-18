@@ -6,14 +6,12 @@
   - [Installation](#installation)
     - [Web Development Environment](#web-development-environment)
     - [Download Signature SDK for JavaScript.](#download-signature-sdk-for-javascript)
-    - [WILL Ink SDK  for Web](#will-ink-sdk--for-web)
-      - [Download WILL Ink SDK](#download-will-ink-sdk)
-    - [SDK License](#sdk-license)
     - [Using the Signature SDK Sample Code](#using-the-signature-sdk-sample-code)
   - [Licensing](#licensing)
     - [Setting up the license](#setting-up-the-license)
       - [Simple demo - in demos/simple/simple.js](#simple-demo---in-demossimplesimplejs)
-      - [Complete demo - in demos/complete\_demo/index.html](#complete-demo---in-demoscomplete_demoindexhtml)
+      - [Complete demo - in demos/complete/index.html](#complete-demo---in-demoscompleteindexhtml)
+      - [Wizard demo - in demos/wizard/index.html](#wizard-demo---in-demoswizardindexhtml)
   - [Operate the Demo application](#operate-the-demo-application)
     - [Capture Signature](#capture-signature)
       - [Choose file](#choose-file)
@@ -39,7 +37,7 @@ Currently, WebHID works if executed locally or on a secure connection.
 
 Download the SDK from https://developer.wacom.com/developer-dashboard
 
-- Login using your Wacom ID
+- Log in using your Wacom ID
 - Select **Downloads for signature**
 - Download **Wacom Ink SDK for signatures for JavaScript**
 - Accept the End User License Agreement to use the SDK
@@ -50,6 +48,7 @@ The Signature SDK for JavaScript is distributed as two files:
 
 1. wasm – This is the SDK itself.
 2. js – This is the JavaScript wrapper.
+3. stu_sdk.min.js – this is the library that connects to STU devices. 
 
 Using the SDK via the website must be done on a web server due to security restrictions. It cannot be used directly from the local file system. Additionally, the connection must be secure (https) when using another URL other than localhost.
 
@@ -65,7 +64,7 @@ For initial development, it is convenient to use localhost for this purpose.
 For example, use Node.js with `http-server`, then launch the demo code from the local server as:
 
 ```
-  http://localhost:8080/demos/complete_demo/index.html
+  http://localhost:8080/demos/complete/index.html
 ```
 
 ## Installation
@@ -89,49 +88,15 @@ Download the SDK from https://developer.wacom.com/developer-dashboard
 
 The downloaded Zip file contains the Signature SDK for JavaScript.
 
-    
-### WILL Ink SDK  for Web
-
-**Wacom Ink Layer Language (WILL™)** is a cross-platform digital ink technology.
-It is based on the needs of the end-user and Wacom's experience with different domains.
-WILL allows you to include premium digital inking features in your applications.
-It uses a modularized pipeline allowing each module to be configured, replaced, or omitted as required by the specific application, providing you with superior flexibility.
-
-Using the WILL Ink SDK library is optional for Signature SDK for JavaScript. However, it is highly recommended as it improves the quality of the captured signature inking.
-
-#### Download WILL Ink SDK
-
-Download the SDK from https://developer.wacom.com/developer-dashboard
-
-* Login using your Wacom ID
-* Select **Downloads for ink**
-* Download **WILL SDK for ink for Web (version 3)**
-* Accept the End User License Agreement to use the SDK
-
-The downloaded Zip file contains the SDK ink engine accessed by the sample code.
-
-
-### SDK License
-
-A valid license is needed for using Signature SDK for JavaScript, the demo code
-includes an evaluation license.
-
 ---
 
 ### Using the Signature SDK Sample Code
 
-* copy the files *signature_sdk.js* and *signature_sdk.wasm* from the Signature SDK for JavaScript zip file into the folder: 
-    * */demos/common/libs/*
+* copy the files *signature_sdk.js*, *signature_sdk.wasm* and *stu-sdk.min.js* from the Signature SDK for JavaScript zip file into the folder: 
+    * */demos/common/libs/signature_sdk/*
     * NB: Be sure to copy and paste the contents of the folder, and not the folder itself, so the directory looks like this:
 
 ![JavaScript SDK sample placement](media/sdk-js-location.png)
-
-* create a folder called *will* within */sigCaptDialog/libs/*. Within */will/*, create a new folder called *digital-ink*
-* copy the contents of the folder from the downloaded WILL Ink SDK and put them into the created above folder:
-    * */sigCaptDialog/libs/will/digital-ink*
-    * NB: Be sure to copy and paste the contents of the folder, and not the folder itself, so the directory looks like this:
-
-![WILL Web SDK sample placement](media/sdk-web-location.png)
 
 
 * start a command prompt in the root folder
@@ -160,45 +125,44 @@ Now you can access the web demos via:
 
 ## Licensing
 
-A valid license is needed for using Signature SDK for JavaScript. The demo code
-includes an evaluation license.
+A valid license is needed for using Signature SDK for JavaScript. 
+
+From version 2 onwards, the SDK's license is transaction-based, and is inserted into the demo as two components:
+
+- The license's key component
+- The license's secret component
 
 ### Setting up the license
 
 You may obtain either an evaluation license or a commercial license at: https://developer.wacom.com/en-us/developer-dashboard/license-keys.
 
-An evaluation license is also available here:
-
-`eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJiMzNhYWUyODA0NmM0MmE5OTgyY2E1NTdkZjhmY2YxOCIsImV4cCI6MTcwODE3ODg3NCwiaWF0IjoxNjgxNzI2MjY3LCJzZWF0cyI6MCwicmlnaHRzIjpbIkpTX0NPUkUiLCJTSUdfU0RLX0NPUkUiLCJTSUdfU0RLX0lTTyIsIlNJR19TREtfRU5DUllQVElPTiJdLCJkZXZpY2VzIjpbIldBQ09NX0FOWSJdLCJ0eXBlIjoiZXZhbCIsImxpY19uYW1lIjoiTGljZW5zZSBmb3IgSmF2YXNjcmlwdCBEZW1vIiwid2Fjb21faWQiOiJiMzNhYWUyODA0NmM0MmE5OTgyY2E1NTdkZjhmY2YxOCIsImxpY191aWQiOiI1MDU3Mzk4My05MDgzLTRjZjUtOGM5Yy0yNTMwNjc0ZWFmMmIiLCJhcHBzX3dpbmRvd3MiOltdLCJhcHBzX2lvcyI6W10sImFwcHNfYW5kcm9pZCI6W10sIm1hY2hpbmVfaWRzIjpbXX0.inGHe6CM3FexchESeu5mlPccOzrbTeZ_goMxRPppmHEqMcKz8DplC0IHOhjPvfV5c1giHsj_OctuomKWAsqt_lqo9ml4QAmnRiBYhE_itq1UdemIYusaHxapU3CL1Nr3ed9g-2Wq9Dducl-d7jCMNVnvmYM7fexIQAEV6soXBnJbdY4YXCznFftcA2jj2YI6Nz6f9ya-C9R1skQ0xuCEkkESWZ9NC_CSbu4I9h_Uv_X-0voY89H046F7wM1t61JGYMfIYwaDcJGazgD8_71OsRfOf5cUKDYsE0c-gH8vUUbbIMRO6i6zICwgEj2FAki9Rf23blPmvk8ijhBU0ZE_Hg`
-
-NB: this particular license is only valid for a limited time.
-
 Once you have a valid license, you can initialize the Signature SDK for JavaScript with the following code:
 
 #### Simple demo - in demos/simple/simple.js
 
-```
-      try {
+```javascript
 
-        mSigObj.setLicence("PUT HERE YOUR LICENCE STRING");  
-
-      } catch (e) {
-
-        ...
-
-      }
-```
-
-#### Complete demo - in demos/complete_demo/index.html
+	const promise = mSigObj.setLicence("key", "secret");
 
 ```
-<script>
-		    const licence = "PUT HERE YOUR LICENCE STRING";
 
-        ...
+#### Complete demo - in demos/complete/index.html
 
-</script>
+```javascript
+
+	const promise = mSigObj.setLicence("put your key licence here", "put your secret licence here");
+
 ```
+
+#### Wizard demo - in demos/wizard/index.html
+
+```javascript
+
+	const promise = mSigObj.setLicence("key", "secret");
+
+```
+
+
 
 Now you may use any of the API functions, calling them directly from the Signature Object. You can see these functions in more detail in: Signature_SDK_JS_API.md.
 
@@ -242,7 +206,7 @@ Additional data may be included through the use of "Add extra data".
 
 #### Choose file
 
-A file may be selected to be bound to a signature due to be captured.
+A file may be selected to be bound to a signature that's due to be captured.
 
 ![Example signature](media/choose-file-1.png)
 
@@ -333,7 +297,7 @@ From the loaded signature, the following data can be extracted such as the signa
 
 The settings section contains configuration for the demos:
 
-- Ink: This section allows for selection of the type of inking tool, its colour and the choice of whether or not to use a background image.
+- Ink: This section allows for the selection of the type of inking tool, its color and the choice of whether or not to use a background image.
 
 - Capture window: This section allows adjustment of the capture window's size, fonts, their size and x/y offsets that appear within it and the number of buttons that appear.
 
@@ -347,7 +311,7 @@ A simplified version of the JS demo exists within demos/simple/index.html, with 
 
 ## Known issues
 
-- On Android and iOS, performing two point touch over the signature capture area (e.g zooming in or out) will produce a defaced signature trace on the canvas.
+- On Android and iOS, performing two-point touch over the signature capture area (e.g zooming in or out) will produce a defaced signature trace on the canvas.
 - On a Motorola G30, the signature area is not loaded and trace is unable to be added. This is an issue with the installed web browser, rather than an issue with the Signature SDK.
 - On Chrome 101 with older Windows 10 (or Windows 7) versions, it will not be possible to add STU or Generic signatures. This is a web browser issue that would, were a fix to be made, introduce further problems.
 - On iOS 15, when adding strokes, occasionally a dot artifact is created at the end point of the stroke when signing. When pressing OK to complete the signature, the dot artifact is no longer visible and the signature renders correctly.

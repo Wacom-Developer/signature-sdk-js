@@ -98,13 +98,6 @@ The downloaded Zip file contains the Signature SDK for JavaScript.
 
 ![JavaScript SDK sample placement](media/sdk-js-location.png)
 
-
-* start a command prompt in the root folder
-* use the command ```npm install``` to create the node_modules folder with all the dependencies
-* after installation, the root should look like this: 
-
-![Root](media/root.png)
-
 The web-based app needs a web server.
 Python's `SimpleHTTPServer` provides an easy way to get started.
 To start the web server, start a command prompt in the project root folder and run:

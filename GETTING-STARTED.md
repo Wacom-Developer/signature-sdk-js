@@ -46,8 +46,8 @@ The downloaded Zip file contains the Signature SDK for JavaScript.
 
 The Signature SDK for JavaScript is distributed as two files:
 
-1. wasm – This is the SDK itself.
-2. js – This is the JavaScript wrapper.
+1. signature_sdk.wasm – This is the SDK itself.
+2. signature_sdk.js – This is the JavaScript wrapper.
 3. stu_sdk.min.js – this is the library that connects to STU devices. 
 
 Using the SDK via the website must be done on a web server due to security restrictions. It cannot be used directly from the local file system. Additionally, the connection must be secure (https) when using another URL other than localhost.
@@ -127,9 +127,9 @@ From version 2 onwards, the SDK's license is transaction-based, and is inserted 
 
 ### Setting up the license
 
-You may obtain either an evaluation license or a commercial license at: https://developer.wacom.com/en-us/developer-dashboard/license-keys.
+You may obtain either an evaluation license or a commercial license at: https://developer.wacom.com/en-us/developer-dashboard/license-keys. Alternatively, please contact your regional Wacom Sales representative. You can contact sales by going to https://developer.wacom.com/.
 
-Once you have a valid license, you can initialize the Signature SDK for JavaScript with the following code:
+Once you have a valid license, you can initialize the Signature SDK for JavaScript by adding the license key and secret into the code. Each demo you wish to use will require the license key and secret to be added into these sections:
 
 #### Simple demo - in demos/simple/simple.js
 
@@ -158,14 +158,6 @@ Once you have a valid license, you can initialize the Signature SDK for JavaScri
 
 
 Now you may use any of the API functions, calling them directly from the Signature Object. You can see these functions in more detail in: Signature_SDK_JS_API.md.
-
-Install the JWT license which is supplied separately.
-
-To obtain a license for the SDK, please contact your regional Wacom Sales representative. You can contact sales by going to https://developer.wacom.com/.
-
-Insert the license string in the demo code.
-
-Within index.html or simple.js for the complete and simple demos respectively, locate 'PUT HERE YOUR LICENCE STRING' and insert the license string in its place.
 
 ## Operate the Demo application
 

@@ -1,0 +1,1 @@
+Place the contents of the JavaScript SDK in this directory. 

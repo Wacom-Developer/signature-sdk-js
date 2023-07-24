@@ -18,8 +18,9 @@
     - [Documentation](#documentation)
     - [Demos](#demos)
 
-> **Important Note:**
-> **Version 1 of the signature SDK for JavaScript is now discontinued and support for it is no longer offered.** 
+> **Version 2 of the signature SDK for JavaScript has now been released!** 
+> 
+> **Please note that version 1 is now discontinued.** 
 > 
 > **Version 1 users wishing to use the signature SDK for JavaScript should upgrade to version 2. A guide on how to upgrade can be viewed by [following this link here](https://developer-docs.wacom.com/docs/sdk-for-signature/guides/javascript/v2/v2-upgrade/)**
 

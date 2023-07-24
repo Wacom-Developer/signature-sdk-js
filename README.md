@@ -18,6 +18,11 @@
     - [Documentation](#documentation)
     - [Demos](#demos)
 
+> **Important Note:**
+> **Version 1 of the signature SDK for JavaScript is now discontinued and support for it is no longer offered.** 
+> 
+> **Version 1 users wishing to use the signature SDK for JavaScript should upgrade to version 2. A guide on how to upgrade can be viewed by [following this link here](https://developer-docs.wacom.com/docs/sdk-for-signature/guides/javascript/v2/v2-upgrade/)**
+
 ## Introduction
 
 Wacom’s Signature SDK library for JavaScript provides software components to capture handwritten signatures from a Web Browser. 

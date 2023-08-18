@@ -177,7 +177,16 @@ The main functionalities of this page are:
 
 - Choose file: Choose a file to bind to the signature. This can be later used to see if the document has been changed or not.
 - Capture signature from STU tablet: With an attached STU, capture a new signature.
-- Capture signature from Generic device: With an attached integrated pen device, capture a new signature.
+- Capture signature from Generic device*: With an attached integrated pen device, capture a new signature.
+
+> *These devices include, but are not limited to:
+> - Wacom Pen Display Devices (DTUs and DTKs)
+> - Wacom One devices
+> - Wacom Cintiq devices
+> - Other non-Wacom tablet devices
+> 
+> For a more complete list, see the [JavaScript Signature SDK section of Wacom's software compatibility with Wacom HW](https://developer-support.wacom.com/hc/en-us/articles/9354550540439-BSU-SW-Compatibility-with-Wacom-HW).
+
 
 In the case of the latter two options, the user will have the option to save the signature as a .png, .txt or in Wacom's .fss (Forensic Signature Stream) format.
 

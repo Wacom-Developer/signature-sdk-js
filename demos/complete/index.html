@@ -230,11 +230,14 @@
 		    async function captureFromSTU() {
 			    sigCaptDialog = null;
 			    const config = generateConfig();
-				config.encryption = {
-				    sessionId: window.crypto.getRandomValues(new Uint32Array(1))[0], // 32 bits random value
-				    encryptionHandler: new MyEncryptionHandler(), // only necessary if connecting to STU-300/500/520
-				    encryptionHandler2: new MyEncryptionHandler2(), // only necessary if connection to STU-430/530/540 
-				};
+				
+				if (document.getElementById("encrypt_stu").checked) {				
+				    config.encryption = {
+				        sessionId: window.crypto.getRandomValues(new Uint32Array(1))[0], // 32 bits random value
+				        encryptionHandler: new MyEncryptionHandler(), // only necessary if connecting to STU-300/500/520
+				        encryptionHandler2: new MyEncryptionHandler2(), // only necessary if connection to STU-430/530/540 
+				    };
+				}
 
                 const stuDeviceStr = localStorage.getItem("stuDevice");
 				let stuDevice;
@@ -997,6 +1000,13 @@
 			    </div>
 				<div id="settings_div" class="tabcontent">
 				    <h2>Settings</h2>
+					<div>
+					    <fieldset style="width:400px;padding:5px;margin:5px">						    							
+						    <legend>STU Settings</legend>
+							<input type="checkbox" name="encrypt_stu" id="encrypt_stu" checked="checked">
+							<label for="encrypt_stu">Encrypt STU communication</label>
+						</fieldset>					
+					</div>
 					<div>
 		                <fieldset style="width:400px;padding:5px;margin:5px">
 		                    <legend>Ink</legend>

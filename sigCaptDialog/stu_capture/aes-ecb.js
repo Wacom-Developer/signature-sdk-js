@@ -18,6 +18,60 @@
  */
  
 var AES = {
+	
+  bitArray: {
+	  /**
+       * Find the length of an array of bits.
+       * @param {bitArray} a The array.
+       * @return {Number} The length of a, in bits.
+       */
+      bitLength: function (a) {
+          var l = a.length, x;
+          if (l === 0) { return 0; }
+          x = a[l - 1];
+          return (l-1) * 32 + AES.bitArray.getPartial(x);
+      },
+	  
+	  /**
+       * Truncate an array.
+       * @param {bitArray} a The array.
+       * @param {Number} len The length to truncate to, in bits.
+       * @return {bitArray} A new array, truncated to len bits.
+       */
+      clamp: function (a, len) {
+          if (a.length * 32 < len) { return a; }
+          a = a.slice(0, Math.ceil(len / 32));
+          var l = a.length;
+          len = len & 31;
+          if (l > 0 && len) {
+              a[l-1] = AES.bitArray.partial(len, a[l-1] & 0x80000000 >> (len-1), 1);
+          }
+          return a;
+      },
+	  
+	  /**
+       * Make a partial word for a bit array.
+       * @param {Number} len The number of bits in the word.
+       * @param {Number} x The bits.
+       * @param {Number} [_end=0] Pass 1 if x has already been shifted to the high side.
+       * @return {Number} The partial word.
+       */
+      partial: function (len, x, _end) {
+          if (len === 32) { return x; }
+          return (_end ? x|0 : x << (32-len)) + len * 0x10000000000;
+      },
+	  
+	  /**
+       * Get the number of bits used by a partial word.
+       * @param {Number} x The partial word.
+       * @return {Number} The number of bits used by the partial word.
+       */
+      getPartial: function (x) {
+          return Math.round(x/0x10000000000) || 32;
+      },
+
+	  
+  },	  
   
   Codec: {
 	  
@@ -28,7 +82,7 @@ var AES = {
               for (i=0; i<arr.length; i++) {
                   out += ((arr[i]|0)+0xF00000000000).toString(16).substr(4);
               }
-              return out.substr(0, sjcl.bitArray.bitLength(arr)/4);//.replace(/(.{8})/g, "$1 ");
+              return out.substr(0, AES.bitArray.bitLength(arr)/4);//.replace(/(.{8})/g, "$1 ");
           },
   
           /** Convert from a hex string to a bitArray. */
@@ -40,8 +94,9 @@ var AES = {
               for (i=0; i<str.length; i+=8) {
                   out.push(parseInt(str.substr(i,8),16)^0);
               }
-              return sjcl.bitArray.clamp(out, len*4);
+              return AES.bitArray.clamp(out, len*4);
           }
+		  		  
 	  },
 
     strToWords: function (str) {

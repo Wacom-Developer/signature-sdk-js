@@ -376,7 +376,7 @@ Binary signature data as a string, base-64 encoded or hexadecimal, depending on 
 
 ### getWhen
 
-Returns the date when the signature was captured.
+Returns the date when the signature was captured as a ISO 8601 string.
 
 | Parameters |
 | ---------- |

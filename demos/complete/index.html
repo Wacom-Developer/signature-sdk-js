@@ -633,13 +633,7 @@
 			        document.getElementById("load_who").innerHTML = mSigObj.getWho();
 				    document.getElementById("load_why").innerHTML = mSigObj.getWhy();
 					let when = mSigObj.getWhen();
- 					const userTimezoneOffset = when.getTimezoneOffset() * 60000;
-                    when = new Date(when.getTime() + userTimezoneOffset);
-					if (when.getTime() !== 0) {
-				        document.getElementById("load_when").innerHTML = "The signature was captured on "+mSigObj.getWhen();
-					} else {
-					    document.getElementById("load_when").innerHTML = "";
-					}
+ 					document.getElementById("load_when").innerHTML = "The signature was captured on "+when;
 				    document.getElementById("load_extra_data").innerHTML = mSigObj.getExtraData("");
 				
 				    document.getElementById("load_digitizer_type").innerHTML = mSigObj.getAdditionalData(Module.CaptureData.Digitizer);

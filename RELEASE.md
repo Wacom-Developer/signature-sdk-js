@@ -1,8 +1,11 @@
 # Wacom Ink SDK for Signature - JavaScript
 
-## Version 2.0.0
+## Version 2.0.1
 
 ## History 
+ * Release 2.0.1 31-Oct-2023
+   - Fixed bug where the capture signature date was not being correctly retrieved
+
  * Release 2.0.0 15-Jun-2023
    - Reworked licensing system
 	- Bugs fixed

@@ -24,7 +24,7 @@
   - [Known issues](#known-issues)
 
 The **Wacom Signature SDK for JavaScript** is intended to generate signature objects for the user. It provides the documentation and tools to create signature-enabled applications.
-The JavaScript SDK implements the functionality in browser-ready script. No component installations are required and the SDK is platform-independent.
+The JavaScript SDK implements the functionality in browser-ready script. No component installations are required and the SDK is platform-independent. 
 It does, however, require a browser that supports **WebAssembly** primarily, and **WebHID** when using an STU tablet for pen input.
 
 Please view the README for additional information on WebHID and WebAssembly.
@@ -309,3 +309,19 @@ A simplified version of the JS demo exists within demos/simple/index.html, with 
 - On a Motorola G30, the signature area is not loaded and trace is unable to be added. This is an issue with the installed web browser, rather than an issue with the Signature SDK.
 - On Chrome 101 with older Windows 10 (or Windows 7) versions, it will not be possible to add STU or Generic signatures. This is a web browser issue that would, were a fix to be made, introduce further problems.
 - On iOS 15, when adding strokes, occasionally a dot artifact is created at the end point of the stroke when signing. When pressing OK to complete the signature, the dot artifact is no longer visible and the signature renders correctly.
+- On old Linux distributions, default Wacom drivers were pre-installed. This driver does not have support for STU devices, and once it finds a STU tablet it raises an error refusing to register the HID device. In order to allow the STU tablet to be registered as an HID device, the Wacom driver must be disabled. 
+  - This can be done by putting in the file:
+
+    `<b>/etc/modprobe.d/blacklist.conf</b>`
+
+    on the line:
+
+    `<b>blacklist wacom</b>`
+
+    Then, `update-initramfs -u` to have the system re-generate the initramfs.
+
+    On most Linux systems, USB devices are mapped with read-only permissions by default. To allow Chrome to open a USB device, you will need to add a new udev rule. Create a file at `/etc/udev/rules.d/99-stu.rules` with the following content:
+
+   `KERNEL=="hidraw*", ATTRS{idVendor}=="056a", GROUP="plugdev", MODE="0660"` where 056a is the code for the Wacom vendor and the current user needs to be in plugdev group.
+
+    A more generic rule could be `KERNEL=="hidraw*", ATTRS{idVendor}=="056a", MODE:="0666"` that grant permissions to all users (see udev rules manual for further details).

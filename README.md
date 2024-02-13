@@ -17,6 +17,12 @@
   - [About the content of this folder](#about-the-content-of-this-folder)
     - [Documentation](#documentation)
     - [Demos](#demos)
+  - [Additional resources](#additional-resources)
+    - [Sample Code](#sample-code)
+    - [Documentation](#documentation-1)
+    - [Support](#support)
+    - [Developer Community](#developer-community)
+    - [License](#license)
 
 > **Version 2 of the signature SDK for JavaScript has now been released!** 
 > 
@@ -333,3 +339,27 @@ This folder contains the SDK's demonstration code. Please note that due to diffe
 - common – This folder holds code common across all the examples.
 - complete_demo – This folder contains a demo that shows all the features of Signature SDK JS using SigCaptDialog library.
 - simple – This folder contains a simple example that shows how to load and capture signatures, using either an STU Device or Pen in an HTML5 canvas.
+
+## Additional resources
+
+### Sample Code
+For further samples check Wacom's Developer additional samples, see
+https://github.com/Wacom-Developer
+
+### Documentation
+
+For further details on using the SDK see [Wacom Ink SDK for signature documentation](https://developer-docs.wacom.com/docs/overview/sdks/sdk-for-signature/)
+
+### Support
+If you experience issues with the technology components, please see related [FAQs](https://developer-support.wacom.com/hc/en-us)
+
+For further support file a ticket in our **Developer Support Portal** described here: [Request Support](https://developer-support.wacom.com/hc/en-us/requests/new)
+
+### Developer Community 
+Join our developer community:
+
+- [LinkedIn - Wacom for Developers](https://www.linkedin.com/company/wacom-for-developers/)
+- [Twitter - Wacom for Developers](https://twitter.com/Wacomdevelopers)
+
+### License 
+This sample code is licensed under the [MIT License](https://choosealicense.com/licenses/mit/)

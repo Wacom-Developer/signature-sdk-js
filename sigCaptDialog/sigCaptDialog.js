@@ -1289,7 +1289,7 @@ class SigCaptDialog {
   
   onMovePointer(ev) {
 	  ev.preventDefault();	  	  	  
-	  if (this.mDown === "up") return false;
+	  if (this.mDown === undefined || this.mDown === "up") return false;
 	  let lastEvent;
       if (typeof ev.getCoalescedEvents === "function") {
 	      const events = ev.getCoalescedEvents();
@@ -1321,7 +1321,7 @@ class SigCaptDialog {
   
   onMove(ev) {	
 	  ev.preventDefault();
-	  if (this.mDown === "up") return false;
+	  if (this.mDown === undefined || this.mDown === "up") return false;
 	  
 	  let pressure = 0;
 	  let x, y;	  
@@ -1413,7 +1413,7 @@ class SigCaptDialog {
   
   onUp(ev) {
 	  ev.preventDefault();
-	  if (this.mDown !== "down") return false;	  
+	  if (this.mDown === undefined || this.mDown !== "down") return false;	  
 	  
 	  let pressure = 0;
 	  let x, y;

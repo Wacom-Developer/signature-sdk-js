@@ -1,27 +1,27 @@
 # Wacom Signature SDK for JavaScript
 
 - [Wacom Signature SDK for JavaScript](#wacom-signature-sdk-for-javascript)
-	- [Introduction](#introduction)
-		- [Supported web browsers](#supported-web-browsers)
-		- [Creating the Signature Object](#creating-the-signature-object)
-	- [SigCaptDialog for Wacom Signature SDK](#sigcaptdialog-for-wacom-signature-sdk)
-		- [How to use SigCaptDialog library](#how-to-use-sigcaptdialog-library)
-		- [Configure the library](#configure-the-library)
-			- [Signature Capture Dialog](#signature-capture-dialog)
-			- [STU Capture Dialog](#stu-capture-dialog)
-	- [Ways of capturing a signature](#ways-of-capturing-a-signature)
-		- [Using Wacom STU tablet](#using-wacom-stu-tablet)
-		- [Using HTML5 canvas](#using-html5-canvas)
-		- [Problems](#problems)
-	- [About the content of this folder](#about-the-content-of-this-folder)
-		- [Documentation](#documentation)
-		- [Demos](#demos)
-	- [Additional resources](#additional-resources)
-		- [Sample Code](#sample-code)
-		- [Documentation](#documentation-1)
-		- [Support](#support)
-		- [Developer Community](#developer-community)
-		- [License](#license)
+  - [Introduction](#introduction)
+    - [Supported web browsers](#supported-web-browsers)
+    - [Creating the Signature Object](#creating-the-signature-object)
+  - [SigCaptDialog for Wacom Signature SDK](#sigcaptdialog-for-wacom-signature-sdk)
+    - [How to use SigCaptDialog library](#how-to-use-sigcaptdialog-library)
+    - [Configure the library](#configure-the-library)
+      - [Signature Capture Dialog](#signature-capture-dialog)
+      - [STU Capture Dialog](#stu-capture-dialog)
+  - [Ways of capturing a signature](#ways-of-capturing-a-signature)
+    - [Using Wacom STU tablet](#using-wacom-stu-tablet)
+    - [Using HTML5 canvas](#using-html5-canvas)
+    - [Problems](#problems)
+  - [About the content of this folder](#about-the-content-of-this-folder)
+    - [Documentation](#documentation)
+    - [Demos](#demos)
+  - [Additional resources](#additional-resources)
+    - [Sample Code](#sample-code)
+    - [Documentation](#documentation-1)
+    - [Support](#support)
+    - [Developer Community](#developer-community)
+    - [License](#license)
 
 > **Version 2 of the signature SDK for JavaScript has now been released!** 
 > 
@@ -146,8 +146,6 @@ stuCaptDialog.open(sigObj, "Signatory", "Reason for signing", null, Module.KeyTy
 // automatically when the STU device is ready.
 
 ``` 
-
-Apart from **signCaptDialog.js** and **stuCaptDialog.js**, some third-party licenses need to be added to the project:
 
 ### Configure the library 
 

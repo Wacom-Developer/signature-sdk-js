@@ -552,7 +552,8 @@
 			                //}
 		                }
                         reader.readAsText(file);
-	                } else if (file.type == "image/png") {			  
+	                } else if ((file.type == "image/png") || 
+					           (file.type == "image/jpeg")) {			  			  
 		                const reader = new FileReader();
                         reader.onload = async function() {
                             const data = reader.result;
@@ -560,13 +561,29 @@
 		                    img.addEventListener('load', async function() {
                                 //the image has been loaded
 			                    const canvas = document.createElement("canvas");
-			                    canvas.width = img.width;
-			                    canvas.height = img.height;
-			                    const ctx = canvas.getContext("2d");
-			                    ctx.drawImage(img, 0, 0, img.width, img.height);
-			                    const imageData = ctx.getImageData(0, 0, img.width, img.height);
+			                    //canvas.width = img.width;
+			                    //canvas.height = img.height;
+			                    //const ctx = canvas.getContext("2d");
+			                    //ctx.drawImage(img, 0, 0, img.width, img.height);
+			                    //const imageData = ctx.getImageData(0, 0, img.width, img.height);
+								
+								//Note: using the 2D context, the alpha channel uses premultiplication, so in case we are loading a image
+			                    //with alpha channel the biometric data embedded inside the image is destroyed, so we use
+			                    //webgl2 context instead that maintaing the RGBA colors without modification.
+			                    const gl = canvas.getContext("webgl2");
+			                    gl.activeTexture(gl.TEXTURE0);
+                                const texture = gl.createTexture();
+                                gl.bindTexture(gl.TEXTURE_2D, texture);
+                                const framebuffer = gl.createFramebuffer();
+                                gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+                                gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+                                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this);
+                                gl.drawBuffers([gl.COLOR_ATTACHMENT0]);
+                                const imageData = new Uint8Array(this.width * this.height * 4);
+                                gl.readPixels(0, 0, this.width, this.height, gl.RGBA, gl.UNSIGNED_BYTE, imageData);			
 			                    try {
-				                    await mSigObj.readEncodedBitmapBinary(imageData.data, imageData.width, imageData.height);
+				                    //await mSigObj.readEncodedBitmapBinary(imageData.data, imageData.width, imageData.height);
+									await mSigObj.readEncodedBitmapBinary(imageData, img.width, img.height);
 				                    readSignature(true);
 			                    } catch (e) {
 				                    alert.log(e);

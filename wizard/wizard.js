@@ -2696,7 +2696,7 @@ class WizCtl {
 
         //in this demo we use https://github.com/keithws/browser-report library for getting 
 		//information about the os.
-		const webBrowserData = browserReportSync();		
+		const webBrowserData = await getBrowserNameAndOS();
 		const osInfo = webBrowserData.os.name + " " + webBrowserData.os.version;
         const nicInfo = "";
         const digitizerInfo = "STU;'"+this.mInformation.modelName+"';"+this.mInformation.firmwareMajorVersion+"."+((parseInt(this.mInformation.firmwareMinorVersion) >> 4) & 0x0f)+"."+(parseInt(this.mInformation.firmwareMinorVersion) & 0x0f)+";"+uid2;

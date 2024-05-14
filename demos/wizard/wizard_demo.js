@@ -66,7 +66,7 @@ async function wizard_step1() {
 	wizCtl.addObjectText("", 10, lineObject.rect.lowerRightYpixel+10, "Checkbox control");	
 	
 	wizCtl.setProperty({font:{size:padDefs.stu.subTitleWidth, color:"black", style:" "}});
-	wizCtl.addObjectText("", "right", +10, "Step 1 of 7");	
+	wizCtl.addObjectText("", "right", +10, "Step 1 of 6");	
 	
 	wizCtl.setProperty({font:{name:"arial", size:padDefs.stu.controlTextWidth, color:"black"}});
 	wizCtl.addObjectCheckBox("checkbox1", padDefs.stu.controlLeft, padDefs.stu.controlTop1, "This is a checkbox with the default options.");	
@@ -117,7 +117,7 @@ async function wizard_step2() {
 	wizCtl.addObjectText("", 10, lineObject.rect.lowerRightYpixel+10, "Radio button control");	
 	
 	wizCtl.setProperty({font:{size:padDefs.stu.subTitleWidth, color:"black", style:" "}});
-	wizCtl.addObjectText("", "right", lineObject.rect.lowerRightYpixel+10, "Step 2 of 7");	
+	wizCtl.addObjectText("", "right", lineObject.rect.lowerRightYpixel+10, "Step 2 of 6");	
 	
 	wizCtl.setProperty({font:{name:"arial", size:padDefs.stu.controlTextWidth, color:"black"}});
 	wizCtl.addObjectRadioButton("radio1", padDefs.stu.controlLeft, padDefs.stu.controlTop1, "This is a radio button with the default options.", {Group:"group1"});	
@@ -135,7 +135,7 @@ async function wizard_step2() {
 								border:{size:padDefs.stu.buttonBorderSize, color:"#D3D3D3"}}});
 	const backBtn = wizCtl.addObjectButton("back", "left", "bottom", "<< Back", padDefs.stu.buttonWidth);
 	backBtn.onClick = async function() {
-		await wizard_step2();
+		await wizard_step1();
 		return true;
 	}
 		
@@ -164,7 +164,7 @@ async function wizard_step3() {
 	wizCtl.addObjectText("", 10, lineObject.rect.lowerRightYpixel+10, "Input control");	
 	
 	wizCtl.setProperty({font:{size:padDefs.stu.subTitleWidth, color:"black", style:" "}});
-	const stepObject = wizCtl.addObjectText("", "right", lineObject.rect.lowerRightYpixel+10, "Step 3 of 7");	
+	const stepObject = wizCtl.addObjectText("", "right", lineObject.rect.lowerRightYpixel+10, "Step 3 of 6");	
 	
 	wizCtl.setProperty({font:{size:padDefs.stu.inputTextWidth}});
 	const infoObject = wizCtl.addObject(WizCtl.ObjectType.ObjectText, "txt", 10, stepObject.rect.lowerRightYpixel+10, "Enter a 4 digit PIN code: ", null);		
@@ -285,53 +285,7 @@ async function wizard_step3() {
 async function wizard_step4() {
     await reset_wizard();	
 	
-	wizCtl.setProperty({font:{name:"verdana", size:padDefs.stu.titleSize, color:"black"}});
-	const titleText = wizCtl.addObjectText("", "left", "top", "Wizard Demo");
-	
-	wizCtl.setProperty({borderColor:"red"});
-	const lineObject = wizCtl.addPrimitive(WizCtl.PrimitiveType.Line, "left", titleText.rect.lowerRightYpixel, "right", titleText.rect.lowerRightYpixel, padDefs.stu.tileLineWidth);	
-			
-	wizCtl.setProperty({backColor:"white"});		
-	wizCtl.setProperty({font:{size:padDefs.stu.subTitleWidth, color:"blue", style:"bold"}});
-	wizCtl.addObjectText("", 10, lineObject.rect.lowerRightYpixel+10, "Inking object");	
-	
-	wizCtl.setProperty({font:{size:padDefs.stu.subTitleWidth, color:"black", style:" "}});
-	wizCtl.addObjectText("", "right", lineObject.rect.lowerRightYpixel+10, "Step 4 of 7");		
-	
-	const inkingObject = wizCtl.addObjectInking();
-	inkingObject.onInkingCaptured = async function(imageString) {
-		await wizard_step5(imageString);
-		return true;
-	}
-	
-	wizCtl.setProperty({font:{name:"verdana", size:padDefs.stu.buttonTextWidth, color:"black"}});
-	wizCtl.setProperty({backColor:"#D3D3D3", 
-	                    border:{size:padDefs.stu.buttonBorderSize, color:"black"},
-	                    pushed:{backColor:"#A9A9A9", 
-						        font:{color:"black"},
-								border:{size:padDefs.stu.buttonBorderSize, color:"#D3D3D3"}}});
-	const backBtn = wizCtl.addObjectButton("back", "left", "bottom", "<< Back", padDefs.stu.buttonWidth);
-	backBtn.onClick = async function() {
-		await wizard_step3();
-		return true;
-	}
-	
-	wizCtl.addObjectButton("clear", "centre", "bottom", "Clear", padDefs.stu.buttonWidth);
-		
-	wizCtl.setProperty({font:{color:"green"}, pushed:{font:{color:"green"}}});	
-	wizCtl.addObjectButton("ok", "right", "bottom", "Ok >>", padDefs.stu.buttonWidth);
-	
-	await wizCtl.display(document.getElementById("show_wait_checkbox").checked);
-    enableControlBtn(["back_btn", "ok_btn", "clear_btn"]);	
-}
-
-async function wizard_step5(imageString) {
-    await reset_wizard();	
-	
-	const useColor = !document.getElementById("force_monochrome_checkbox").checked && wizCtl.padWidth() == 800;
-	
-	const img = await loadImage(imageString);
-    wizCtl.addObject(WizCtl.ObjectType.ObjectImage, "img", 0, 0, img);
+	const useColor = !document.getElementById("force_monochrome_checkbox").checked && wizCtl.padWidth() == 800;	
 	
 	wizCtl.setProperty({font:{name:"verdana", size:padDefs.stu.titleSize, color:"black"}});
 	const titleText = wizCtl.addObjectText("", "left", "top", "Wizard Demo");
@@ -344,7 +298,7 @@ async function wizard_step5(imageString) {
 	wizCtl.addObjectText("", 10, lineObject.rect.lowerRightYpixel+10, "Image object");	
 	
 	wizCtl.setProperty({font:{size:padDefs.stu.subTitleWidth, color:"black", style:" "}});
-	wizCtl.addObjectText("", "right", lineObject.rect.lowerRightYpixel+10, "Step 4 of 7");					
+	wizCtl.addObjectText("", "right", lineObject.rect.lowerRightYpixel+10, "Step 4 of 6");					
 	
 	const acceptImage = await loadImage(useColor?"./images/accept_btn.png":"./images/accept_btn_bw.png");
 	acceptImage.width = 40;
@@ -360,22 +314,25 @@ async function wizard_step5(imageString) {
 	
 	const acceptObj = wizCtl.addObject(WizCtl.ObjectType.ObjectImage, "next", "right", "bottom", acceptImage,options);
 	acceptObj.onClick = async function() {
-		await wizard_step6();
+		await wizard_step5();
 		return true;
 	}
 	
 	const cancelImage = await loadImage(useColor?"./images/cancel_btn.png":"./images/cancel_btn_bw.png");
 	const cancelBtn = wizCtl.addObject(WizCtl.ObjectType.ObjectImage, "back", "left", "bottom", cancelImage,options);
 	cancelBtn.onClick = async function() {
-		await wizard_step4();
+		await wizard_step3();
 		return true;
 	}
+	
+	const img = await loadImage("./images/logo.png");
+    wizCtl.addObject(WizCtl.ObjectType.ObjectImage, "img", "centre", "bottom", img);
 	
 	await wizCtl.display(document.getElementById("show_wait_checkbox").checked);	
 	enableControlBtn(["back_btn", "next_btn"]);
 }
 
-async function wizard_step6() {
+async function wizard_step5() {
     await reset_wizard();	
 	
 	wizCtl.setProperty({font:{name:"verdana", size:padDefs.stu.titleSize, color:"black"}});
@@ -388,7 +345,7 @@ async function wizard_step6() {
 	wizCtl.addObjectText("", 10, lineObject.rect.lowerRightYpixel+10, "Primitive objects");	
 	
 	wizCtl.setProperty({font:{size:padDefs.stu.subTitleWidth, color:"black", style:" "}});
-	wizCtl.addObjectText("", "right", lineObject.rect.lowerRightYpixel+10, "Step 6 of 7");	
+	wizCtl.addObjectText("", "right", lineObject.rect.lowerRightYpixel+10, "Step 5 of 6");	
 	
 	wizCtl.setProperty({fillColor:"green", borderColor:"blue"});
 	wizCtl.addPrimitive(WizCtl.PrimitiveType.Line, padDefs.stu.shape.line1X1, padDefs.stu.shape.line1Y1, padDefs.stu.shape.line1X2, padDefs.stu.shape.line1Y2, padDefs.stu.shape.lineWidth, WizCtl.PrimitiveOptions.LineSolid);			
@@ -413,14 +370,14 @@ async function wizard_step6() {
 								border:{size:padDefs.stu.buttonBorderSize, color:"#D3D3D3"}}});
 	const backBtn = wizCtl.addObjectButton("back", "left", "bottom", "<< Back", padDefs.stu.buttonWidth);
 	backBtn.onClick = async function() {
-		await wizard_step5();
+		await wizard_step4();
 		return true;
 	}
 		
 	wizCtl.setProperty({font:{color:"green"}, pushed:{font:{color:"green"}}});	
 	const nextBtn = wizCtl.addObjectButton("next", "right", "bottom", "Next >>", padDefs.stu.buttonWidth);
 	nextBtn.onClick = async function() {
-		await wizard_step7();
+		await wizard_step6();
 		return true;
 	}
 	
@@ -428,7 +385,7 @@ async function wizard_step6() {
     enableControlBtn(["back_btn", "next_btn"]);	
 }
 
-async function wizard_step7() {
+async function wizard_step6() {
 	await reset_wizard();	
 	
 	const signatureOpts = {
@@ -459,7 +416,7 @@ async function wizard_step7() {
 	wizCtl.addObjectText("", 10, lineObject.rect.lowerRightYpixel+10, "Signature object");	
 	
 	wizCtl.setProperty({font:{size:padDefs.stu.subTitleWidth, color:"black", style:" "}});
-	wizCtl.addObjectText("", "right", lineObject.rect.lowerRightYpixel+10, "Step 7 of 7");	
+	wizCtl.addObjectText("", "right", lineObject.rect.lowerRightYpixel+10, "Step 6 of 6");	
 			
 	wizCtl.setProperty({font:{size:padDefs.stu.xCharFontSize}});
 	wizCtl.addObjectText("", padDefs.stu.xCharPosX, padDefs.stu.xCharPosY, "X");
@@ -481,7 +438,7 @@ async function wizard_step7() {
 	
 	const backBtn = wizCtl.addObjectButton("back", "left", "bottom", "<< Back", padDefs.stu.buttonWidth);
 	backBtn.onClick = async function() {
-		await wizard_step6();
+		await wizard_step5();
 		return true;
 	}
 	

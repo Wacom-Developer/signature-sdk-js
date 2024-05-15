@@ -287,13 +287,27 @@ async function wizard_step4() {
 	
 	const useColor = !document.getElementById("force_monochrome_checkbox").checked && wizCtl.padWidth() == 800;	
 	
+	let imgSrc = "";
+	let colorImg = false;
+	switch (wizCtl.padModelName()) {
+		case "STU-300": imgSrc = "./images/STU300.png"; break;
+		case "STU-500": imgSrc = "./images/STU500.png"; break;
+		case "STU-430": imgSrc = "./images/STU430.png"; break;
+		default: imgSrc = "./images/STU530-540.png"; colorImg = true;
+	}
+	
+	const img = await loadImage(imgSrc);
+    wizCtl.addObject(WizCtl.ObjectType.ObjectImage, "img", "centre", "bottom", img);
+	
 	wizCtl.setProperty({font:{name:"verdana", size:padDefs.stu.titleSize, color:"black"}});
+	wizCtl.setProperty({backColor:"#B1B3B3"});		
 	const titleText = wizCtl.addObjectText("", "left", "top", "Wizard Demo");
 	
 	wizCtl.setProperty({borderColor:"red"});
 	const lineObject = wizCtl.addPrimitive(WizCtl.PrimitiveType.Line, "left", titleText.rect.lowerRightYpixel, "right", titleText.rect.lowerRightYpixel, padDefs.stu.tileLineWidth);	
 			
-	wizCtl.setProperty({backColor:"white"});		
+	//wizCtl.setProperty({backColor:"white"});		
+	wizCtl.setProperty({backColor:"#B1B3B3"});		
 	wizCtl.setProperty({font:{size:padDefs.stu.subTitleWidth, color:"blue", style:"bold"}});
 	wizCtl.addObjectText("", 10, lineObject.rect.lowerRightYpixel+10, "Image object");	
 	
@@ -324,9 +338,6 @@ async function wizard_step4() {
 		await wizard_step3();
 		return true;
 	}
-	
-	const img = await loadImage("./images/logo.png");
-    wizCtl.addObject(WizCtl.ObjectType.ObjectImage, "img", "centre", "bottom", img);
 	
 	await wizCtl.display(document.getElementById("show_wait_checkbox").checked);	
 	enableControlBtn(["back_btn", "next_btn"]);

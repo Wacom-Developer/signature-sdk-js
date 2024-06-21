@@ -1,3 +1,6 @@
+import AES from "./aes-ecb.js";
+import com from "./stu-sdk.min.js"
+
 /**
  * Classes for encryption on STU devices
  **/
@@ -280,3 +283,5 @@ class MyEncryptionHandler2 {
 		return hexToArray(hexPlainText);
 	}
 }
+
+export { MyEncryptionHandler, MyEncryptionHandler2 };

@@ -295,3 +295,5 @@ AES.ECB.prototype._precompute = function () {
 };
 
 AES.ECB.prototype._tables = [[[],[],[],[],[]],[[],[],[],[],[]]];
+
+export default AES;

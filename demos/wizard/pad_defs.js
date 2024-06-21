@@ -172,3 +172,5 @@ class PadDefs {
 		}
 	}
 }
+
+export default PadDefs;

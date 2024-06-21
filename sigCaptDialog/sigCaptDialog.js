@@ -1,3 +1,5 @@
+import { getBrowserNameAndOS } from "../demos/common/browser-report.js"
+
 function Button() {
   this.Bounds; // in Screen coordinates
   this.Text;
@@ -420,7 +422,8 @@ class SigCaptDialog {
 	  }
   }
 	
-  constructor(config) {	      
+  constructor(sigSDK, config) {	      
+    this.sigSDK = sigSDK;
 	this.config = {
 	  width: 400,
 	  height: 300,
@@ -459,6 +462,9 @@ class SigCaptDialog {
 	this.onOkListeners = new Array();
 
 	this.timeOnSurface = 0;	
+	getBrowserNameAndOS().then(result => {
+	    this.webBrowserData = result;
+	});	
   }
   
   /**
@@ -478,14 +484,10 @@ class SigCaptDialog {
    * Connect to the first STU device found, and open the capture dialog.
    * @param {string} - Name of the person who is going to sign.
    * @param {string} - Reason for signing.
-   * @param {string} - Where, indicating the place where the signature is captured.
    * @param {IntegrityType} - Hash method to maintain the signature integrity. None by default.
    * @param {Hash} - Hash of an attached document. None by default.
-   * @param {string} - osInfo, string indicating the OS.
-   * @param {string} - digitizerInfo, string indicationg the digitalizer.
-   * @param {string} - nicInfo.
   **/	 
-  async open(sigObj, who, why, where, extraData, integrityType, documentHash, osInfo, digitizerInfo, nicInfo) {	  
+  async open(sigObj, who, why, extraData, integrityType, documentHash) {	  
       this.sigObj = sigObj;
 	  this.extraData = extraData;
 	  
@@ -500,43 +502,19 @@ class SigCaptDialog {
 	  } else {
 	      this.reason = getLocateString('defaultReason');
 	  }
-	  
-	  if (where) {
-		  this.where = where;
-	  } else {
-		  this.where = "";
-	  }
 		
 	  if (integrityType) {
 	      this.integrityType = integrityType;
 	  } else {
-		  this.integrityType = Module.KeyType.None;
+		  this.integrityType = this.sigSDK.KeyType.None;
 	  }
-		
+	  
 	  if (documentHash) {
 		  this.documentHash = documentHash;
 	  } else {
-		  this.documentHash = new Module.Hash(Module.HashType.None);	
+		  this.documentHash = new this.sigSDK.Hash(this.sigSDK.HashType.None);	
 	  }
 	  
-	  if (osInfo) {
-		  this.osInfo = osInfo;
-	  } else {
-		  this.osInfo = window.navigator.userAgent;
-	  }
-	  
-	  if (digitizerInfo) {
-		  this.digitizerInfo = digitizerInfo;
-	  } else {
-		  this.digitizerInfo = "Javascript canvas";
-	  }
-	  
-	  if (nicInfo) {
-		  this.nicInfo = nicInfo;
-	  } else {
-		  this.nicInfo = "";
-	  }
-    
 	  this.createWindow(parseInt(this.config.width), parseInt(this.config.height));
 	  	  	  
 	  this.drawingCtx = this.drawingCanvas.getContext("2d");
@@ -1020,7 +998,7 @@ class SigCaptDialog {
 		button.style.border = this.config.buttons[i].borderWidth + "px solid "+this.config.buttons[i].borderColor;
         button.onclick = btn.Click;	
 		
-		// some touch browser wait for about 300 ms in case it is double touch. This code disables the delay
+		// some touch browser wait for about 300 ms in case it is double touch. This code disable the delay
         button.addEventListener("touchend", function(e) {e.preventDefault(); btn.Click(); return false;}, false);		
 		this.mFormDiv.appendChild(button);	  		       
 	}	  
@@ -1221,7 +1199,7 @@ class SigCaptDialog {
 		  pointerType = ev.pointerType;
 		  this.pointerId = ev.pointerId;		             		  
 		  
-		  //intuos pro draws with button pressed on hover
+		  //intous pro draws with button pressed on hover
 	      //here we avoid it.
 		  if (!this.config.allowZeroPressure) {	
               if (ev.pointerType === "pen" && ev.pressure === 0) {
@@ -1262,9 +1240,9 @@ class SigCaptDialog {
 	  this.disableScroll();
 	  let time = Math.floor(ev.timeStamp);	  
 	  if (!this.willEngine) {
-	      this.willEngine = new Module.WillEngine(this.config.strokeSize, this.hasPressure);
+	      this.willEngine = new this.sigSDK.WillEngine(this.config.strokeSize, this.hasPressure);
 	  }
-	  this.willEngine.addPointerData(Module.Phase.BEGIN, x > 0 ? x : 0, y > 0 ? y : 0, pressure, time);
+	  this.willEngine.addPointerData(this.sigSDK.Phase.BEGIN, x > 0 ? x : 0, y > 0 ? y : 0, pressure, time);
 	  this.currentPath = new Path2D();
 	  	  
 	  const orientation = getPenOrientation(ev);
@@ -1355,7 +1333,7 @@ class SigCaptDialog {
           }	  
 	  }
 	  
-	  // onpointerleave is not working fine with pen
+	  // onpointerleave it is not working fine with pen
 	  // so we handle it here.
       if (x > this.drawingCanvas.width || 
 	      y > this.drawingCanvas.height ||
@@ -1389,14 +1367,14 @@ class SigCaptDialog {
       };
 	  this.capturedPoints.push(point);
 	  if (this.willEngine) {
-	      this.willEngine.addPointerData(Module.Phase.UPDATE, x > 0 ? x : 0, y > 0 ? y : 0, pressure, time);
+	      this.willEngine.addPointerData(this.sigSDK.Phase.UPDATE, x > 0 ? x : 0, y > 0 ? y : 0, pressure, time);
 	  
 	      const polygon = this.willEngine.getLastPolygon();
 	      const polygonPoints = polygon.getPoints();
 	      if (polygonPoints.size() > 0) {
 	          for (let i=0; i< polygonPoints.size(); i++) {
 		          const polygonPoint = polygonPoints.get(i);
-		          if (polygonPoint.pointType == Module.PolygonPointType.MOVE) {
+		          if (polygonPoint.pointType == this.sigSDK.PolygonPointType.MOVE) {
 			          this.currentPath.moveTo(polygonPoint.x, polygonPoint.y); 
 		          } else {			  
 			          this.currentPath.lineTo(polygonPoint.x, polygonPoint.y); 
@@ -1472,7 +1450,7 @@ class SigCaptDialog {
 	  this.enableScroll();	  	  
 	  	  
 	  if (this.willEngine) {		  
-	      this.willEngine.addPointerData(Module.Phase.END, x > 0 ? x : 0, y > 0 ? y : 0, 0, time);	  
+	      this.willEngine.addPointerData(this.sigSDK.Phase.END, x > 0 ? x : 0, y > 0 ? y : 0, 0, time);	  
 	      this.willEngine.getLastPolygon().delete(); //this call is necessary
 	  
 	      this.currentPath = null;
@@ -1480,7 +1458,7 @@ class SigCaptDialog {
 	      const polygonPoints = polygon.getPoints();
 	      for (let i=0; i< polygonPoints.size(); i++) {
 		      const polygonPoint = polygonPoints.get(i);
-		      if (polygonPoint.pointType == Module.PolygonPointType.MOVE) {
+		      if (polygonPoint.pointType == this.sigSDK.PolygonPointType.MOVE) {
 			      this.drawingPath.moveTo(polygonPoint.x, polygonPoint.y); 
 		      } else {			  
 			      this.drawingPath.lineTo(polygonPoint.x, polygonPoint.y); 
@@ -1498,8 +1476,8 @@ class SigCaptDialog {
 	 **/
     getCaptureData() {				
 	    //Create Stroke Data
-        let strokeVector = new Module.StrokeVector();
-        let currentStroke = new Module.PointVector();
+        let strokeVector = new this.sigSDK.StrokeVector();
+        let currentStroke = new this.sigSDK.PointVector();
 
         let currentStrokeID = 0;
         let isDown = true;
@@ -1508,7 +1486,7 @@ class SigCaptDialog {
         for (let index = 0; index < this.capturedPoints.length; index++) {
 		    if (!this.capturedPoints[index].isDown && !hasDown) {
 				// the signature starts with the first pen down, so the hover
-				// points before first down are ignored.
+				// points before first down are ingnored.
 			    continue;
 		    }
 		
@@ -1519,7 +1497,7 @@ class SigCaptDialog {
                 //Move the current stroke data into the strokes array
                 strokeVector.push_back({'points': currentStroke});
                 currentStroke.delete();
-                currentStroke = new Module.PointVector();
+                currentStroke = new this.sigSDK.PointVector();
                 currentStrokeID++;
             }	
 			
@@ -1555,10 +1533,15 @@ class SigCaptDialog {
 			'device_unit_pixels': true
 		}	
 
-        const timeResolution = 1000;		
+        const osInfo = this.webBrowserData.os.name + " " + this.webBrowserData.os.version;
+        const digitizerInfo = this.webBrowserData.browser.name + " " + this.webBrowserData.browser.version;
+        const nicInfo = "";
+        const timeResolution = 1000;
+		const where = "";
+		
         const myPromise = new Promise((resolve, reject) => {
 			try {
-                const promise = this.sigObj.generateSignature(this.signatory, this.reason, this.where, this.integrityType, this.documentHash, strokeVector, device, this.osInfo, this.digitizerInfo, this.nicInfo, timeResolution);
+                const promise = this.sigObj.generateSignature(this.signatory, this.reason, where, this.integrityType, this.documentHash, strokeVector, device, osInfo, digitizerInfo, nicInfo, timeResolution);
 			    promise.then((value) => {
 				    if (value) {
 		                // put the extra data
@@ -1690,7 +1673,7 @@ class SigCaptDialog {
     }
 	
 	//firefox seems to scroll instead of drawing when using pen
-	//so we use this function to disable the scroll while drawing
+	//so we use this fucntion to disable the scroll while drawing
 	disableScroll() {
 		if (navigator.userAgent.indexOf('Firefox') !== -1) {
 		    document.body.style.overflowY = "hidden";
@@ -1718,3 +1701,5 @@ class SigCaptDialog {
 		}	        		
 	}	
 }
+
+export default SigCaptDialog;

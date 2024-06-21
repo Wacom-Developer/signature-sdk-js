@@ -1,9 +1,13 @@
+import SigCaptDialog from "./sigCaptDialog.js"
+import com from "./stu_capture/stu-sdk.min.js"
+
 /**
  * Capture dialog using a STU device.
  **/
 class StuCaptDialog {
 	
-    constructor(config) {
+    constructor(sigSDK, config) {
+		this.sigSDK = sigSDK;
 		if (config) {
 		    this.config = config;		
 				
@@ -40,10 +44,36 @@ class StuCaptDialog {
 	 * @param {string} - Reason for signing.
 	 * @param {IntegrityType} - Hash method to maintain the signature integrity. None by default.
 	 * @param {Hash} - Hash of an attached document. None by default.
-	 * @param {string} - osInfo, string indicating the OS.
-     * @param {string} - nicInfo.
      **/	 
-    async open(sigObj, who, why, where, extraData, integrityType, documentHash, osInfo, nicInfo) {	
+    async open(sigObj, who, why, extraData, integrityType, documentHash) {	
+	    this.sigObj = sigObj;
+	
+	    if (who) {
+	        this.who = who;
+		} else {
+			this.who = 'Customer';
+		}
+		
+		if (why) {
+		    this.why = why;
+		} else {
+			this.why = 'Confirmed';
+		}
+		
+		this.extraData = extraData;
+		
+	    if (integrityType) {
+			this.integrityType = integrityType;
+		} else {
+			this.integrityType = this.sigSDK.KeyType.None;
+		}
+		
+		if (documentHash) {
+			this.documentHash = documentHash;
+		} else {
+			this.documentHash = new this.sigSDK.Hash(this.sigSDK.HashType.None);	
+		}
+		
 	    if (!this.config.stuDevice) {
 	        let devices = await com.WacomGSS.STU.UsbDevice.requestDevices();
 	        if (devices.length > 0) {
@@ -73,6 +103,18 @@ class StuCaptDialog {
 	    this.mCapability = await this.mTablet.getCapability();
 	    this.mInformation = await this.mTablet.getInformation();
 	    this.mInkThreshold = await this.mTablet.getInkThreshold();
+		
+		try {
+		    this.uid = await this.mTablet.getUid();
+		} catch (e) {
+			this.uid = 0;
+		}
+		
+		try {
+		    this.uid2 = await this.mTablet.getUid2();
+		} catch (e) {
+			this.uid2 = 0;
+		}
 	  
 	    try {
 		    await this.mTablet.setPenDataOptionMode(com.WacomGSS.STU.Protocol.PenDataOptionMode.TimeCountSequence);	
@@ -137,15 +179,15 @@ class StuCaptDialog {
 		this.config.title = this.mInformation.modelName;
 		//this.config.borderColor = "#cccccc";
 		this.config.source = {mouse:false, touch:false, pen:false, stu:true},
-		this.sigCaptDialog = new SigCaptDialog(this.config);		
+		this.sigCaptDialog = new SigCaptDialog(this.sigSDK, this.config);		
 		this.sigCaptDialog.getCaptureData = this.getCaptureData.bind(this);
 		this.sigCaptDialog.addEventListener("clear", this.onClearBtn.bind(this));
 		this.sigCaptDialog.addEventListener("cancel", this.onCancelBtn.bind(this));
 		this.sigCaptDialog.addEventListener("ok", this.onOkBtn.bind(this));
 		
-		await this.sigCaptDialog.open(sigObj, who, why, where, extraData, integrityType, documentHash, osInfo, "", nicInfo);
+		await this.sigCaptDialog.open(this.sigObj, this.who, this.why, this.extraData, this.integrityType, this.documentHash);
 						
-		//store the background image in order for it to be reused when the screen is cleared
+		//store the background image in order to be reuse it when clear the screen
 		let canvas = await this.drawImageToCanvas(this.sigCaptDialog.createScreenImage(useColor));
 		let ctx = canvas.getContext("2d");						
 		this.mDeviceBackgroundImage = com.WacomGSS.STU.Protocol.ProtocolHelper.resizeAndFlatten(canvas, 0, 0, canvasWidth, canvasHeight, 
@@ -351,7 +393,7 @@ class StuCaptDialog {
                 // transition to down we save the button pressed
 				this.mBtnIndex = btnIndex;
                 if (this.mBtnIndex == -1) {
-                    // We have put the pen down outside a button.
+                    // We have put the pen down outside a buttom.
                     // Treat it as part of the signature.
 		            this.mPenData.push(penData);
 		  
@@ -422,8 +464,8 @@ class StuCaptDialog {
 	 **/
     getCaptureData() {
 	    //Create Stroke Data
-        let strokeVector = new Module.StrokeVector();
-        let currentStroke = new Module.PointVector();
+        let strokeVector = new this.sigSDK.StrokeVector();
+        let currentStroke = new this.sigSDK.PointVector();
 
         let currentStrokeID = 0;
         let isDown = true;
@@ -444,7 +486,7 @@ class StuCaptDialog {
 		        //Move the current stroke data into the strokes array
                 strokeVector.push_back({'points': currentStroke});
                 currentStroke.delete();
-                currentStroke = new Module.PointVector();
+                currentStroke = new this.sigSDK.PointVector();
                 currentStrokeID++;		
             }		
         
@@ -474,25 +516,18 @@ class StuCaptDialog {
             'device_origin_Y': 1,
 			'device_unit_pixels': false
         }	
-	
-	    var uid2;
-	    try {
-            // getUid2 will throw if pad doesn't support Uid2
-            uid2 = mTablet.getUid2();
-        }
-        catch (e) {
-        }
-	
-	    if (!uid2) {
-		    uid2 = 0;
-	    }
-
-        const digitizerInfo = "STU;'"+this.mInformation.modelName+"';"+this.mInformation.firmwareMajorVersion+"."+((parseInt(this.mInformation.firmwareMinorVersion) >> 4) & 0x0f)+"."+(parseInt(this.mInformation.firmwareMinorVersion) & 0x0f)+";"+uid2;
+		
+        const osInfo = this.sigCaptDialog.webBrowserData.os.name + " " + this.sigCaptDialog.webBrowserData.os.version;
+        const digitizerInfo = "STU;'"+this.mInformation.modelName+"';"+this.mInformation.firmwareMajorVersion+"."+((parseInt(this.mInformation.firmwareMinorVersion) >> 4) & 0x0f)+"."+(parseInt(this.mInformation.firmwareMinorVersion) & 0x0f)+";"+this.uid+";"+this.uid2;
+        const nicInfo = "";
         const timeResolution = 1000;
+        const who = this.who;
+        const why = this.why;
+	    const where = "";
 	
 	    const myPromise = new Promise((resolve, reject) => {
 			try {	
-                const promise = this.sigCaptDialog.sigObj.generateSignature(this.sigCaptDialog.signatory, this.sigCaptDialog.reason, this.sigCaptDialog.where, this.sigCaptDialog.integrityType, this.sigCaptDialog.documentHash, strokeVector, device, this.sigCaptDialog.osInfo, digitizerInfo, this.sigCaptDialog.nicInfo, timeResolution);
+                const promise = this.sigObj.generateSignature(who, why, where, this.integrityType, this.documentHash, strokeVector, device, osInfo, digitizerInfo, nicInfo, timeResolution);
 	            promise.then((value) => {
 					if (value) {
 	                    // put the extra data
@@ -539,3 +574,4 @@ class StuCaptDialog {
     }		
 }
 
+export default StuCaptDialog;

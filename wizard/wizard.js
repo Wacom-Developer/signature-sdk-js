@@ -153,6 +153,9 @@
  * @property {function} onSignatureCaptured - Defines a function to be called with the signature is captured. The signature is passed as parameter.
  */  
  
+ import com from "../sigCaptDialog/stu_capture/stu-sdk.min.js"
+ import { getBrowserNameAndOS } from "../demos/common/browser-report.js"
+ 
 /**
  * @class WizCtl
  * The Wizard library provides interactive controls for STU tablets devices.
@@ -162,7 +165,8 @@ class WizCtl {
 	/**
      * Create a new WizCtl control
      */	 
-	constructor() {
+	constructor(sigSDK) {
+		this.sigSDK = sigSDK;
 		this.reset(false);
 		this.useColor = true;			
 	}		
@@ -2629,8 +2633,8 @@ class WizCtl {
 	
 	async #generateSignature() {
 	    //Create Stroke Data
-        let strokeVector = new Module.StrokeVector();
-        let currentStroke = new Module.PointVector();
+        let strokeVector = new this.sigSDK.StrokeVector();
+        let currentStroke = new this.sigSDK.PointVector();
 
         let currentStrokeID = 0;
         let isDown = true;
@@ -2651,7 +2655,7 @@ class WizCtl {
 		        //Move the current stroke data into the strokes array
                 strokeVector.push_back({'points': currentStroke});
                 currentStroke.delete();
-                currentStroke = new Module.PointVector();
+                currentStroke = new this.sigSDK.PointVector();
                 currentStrokeID++;		
             }		
         
@@ -2694,8 +2698,6 @@ class WizCtl {
 		    uid2 = 0;
 	    }
 
-        //in this demo we use https://github.com/keithws/browser-report library for getting 
-		//information about the os.
 		const webBrowserData = await getBrowserNameAndOS();
 		const osInfo = webBrowserData.os.name + " " + webBrowserData.os.version;
         const nicInfo = "";
@@ -2705,7 +2707,7 @@ class WizCtl {
         const why = this.why;
 	    const where = "";
 		
-		let integrityKey = Module.KeyType.SHA512;
+		let integrityKey = this.sigSDK.KeyType.SHA512;
 		let documentHash;
 		if (this.mSigOptions) {
 			if (this.mSigOptions.integrityKey) {
@@ -2718,7 +2720,7 @@ class WizCtl {
 		
 		let deleteHash = false;
 		if (!documentHash) {
-			documentHash = new Module.Hash(Module.HashType.None);
+			documentHash = new this.sigSDK.Hash(this.sigSDK.HashType.None);
 			deleteHash = true;
 		}
 	
@@ -2779,3 +2781,5 @@ WizCtl.Point = class {
 		this.y = y;
 	}
 }
+
+export default WizCtl;

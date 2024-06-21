@@ -1,0 +1,21 @@
+{
+  "name": "javascript-signature-sdk-demos",
+  "version": "2.0.2",
+  "type": "module",
+  "description": "Demos for Signature SDK JS",
+  "main": "index.js",
+  "dependencies": {
+	  "javascript-signature-sdk": "^2.0.2"
+  },	  
+  "scripts": {
+	"build": "vite build",
+	"preview": "vite preview",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Wacom",
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^5.3.1",
+	"vite-plugin-static-copy": "^1.0.4"
+  }  
+}

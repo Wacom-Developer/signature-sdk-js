@@ -376,3 +376,5 @@ async function getBrowserNameAndOS() {
 
     return report;
 }
+
+export { getBrowserNameAndOS }

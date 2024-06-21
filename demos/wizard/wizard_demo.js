@@ -1,7 +1,152 @@
 /**
- * Copyright (C) 2023 Wacom.
+ * Copyright (C) 2024 Wacom.
  * Use of this source code is governed by the MIT License that can be found in the LICENSE file.
  */
+ 
+import SigSDK from "javascript-signature-sdk";
+import WizCtl from "../../wizard/wizard.js"
+import { MyEncryptionHandler, MyEncryptionHandler2} from "../../sigCaptDialog/stu_capture/stu_capture_encryption.js"
+import PadDefs from "./pad_defs.js"
+
+import acceptBtnColor from "./images/accept_btn.png";
+import acceptBtnBW from "./images/accept_btn_bw.png";
+import cancelBtnColor from "./images/cancel_btn.png";
+import cancelBtnBW from "./images/cancel_btn_bw.png";
+import stu300Img from "./images/STU300.png";
+import stu430Img from "./images/STU430.png";
+import stu500Img from "./images/STU500.png";
+import stu530Img from "./images/STU530-540.png";
+
+let sigSDK
+let mSigObj;	
+let documentHash;
+let wizCtl;		
+let padDefs;
+let btnWaiting;       	
+
+try {
+	sigSDK = await new SigSDK();
+	
+	document.getElementById("version_txt").innerHTML = sigSDK.VERSION;								
+	mSigObj = new sigSDK.SigObj();		
+				
+	// Here we need to set the licence. The easiest way is directly using
+	// const promise = mSigObj.setLicence(key, secret);
+	// however here the problem it is that we expose the key and secret publically.
+	// if we want to hide the licence we can get the licence from an external server.				
+	// there is a php demo file in /common/licence_proxy.php
+    //const promise = mSigObj.setLicenceProxy("url from where to get the licence");
+	const promise = mSigObj.setLicence("key", "secret");
+	promise.then(value => {
+	    if (value) {
+	        if (navigator.hid) {				
+			    document.getElementById("start_wizard").disabled = false;
+			}
+				
+			documentHash = new sigSDK.Hash(sigSDK.HashType.None);				                
+			wizCtl = new WizCtl(sigSDK);				
+				
+			document.getElementById("document_hash").disabled = false;
+			document.getElementById("initializeBanground").style.display = "none";
+	    }
+	});
+	promise.catch(error => {
+		alert(error);
+		document.getElementById("initializeBanground").style.display = "none";
+	});
+} catch (e) {
+	alert("Error initializing SigSDK "+e);
+ 	document.getElementById("initializeBanground").style.display = "none";
+}
+
+			
+window.startWizard = async function() {
+	const options = {};
+	options.encryptionHandler = new MyEncryptionHandler();
+	options.encryptionHandler2 = new MyEncryptionHandler2();
+	await wizCtl.padConnect(options);
+	const mirrorDiv = document.getElementById("mirror_div");
+	mirrorDiv.style.width = wizCtl.padWidth()+"px";
+	mirrorDiv.style.height = wizCtl.padHeight()+"px";
+	mirrorDiv.style.display="block";
+	document.getElementById("signature_div").style.display="none";				
+	padDefs = new PadDefs(wizCtl.padWidth(), wizCtl.padHeight());
+	await wizard_step_init();
+	document.getElementById("start_wizard").disabled = true;
+	document.getElementById("stop_wizard").disabled = false;
+}
+			
+window.stopWizard =	async function() {
+	await shutdown_step();
+	document.getElementById("start_wizard").disabled = false;
+	document.getElementById("stop_wizard").disabled = true;
+}
+			
+window.showMirrorChanged = function(object) {
+	if (object.checked) {
+		document.getElementById("mirror_div").style.display = "block";
+	} else {
+		document.getElementById("mirror_div").style.display = "none";
+	}
+}
+			
+window.mirrorInputChanged = function(object) {
+	wizCtl.setProperty({mirrorDiv:{enable:object.checked}});
+}
+			
+window.encryptionChanged = function(object) {
+	wizCtl.setProperty({encrypted:object.checked, sessionId:0xc0ffee});
+}
+			
+window.monochromeChanged = function(object) {
+	wizCtl.setProperty({forceMonochrome:object.checked});
+}
+            						
+function mmToPx(mm) {
+	var dpr = window.devicePixelRatio;
+    var inch = 25.4; //1inch = 25.4 mm
+    var ppi = 96;	
+    return ((mm/inch)*ppi)/dpr;
+}			
+
+async function renderSignature() {
+	let renderWidth = mmToPx(mSigObj.getWidth(false)/100);
+	const renderHeight = mmToPx(mSigObj.getHeight(false)/100);				
+	renderWidth += renderWidth % 4;
+	const inkColor = "blue";
+	const inkWidth = 3.0;
+	const image = await mSigObj.renderBitmap(renderWidth, renderHeight, "image/png", inkWidth, inkColor, "white", 0, 0, 0);				
+	return image;
+}
+				
+async function addDocumentHash() {
+	const reader = new FileReader();
+    reader.onload = async function() {                    
+		try {
+			documentHash.delete();
+			const data = reader.result;   
+            const hashType = sigSDK.HashType.SHA512;
+	        documentHash = new sigSDK.Hash(hashType);	  
+	        var enc = new TextEncoder(); // always utf-8
+	        if (await documentHash.add(data)) {
+				alert("Document bounded properly");
+	        } else {
+		        alert("Document fails to bound");
+	        }     
+	    } catch (e) {
+		    alert(e);
+	    }
+	}
+    reader.readAsArrayBuffer(document.getElementById("document_hash").files[0]);		
+}	
+
+window.fireClick = async function(id) {
+    if (!btnWaiting) {
+	    btnWaiting = true;
+		await wizCtl.fireClick(id);
+		btnWaiting = false;
+	}			    
+} 
 
 async function reset_wizard() {
 	await wizCtl.reset();
@@ -135,7 +280,7 @@ async function wizard_step2() {
 								border:{size:padDefs.stu.buttonBorderSize, color:"#D3D3D3"}}});
 	const backBtn = wizCtl.addObjectButton("back", "left", "bottom", "<< Back", padDefs.stu.buttonWidth);
 	backBtn.onClick = async function() {
-		await wizard_step1();
+		await wizard_step2();
 		return true;
 	}
 		
@@ -290,10 +435,10 @@ async function wizard_step4() {
 	let imgSrc = "";
 	let colorImg = false;
 	switch (wizCtl.padModelName()) {
-		case "STU-300": imgSrc = "./images/STU300.png"; break;
-		case "STU-500": imgSrc = "./images/STU500.png"; break;
-		case "STU-430": imgSrc = "./images/STU430.png"; break;
-		default: imgSrc = "./images/STU530-540.png"; colorImg = true;
+		case "STU-300": imgSrc = stu300Img; break;
+		case "STU-500": imgSrc = stu500Img; break;
+		case "STU-430": imgSrc = stu430Img; break;
+		default: imgSrc = stu530Img; colorImg = true;
 	}
 	
 	const img = await loadImage(imgSrc);
@@ -314,7 +459,7 @@ async function wizard_step4() {
 	wizCtl.setProperty({font:{size:padDefs.stu.subTitleWidth, color:"black", style:" "}});
 	wizCtl.addObjectText("", "right", lineObject.rect.lowerRightYpixel+10, "Step 4 of 6");					
 	
-	const acceptImage = await loadImage(useColor?"./images/accept_btn.png":"./images/accept_btn_bw.png");
+	const acceptImage = await loadImage(useColor?acceptBtnColor:acceptBtnBW);
 	acceptImage.width = 40;
 	acceptImage.height = 20;
 	
@@ -332,12 +477,12 @@ async function wizard_step4() {
 		return true;
 	}
 	
-	const cancelImage = await loadImage(useColor?"./images/cancel_btn.png":"./images/cancel_btn_bw.png");
+	const cancelImage = await loadImage(useColor?cancelBtnColor:cancelBtnBW);
 	const cancelBtn = wizCtl.addObject(WizCtl.ObjectType.ObjectImage, "back", "left", "bottom", cancelImage,options);
 	cancelBtn.onClick = async function() {
-		await wizard_step3();
+		await wizard_step4();
 		return true;
-	}
+	}		
 	
 	await wizCtl.display(document.getElementById("show_wait_checkbox").checked);	
 	enableControlBtn(["back_btn", "next_btn"]);
@@ -356,7 +501,7 @@ async function wizard_step5() {
 	wizCtl.addObjectText("", 10, lineObject.rect.lowerRightYpixel+10, "Primitive objects");	
 	
 	wizCtl.setProperty({font:{size:padDefs.stu.subTitleWidth, color:"black", style:" "}});
-	wizCtl.addObjectText("", "right", lineObject.rect.lowerRightYpixel+10, "Step 5 of 6");	
+	wizCtl.addObjectText("", "right", lineObject.rect.lowerRightYpixel+10, "Step 6 of 6");	
 	
 	wizCtl.setProperty({fillColor:"green", borderColor:"blue"});
 	wizCtl.addPrimitive(WizCtl.PrimitiveType.Line, padDefs.stu.shape.line1X1, padDefs.stu.shape.line1Y1, padDefs.stu.shape.line1X2, padDefs.stu.shape.line1Y2, padDefs.stu.shape.lineWidth, WizCtl.PrimitiveOptions.LineSolid);			
@@ -400,7 +545,7 @@ async function wizard_step6() {
 	await reset_wizard();	
 	
 	const signatureOpts = {
-		integrityKey:Module.KeyType.SHA512
+		integrityKey:sigSDK.KeyType.SHA512
 	};
 	
 	if (documentHash) {
@@ -427,7 +572,7 @@ async function wizard_step6() {
 	wizCtl.addObjectText("", 10, lineObject.rect.lowerRightYpixel+10, "Signature object");	
 	
 	wizCtl.setProperty({font:{size:padDefs.stu.subTitleWidth, color:"black", style:" "}});
-	wizCtl.addObjectText("", "right", lineObject.rect.lowerRightYpixel+10, "Step 6 of 6");	
+	wizCtl.addObjectText("", "right", lineObject.rect.lowerRightYpixel+10, "Step 7 of 7");	
 			
 	wizCtl.setProperty({font:{size:padDefs.stu.xCharFontSize}});
 	wizCtl.addObjectText("", padDefs.stu.xCharPosX, padDefs.stu.xCharPosY, "X");
@@ -484,11 +629,11 @@ function loadImage(src) {
     })
 }
 
-async function renderSignature(signature) {
+/*async function renderSignature(signature) {
 	console.log(signature.getWho());
 	console.log(signature.getWhy());
 	await stopWizard();
-}
+}*/
 
 function enableControlBtn(ids) {
 	document.getElementById("start_btn").disabled = true;

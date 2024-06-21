@@ -1,27 +1,16 @@
 <!--
-    Copyright (C) 2023 Wacom.
+    Copyright (C) 2024 Wacom.
 	Use of this source code is governed by the MIT License that can be found in the LICENSE file.
 -->
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	    <title>Signature SDK - Simple demo</title>
 	    <link href="../common/style/wacom.css" rel="stylesheet" type="text/css">		
-	    <link href="../../sigCaptDialog/style/sigCaptDialog.css" rel="stylesheet" type="text/css">		
-		
-		<!-- files for connection to STU tablets devices, if you don't need to connect to STU devices you don't have to include these files -->
-		<script src="../common/libs/signature_sdk/stu-sdk.min.js"></script> <!-- used to connect to STU devices -->
-	    <script src="../../sigCaptDialog/stu_capture/aes-ecb.js"></script> <!-- utility for STU encryption -->
-		<script src="../../sigCaptDialog/stu_capture/stu_capture_encryption.js"></script> <!-- STU encryption functions -->
-		
-		<script src="../common/libs/signature_sdk/signature_sdk.js"></script> <!-- signature SDK -->
-		
-        <script src="../../sigCaptDialog/sigCaptDialog.js"></script>
-		<script src="../../sigCaptDialog/stuCaptDialog.js"></script>
-		
-	    <script src="simple.js"></script>
+	    <link href="../../sigCaptDialog/style/sigCaptDialog.css" rel="stylesheet" type="text/css">				
+	    <script src="simple.js" type="module"></script>
     </head>
     <body>
 	    <div id="initializeBanground" class="active" style="width:100%;height:100%;position:fixed;background:#cccccccc;">
@@ -29,46 +18,62 @@
 			    <table><tr><td><div class="loader"></div></td><td>Initializing, this could take a few seconds...</td></tr></table>
 			</div>
 		</div>
-        <h1>Signature SDK <span id="version_txt"></span>- Simple demo</h1>
-	    <p>This is a pure javascript version of Signature SDK, using WebAssembly. This version it is supported by the major web browsers, you can see <a href="https://caniuse.com/?search=webassembly">here the list of compatible browsers</a>.</p>
-	    With the SDK you can:
-	    <ul>
-	        <li>
-		        Load a previous captured Signature:
-			    <br><br><input type="file" id="myfile" name="myfile" onchange="javascript:loadFromFile();" disabled="disabled">
-		    </li>
-		    <br>
-		    <li>
-		        Capture with STU device. This makes use of STU-SDK for javascript, and it is only supported on web browsers that supports WebHID. You can see <a href="https://caniuse.com/?search=webhid">here the list of compatible browsers</a>.
-			    <br><br><button id="capture_stu_device" onClick="captureFromSTU()" disabled="disabled">Capture with STU device</button>
-		    </li>
-		    <br>
-		    <li>
-		        <div>
-		            Capture the signature using standard javascript events.
-			        <br><br>
-		            <input type="checkbox" name="allow_mouse_check" id="allow_mouse_check" checked="checked">
-		            <label for="allow_mouse_check">Allow mouse input</label>			
-		            &nbsp;&nbsp;
-		            <input type="checkbox" name="allow_touch_check" id="allow_touch_check" checked="checked">
-		            <label for="allow_touch_check">Allow touch</label>			
-		            &nbsp;&nbsp;
-		            <input type="checkbox" name="allow_pen_check" id="allow_pen_check" checked="checked">
-		            <label for="allow_pen_check">Allow pen</label>			
-		            &nbsp;&nbsp;
-			        <br><br>
-		            <button type="button" id="canvas_capture_btn" onClick="captureFromCanvas()" disabled="disabled">Capture with Generic Canvas</button>			  
-			    </div>
-		    </li>
-	    </ul>
-	    <fieldset id="signature_image" style="width:310px;height:210pxdisplay: flex;justify-content: center;align-items: center;">
-	        <legend>Signature image:</legend>
-		    <img id="sig_image" style="display:block;margin: auto;">
-	    </fieldset>
-	    <br>
-	    <fieldset id="signature_text" style="width:620px;height:210px;">
-	        <legend>Signature text:</legend>
-		    <textarea id="sig_text" style="width:100%; height:100%;"></textarea>
-	    </fieldset>
+		<div class="wrapper">
+		    <div id="header_container">
+                <div id="header">
+			        <a href="http://www.wacom.com/" target="_blank"><img src="../common/images/logo.png" alt="Wacom logo" class="float-left"></a>
+				    <span class="float-left" style="padding-left:20px;padding-top:20px;"><h1 style="color:#ffffff">SIGNATURE SDK JS <span id="version_txt"></span> DEMO</h1></span>
+			    </div>		
+                <div class="tab">
+                    <button id="demo_tab" class="tablinks active">Simple Demo</button>
+                </div>				
+            </div>		
+			<div id="content_container">		
+                <h1>Signature SDK <span id="version_txt"></span>- Simple demo</h1>
+	            <p>This is a pure javascript version of Signature SDK, using WebAssembly. This version it is supported by the major web browsers, you can see <a href="https://caniuse.com/?search=webassembly">here the list of compatible browsers</a>.</p>
+				<p>With the SDK you can:</p>
+	            <ul>
+	                <li>
+		                <p>Load a previous captured Signature:</p>
+			            <p><input type="file" id="myfile" name="myfile" onchange="javascript:loadFromFile();" disabled="disabled"></p>
+		            </li>		            
+		            <li>
+		                <p>
+						    Capture with STU device. This makes use of STU-SDK for javascript, and it is only supported on web browsers that supports WebHID. You can see <a href="https://caniuse.com/?search=webhid">here the list of compatible browsers</a>.
+						</p>
+			            <p><button id="capture_stu_device" onClick="captureFromSTU()" disabled="disabled">Capture with STU device</button></p>
+		            </li>		     
+		            <li>
+		                <div>
+		                    <p>Capture the signature using standard javascript events.</p>
+							<p>
+		                        <input type="checkbox" name="allow_mouse_check" id="allow_mouse_check" checked="checked">
+		                        <label for="allow_mouse_check">Allow mouse input</label>			
+		                        &nbsp;&nbsp;
+		                        <input type="checkbox" name="allow_touch_check" id="allow_touch_check" checked="checked">
+		                        <label for="allow_touch_check">Allow touch</label>			
+		                        &nbsp;&nbsp;
+		                        <input type="checkbox" name="allow_pen_check" id="allow_pen_check" checked="checked">
+		                        <label for="allow_pen_check">Allow pen</label>			
+		                        &nbsp;&nbsp;
+			                </p>
+		                    <p><button type="button" id="canvas_capture_btn" onClick="captureFromCanvas()" disabled="disabled">Capture with Generic Canvas</button></p>
+			            </div>
+		            </li>
+	            </ul>
+				<p>
+	                <fieldset id="signature_image" style="width:310px;height:210pxdisplay: flex;justify-content: center;align-items: center;">
+	                    <legend>Signature image:</legend>
+		                <img id="sig_image" style="display:block;margin: auto;">
+	                </fieldset>
+	            </p>
+				<p>
+	                <fieldset id="signature_text" style="width:620px;height:210px;">
+	                    <legend>Signature text:</legend>
+		                <textarea id="sig_text" style="width:100%; height:100%;"></textarea>
+	                </fieldset>
+				</p>
+			</div>
+		</div>
     </body>
 </html>

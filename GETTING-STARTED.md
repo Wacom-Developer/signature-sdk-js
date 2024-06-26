@@ -81,7 +81,11 @@ To run the sample code first ensure you have installed the following:
 
 ### Using the Signature SDK legacy Sample Code
 
-* copy the files *signature_sdk.js*, *signature_sdk.wasm* and *stu-sdk.min.js* from the `legacy` folder from the installed Signature SDK for JavaScript file into the folder: 
+* Clone the repository from GitHub.
+* Follow the instructions on https://developer.wacom.com/developer-dashboard.
+* Go to the demos folder. Add the `.npmrc` file created from the Developer Dashboard instructions to the demos folder. Run the following commands on the console. 
+  - `npm install` -> this will download and install Signature SDK JS from Cloudsmith.
+* copy the files *signature_sdk.js*, *signature_sdk.wasm* and *stu-sdk.min.js* from the `node_modules/javascript-signature-sdk/legacy` folder from the installed Signature SDK for JavaScript file into the folder: 
     * */demos/common/libs/signature_sdk/*
     * NB: Be sure to copy and paste the contents of the folder, and not the folder itself, so the directory looks like this:
 

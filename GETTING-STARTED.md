@@ -5,13 +5,13 @@
     - [How to use](#how-to-use)
   - [Installation](#installation)
     - [Web Development Environment](#web-development-environment)
-    - [Download Signature SDK for JavaScript.](#download-signature-sdk-for-javascript)
-    - [Using the Signature SDK Sample Code](#using-the-signature-sdk-sample-code)
+    - [Using the Signature SDK legacy Sample Code](#using-the-signature-sdk-legacy-sample-code)
   - [Licensing](#licensing)
     - [Setting up the license](#setting-up-the-license)
       - [Simple demo - in demos/simple/simple.js](#simple-demo---in-demossimplesimplejs)
       - [Complete demo - in demos/complete/index.html](#complete-demo---in-demoscompleteindexhtml)
       - [Wizard demo - in demos/wizard/index.html](#wizard-demo---in-demoswizardindexhtml)
+    - [On premise licensing](#on-premise-licensing)
   - [Operate the Demo application](#operate-the-demo-application)
     - [Capture Signature](#capture-signature)
       - [Choose file](#choose-file)
@@ -38,13 +38,13 @@ Currently, WebHID works if executed locally or on a secure connection.
 Download the SDK from https://developer.wacom.com/developer-dashboard
 
 - Log in using your Wacom ID
-- Select **Downloads for signature**
-- Download **Wacom Ink SDK for signatures for JavaScript**
-- Accept the End User License Agreement to use the SDK
+- Select **For signature** within **Download SDKs**
+- Select **More info** within **Wacom Ink SDK for signatures for JavaScript**
+- Follow the instructions on the page to download the SDK
 
-The downloaded Zip file contains the Signature SDK for JavaScript.
+The downloaded file contains the legacy version of the Signature SDK for JavaScript within the `legacy` folder.
 
-The Signature SDK for JavaScript is distributed as two files:
+The legacy version of the Signature SDK for JavaScript is distributed as three files:
 
 1. signature_sdk.wasm – This is the SDK itself.
 2. signature_sdk.js – This is the JavaScript wrapper.
@@ -77,22 +77,11 @@ To run the sample code first ensure you have installed the following:
 * python e.g. [python 3.8.3](https://www.python.org/downloads/release/python-383/)
   (check that Python has been added to the Windows path variable)
 
-### Download Signature SDK for JavaScript.
-
-Download the SDK from https://developer.wacom.com/developer-dashboard
-
-* Login using your Wacom ID
-* Select **Downloads for signature**
-* Download **Wacom Ink SDK for signatures for JavaScript**
-* Accept the End User License Agreement to use the SDK
-
-The downloaded Zip file contains the Signature SDK for JavaScript.
-
 ---
 
-### Using the Signature SDK Sample Code
+### Using the Signature SDK legacy Sample Code
 
-* copy the files *signature_sdk.js*, *signature_sdk.wasm* and *stu-sdk.min.js* from the Signature SDK for JavaScript zip file into the folder: 
+* copy the files *signature_sdk.js*, *signature_sdk.wasm* and *stu-sdk.min.js* from the `legacy` folder from the installed Signature SDK for JavaScript file into the folder: 
     * */demos/common/libs/signature_sdk/*
     * NB: Be sure to copy and paste the contents of the folder, and not the folder itself, so the directory looks like this:
 
@@ -158,6 +147,12 @@ Once you have a valid license, you can initialize the Signature SDK for JavaScri
 
 
 Now you may use any of the API functions, calling them directly from the Signature Object. You can see these functions in more detail in: Signature_SDK_JS_API.md.
+
+### On premise licensing
+
+The on premise feature enables hosting of the transaction license's server on local infrastructure.
+
+More information about the on premise feature can be found within our [developer documentation](https://developer-docs.wacom.com/docs/sdk-for-signature/guides/javascript/on-premise/).
 
 ## Operate the Demo application
 

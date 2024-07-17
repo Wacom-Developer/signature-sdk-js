@@ -12,6 +12,7 @@
       - [Complete demo - in demos/complete/complete\_demo.js](#complete-demo---in-demoscompletecomplete_demojs)
       - [Wizard demo - in demos/wizard/wizard\_demo.js](#wizard-demo---in-demoswizardwizard_demojs)
     - [On premise licensing](#on-premise-licensing)
+    - [Using a custom URL](#using-a-custom-url)
   - [Operate the Demo application](#operate-the-demo-application)
     - [Capture Signature](#capture-signature)
       - [Choose file](#choose-file)
@@ -130,6 +131,20 @@ Now you may use any of the API functions, calling them directly from the Signatu
 The on premise feature enables hosting of the transaction license's server on local infrastructure.
 
 More information about the on premise feature can be found within our [developer documentation](https://developer-docs.wacom.com/docs/sdk-for-signature/guides/javascript/on-premise/).
+
+### Using a custom URL
+
+To set a custom URL, change the `$url` within `license_proxy.php` to be the custom URL as required.
+
+```php
+...
+
+    // Insert your URL in $url to set a custom URL for on premise licensing
+    $url = "https://lms-tx.azurewebsites.net/api/Client/".$key."?hashedKey=".$sign;
+
+...
+```
+
 
 ## Operate the Demo application
 

@@ -54,6 +54,7 @@ if (substr($_SERVER['HTTP_REFERER'], 0, strlen($query)) !== $query) {
     $secret = "PUT THE SECRET HERE";
     $sign = hash_hmac('sha256', $key, base64_decode($secret), true);
     $sign = urlencode(base64_encode($sign));
+    // Insert your URL in $url to set a custom URL for on premise licensing
     $url = "https://lms-tx.azurewebsites.net/api/Client/".$key."?hashedKey=".$sign;
     $authorization = "Authorization: Bearer ".getBearerToken();
 

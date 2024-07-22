@@ -83,6 +83,9 @@ The web-based app needs a web server.
 `npm run preview` -> this will open a web server.
   - open a web browser with the URL: http://localhost:4173
 
+
+> **NB:** When making any changes to the code, including inserting a new license, it is necessary to run `npm run build` before running `npm run preview` again. 
+ 
 ## Licensing
 
 A valid license is needed for using Signature SDK for JavaScript. 

@@ -133,9 +133,22 @@ Now you may use any of the API functions, calling them directly from the Signatu
 
 The on premise feature enables hosting of the transaction license's server on local infrastructure.
 
+**NB:** The on premise licensing features generates network traffic to Azure. 
+
+Before the call to `setLicence()`, insert a call to the `setLicenceEndPoint(licenseEndPoint)` method of the signature object.
+
+An example of this can be seen below:
+
+
+```javascript
+SigObj.setLicenceEndPoint(licenceEndPoint);
+```
+
+where `licenceEndPoint` is the URL location of the offline server.
+
 More information about the on premise feature can be found within our [developer documentation](https://developer-docs.wacom.com/docs/sdk-for-signature/guides/javascript/on-premise/).
 
-### Using a custom URL
+ ### Using a custom URL
 
 To set a custom URL, change the `$url` within `license_proxy.php` to be the custom URL as required.
 

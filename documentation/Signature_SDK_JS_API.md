@@ -241,11 +241,16 @@ Exports the signature as an ISO format. The format depends on the passed paramet
 | Parameters                                                                                            |
 | ----------------------------------------------------------------------------------------------------- |
 | IsoType -  The possible values are:                                                                   |
-| Module.IsoType.ISO19794_7_BINARY – exports the signature as binary ISO19794_7                         |
-| Module.IsoType.ISO19785_3_XML – exports the signature as xml ISO19785_3                               |
-| Module.IsoType.ISO19794_7_ENCRYPTED_BINARY – exports the signature as ISO19794_7 encrypted as binary. |
-| Module.IsoType.ISO19794_7_ENCRYPTED_TEXT – exports the signature as ISO19794_7 encrypted as text.     |
-
+| Module.IsoType.ISO19794_7_2007_BINARY – exports the signature as binary ISO19794_7 2007 format                         |
+| Module.IsoType.ISO19785_3_2015_XML – exports the signature as xml ISO19785_3 2015 format                            |
+| Module.IsoType.ISO19794_7_2007_ENCRYPTED_BINARY – exports the signature as ISO19794_7 2007 format encrypted as binary. |
+| Module.IsoType.ISO19794_7_2007_ENCRYPTED_TEXT – exports the signature as ISO19794_7 2007 encrypted as text.     |
+| Module.IsoType.ISO19794_7_2014_BINARY – exports the signature as binary ISO19794_7 2014 format                         |
+| Module.IsoType.ISO19794_7_2014_ENCRYPTED_BINARY – exports the signature as ISO19794_7 2014 format encrypted as binary. |
+| Module.IsoType.ISO19794_7_2014_ENCRYPTED_TEXT – exports the signature as ISO19794_7 2014 encrypted as text.     |
+| Module.IsoType.ISO19794_7_2021_BINARY – exports the signature as binary ISO19794_7 2021 format                         |
+| Module.IsoType.ISO19794_7_2021_ENCRYPTED_BINARY – exports the signature as ISO19794_7 2021 format encrypted as binary. |
+| Module.IsoType.ISO19794_7_2021_ENCRYPTED_TEXT – exports the signature as ISO19794_7 2021 encrypted as text.     |
 
 
 
@@ -432,7 +437,17 @@ Returns the reason for signing, as specified at the time of signature capture.
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Parameters                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | IsoData: The iso signature.                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| IsoType: The type of the signature. It can be one of the following: <ul><li>Module.IsoType.ISO19784_7_BINARY – exports the signature as binary ISO19784_7</li><li>Module.IsoType.ISO19785_3_XML – exports the signature as xml ISO19785_3</li><li>Module.IsoType.ISO19784_7_ENCRYPTED_BINARY – exports the signature as ISO19784_7 encrypted as binary.</li><li>Module.IsoType.ISO19784_7_ENCRYPTED_TEXT – exports the signature as ISO19784_7 encrypted as text.</li></ul> |
+| IsoType -  The type of the signature. It can be one of the following:                                                                   |
+| Module.IsoType.ISO19794_7_2007_BINARY – exports the signature as binary ISO19794_7 2007 format                         |
+| Module.IsoType.ISO19785_3_2015_XML – exports the signature as xml ISO19785_3 2015 format                            |
+| Module.IsoType.ISO19794_7_2007_ENCRYPTED_BINARY – exports the signature as ISO19794_7 2007 format encrypted as binary. |
+| Module.IsoType.ISO19794_7_2007_ENCRYPTED_TEXT – exports the signature as ISO19794_7 2007 encrypted as text.     |
+| Module.IsoType.ISO19794_7_2014_BINARY – exports the signature as binary ISO19794_7 2014 format                         |
+| Module.IsoType.ISO19794_7_2014_ENCRYPTED_BINARY – exports the signature as ISO19794_7 2014 format encrypted as binary. |
+| Module.IsoType.ISO19794_7_2014_ENCRYPTED_TEXT – exports the signature as ISO19794_7 2014 encrypted as text.     |
+| Module.IsoType.ISO19794_7_2021_BINARY – exports the signature as binary ISO19794_7 2021 format                         |
+| Module.IsoType.ISO19794_7_2021_ENCRYPTED_BINARY – exports the signature as ISO19794_7 2021 format encrypted as binary. |
+| Module.IsoType.ISO19794_7_2021_ENCRYPTED_TEXT – exports the signature as ISO19794_7 2021 encrypted as text.    
 | AdditionalImportIsoData: The ISO format lacks some important properties of the Wacom signature. With this object we can assign the values for these properties. See the section AdditionalImportIsoData for more information about it.                                                                                                                                                                                                                        |
 
 

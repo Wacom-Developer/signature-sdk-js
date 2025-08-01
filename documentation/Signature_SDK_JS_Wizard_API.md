@@ -276,7 +276,8 @@ error to add more than one ObjectSignature to the current control list.
 | Parameters                                                                                                                |
 | ------------------------------------------------------------------------------------------------------------------------- |
 | id | Cannot be any of the values reserved for text or button objects: who, why, Ok, Clear, Cancel.                        | 
-| signature |  Signature SDK object with a valid licence.                                                                   |        
+| signature sdk |  Signature SDK object with a valid licence.                                                                   |        
+| sigObj |  SigObj object with a valid licence.                                                                   |        
 | options | Object with the integrity type or hash to attach to the signature. It is optional.                              |          
 
 

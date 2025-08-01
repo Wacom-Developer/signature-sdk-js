@@ -1,47 +1,30 @@
-import SigSDK from "javascript-signature-sdk";
-import SigCaptDialog from "../../sigCaptDialog/sigCaptDialog.js"
-import StuCaptDialog from "../../sigCaptDialog/stuCaptDialog.js"
+import SigSDK from "../node_modules/@wacom/signature-sdk/signature-sdk.js"
 
-let sigSDK
-let mSigObj;		
-let backgroundImage;
-let sigCaptDialog
-let stuCapDialog;
-
-try {
-	sigSDK = await new SigSDK();
+class SimpleDemo {
 	
-	document.getElementById("version_txt").innerHTML = sigSDK.VERSION;								
-	mSigObj = new sigSDK.SigObj();		
+  async initialize() {
+    try {
+	  this.sigSDK = await new SigSDK();
+	
+	  document.getElementById("version_txt").innerHTML = this.sigSDK.VERSION;								
+	  this.sigObj = new this.sigSDK.SigObj();		
 				
-	// Here we need to set the licence. The easiest way is directly using
-	// const promise = mSigObj.setLicence(key, secret);
-	// however here the problem it is that we expose the key and secret publically.
-	// if we want to hide the licence we can get the licence from an external server.				
-	// there is a php demo file in /common/licence_proxy.php
-    //const promise = mSigObj.setLicenceProxy("url from where to get the licence");
-	const promise = mSigObj.setLicence("key", "secret");
-	promise.then(value => {
-	    if (value) {
-	        if (navigator.hid) {				
-		        document.getElementById("capture_stu_device").disabled = false;
-		    }
+	  await this.sigObj.setLicence("key", "secret");	
+	  if (this.sigSDK.STUDevice.isHIDSupported()) {				
+        document.getElementById("capture_stu_device").disabled = false;
+      }
 				
-		    document.getElementById("canvas_capture_btn").disabled = false;
-		    document.getElementById("initializeBanground").style.display = "none";
-			document.getElementById("myfile").disabled=false;
-	    }
-	});
-	promise.catch(error => {
-		alert(error);
-		document.getElementById("initializeBanground").style.display = "none";
-	});
-} catch (e) {
-	alert("Error initializing SigSDK "+e);
- 	document.getElementById("initializeBanground").style.display = "none";
-}
+      document.getElementById("canvas_capture_btn").disabled = false;
+      document.getElementById("initializeBanground").style.display = "none";
+      document.getElementById("myfile").disabled=false;
+    } catch (e) {
+      alert("Error initializing SigSDK "+e);
+      document.getElementById("initializeBanground").style.display = "none";
+	}
+  }
 
-window.loadFromFile = async function() {
+  async loadFromFile() {
+	const outer = this;
 	const file = document.getElementById("myfile").files[0];
 	if (file) {
 	  // check the type	  
@@ -51,8 +34,8 @@ window.loadFromFile = async function() {
           reader.onload = async function() {
             const data = reader.result;
 			try {
-				if (await mSigObj.setTextData(data)) {
-					renderSignature();
+				if (await outer.sigObj.setTextData(data)) {
+					outer.renderSignature();
 				} else {
 					alert("Incorrect signature data found");
 				}
@@ -61,8 +44,7 @@ window.loadFromFile = async function() {
 			}
 		  }
           reader.readAsText(file);		
-	  } else if ((file.type == "image/png") ||
-                (file.type == "image/jpeg")) {			  
+	  } else if (file.type == "image/png")  {			  
 		const reader = new FileReader();
         reader.onload = async function() {
           const data = reader.result;
@@ -91,8 +73,8 @@ window.loadFromFile = async function() {
             const imageData = new Uint8Array(this.width * this.height * 4);
             gl.readPixels(0, 0, this.width, this.height, gl.RGBA, gl.UNSIGNED_BYTE, imageData);
 			try {
-				await mSigObj.readEncodedBitmapBinary(imageData, img.width, img.height);
-				renderSignature();
+				await outer.sigObj.readEncodedBitmapBinary(imageData, img.width, img.height);
+				outer.renderSignature();
 			} catch (e) {
 				alert("Error loading image "+e);
 			}			
@@ -106,8 +88,8 @@ window.loadFromFile = async function() {
           reader.onload = async function() {
             const data = reader.result;
 			try {
-				if (await mSigObj.setSigData(new Uint8Array(data))) {
-					renderSignature();
+				if (await outer.sigObj.setSigData(new Uint8Array(data))) {
+					outer.renderSignature();
 				} else {
 					alert("Incorrect signature data found");
 				}
@@ -118,12 +100,12 @@ window.loadFromFile = async function() {
           reader.readAsArrayBuffer(file);		
 	  }
 	}
-}
+  }
 	
-async function renderSignature() {
+  async renderSignature() {
 	//pixels = dpi*mm/25.4mm
-	let width = Math.trunc((96*mSigObj.getWidth(false)*0.01)/25.4);
-	let height = Math.trunc((96*mSigObj.getHeight(false)*0.01)/25.4);
+	let width = Math.trunc((96*this.sigObj.getWidth(false)*0.01)/25.4);
+	let height = Math.trunc((96*this.sigObj.getHeight(false)*0.01)/25.4);
 	
 	let scaleWidth = 300/width;
 	let scaleHeight = 200/height;
@@ -140,34 +122,85 @@ async function renderSignature() {
 	let canvas;
 	const inkColor = "#000F55";
 	try {		
-		const image = await mSigObj.renderBitmap(renderWidth, renderHeight, "image/png", 4, inkColor, "white", 0, 0, 0x400000);					
-	    document.getElementById("sig_image").src = image;	
-        document.getElementById("sig_text").value = await mSigObj.getTextData(sigSDK.TextFormat.BASE64);	
+	  const image = await this.sigObj.renderBitmap(renderWidth, renderHeight, "image/png", 4, inkColor, "white", 0, 0, this.sigSDK.RenderFlags.RenderEncodeData.value);					
+	  document.getElementById("sig_image").src = image;	
+      document.getElementById("sig_text").value = await this.sigObj.getTextData(this.sigSDK.TextFormat.BASE64);	
 	} catch (e) {
-		alert(e);
-	}				
-}
+	  alert(e);
+    }				
+  }
 
-window.captureFromCanvas = function() {	
-    const config = {};
-	config.source = {mouse:document.getElementById("allow_mouse_check").checked,
-				     touch:document.getElementById("allow_touch_check").checked, 
-					 pen:document.getElementById("allow_pen_check").checked};
+  async captureFromCanvas() {	
+    const config = new this.sigSDK.Config();
+	config.source.mouse = document.getElementById("allow_mouse_check").checked;
+	config.source.touch = document.getElementById("allow_touch_check").checked;
+	config.source.pen = document.getElementById("allow_pen_check").checked;
 					 
-	const sigCaptDialog = new SigCaptDialog(sigSDK, config);
+	this.sigCaptDialog = new this.sigSDK.SigCaptDialog(config);
 	
-	sigCaptDialog.addEventListener("ok", function() {
-	    renderSignature();
-	});
+	const outer = this;
+	this.sigCaptDialog.addEventListener(this.sigSDK.EventType.OK, async function() {
+      outer.deleteConfig(config);      
+      outer.renderSignature();
+    });
 	
-	sigCaptDialog.open(mSigObj, null, null, null, sigSDK.KeyType.SHA512, null);
-	sigCaptDialog.startCapture();			
+	this.sigCaptDialog.addEventListener(this.sigSDK.EventType.CANCEL, async function() {
+      outer.deleteConfig(config);
+    });
+	
+    this.sigCaptDialog.open(this.sigObj, 
+	  "", "", null, 
+	  this.sigSDK.KeyType.SHA512, 
+	  null);
+    this.sigCaptDialog.startCapture();					
+  }
+
+  async captureFromSTU() {
+    const config = new this.sigSDK.Config();
+
+    const devices = await this.sigSDK.STUDevice.requestDevices();
+    if (devices.length > 0) {      
+      this.stuDevice = new this.sigSDK.STUDevice(devices[0]);
+      this.stuCaptDialog = new this.sigSDK.StuCaptDialog(this.stuDevice, config);
+	  
+	  const outer = this;
+      this.stuCaptDialog.addEventListener(this.sigSDK.EventType.OK, async function() {
+        outer.deleteConfig(config);      
+        outer.renderSignature();
+		outer.stuDevice.delete();
+      });
+
+      this.stuCaptDialog.addEventListener(this.sigSDK.EventType.CANCEL, async function() {
+        outer.deleteConfig(config);
+		outer.stuDevice.delete();
+      });
+    
+	  await this.stuCaptDialog.open(this.sigObj, 
+	    "", "", null,
+	    this.sigSDK.KeyType.SHA512, 
+	    null);	
+	}
+  }
+
+  deleteConfig(config) {
+    for (let i=0; i<config.buttons.size(); i++) {
+      config.buttons.get(i).delete();
+    }
+    config.delete;
+  }
 }
 
+var simpleDemo = new SimpleDemo();
+simpleDemo.initialize();
+
+window.loadFromFile = async function() {
+	simpleDemo.loadFromFile();
+}
+	
+window.captureFromCanvas = function() {	
+  simpleDemo.captureFromCanvas();
+}
+	
 window.captureFromSTU = function() {
-    const stuCapDialog = new StuCaptDialog(sigSDK);
-	stuCapDialog.addEventListener("ok", function() {
-	    renderSignature();
-	});				
-	stuCapDialog.open(mSigObj, null, null, null, sigSDK.KeyType.SHA512, null);					
+  simpleDemo.captureFromSTU();
 }

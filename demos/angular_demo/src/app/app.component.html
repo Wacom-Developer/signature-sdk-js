@@ -1,0 +1,570 @@
+<div id="initializeBackground" class={{waitingBackgroundVisibility}} style="width:100%;height:100%;position:fixed;background:#cccccccc;">
+  <div
+    style="position:absolute;left:50%;top:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);">
+    <table>
+      <tr>
+        <td>
+          <div class="loader"></div>
+        </td>
+        <td>Initializing, this could take a few seconds...</td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="wrapper">
+  <div id="header_container">
+    <div id="header">
+      <a href="http://www.wacom.com/" target="_blank"><img src="/logo.png" alt="Wacom logo"
+          class="float-left"></a>
+      <span class="float-left" style="padding-left:20px;padding-top:20px;">
+        <h1 style="color:#ffffff">SIGNATURE SDK JS <span id="version_txt">{{versionTxt}}</span> DEMO</h1>
+      </span>
+    </div>
+    <div class="tab">
+      <button id="capture_signature_tab" class="tablinks" (click)="openTab($event, 'capture_signature_div')">Capture
+        Signature</button>
+      <button id="read_signature_tab" class="tablinks" (click)="openTab($event, 'read_signature_div')">Read
+        Signature</button>
+      <button id="settings_tab" class="tablinks" (click)="openTab($event, 'settings_div')">Settings</button>
+    </div>
+  </div>
+  <div id="content_container">
+    <div id="capture_signature_div" class="tabcontent">
+      <h2>Capture Signature</h2>
+      <p>
+        Wacom’s Signature Library provides software components to capture handwritten signatures.<br>
+        The library simplifies the interaction with Wacom pen tablets and provides API to manage and display signatures.
+      </p>
+      <p>
+        <label for="who">Signatory:</label><br>
+        <input type="text" #who name="who"><br><br>
+        <label for="why">Reason:</label><br>
+        <input type="text" #why name="why"><br><br>
+      </p>
+      <p>
+        Some extra data can be included in the signature, in the form of name - value
+      </p>
+      <fieldset style="width:400px;padding:5px;margin:5px">
+        <legend>Extra Data</legend>
+        <div>
+          <button (click)="addExtraData()">Add extra data</button>
+        </div>
+        <br>
+        <div #extra_data_list_div>
+        </div>
+      </fieldset>
+      <p>
+        A document can be bound to the signature, in a way that later it can be checked
+        if the document has been changed or not.
+      </p>
+      <label for="document">Document:</label><br>
+      <input type="file" #document name="document" (change)="addDocumentHash()" disabled="disabled"><br><br>
+      <p>
+        Selected STU device: <span #selectedStuDevice></span>-<button name="removeDevice" (click)="removeDevice()">Remove</button><br>
+        <button #capture_stu_btn (click)="capture('STU')" disabled="disabled">Capture signature from STU
+          tablet</button><br><br>
+      </p>
+      <p>
+        The input data for the signature can be taken from different sources:
+      </p>
+      <fieldset style="width:400px;height:40px;padding:5px;margin:5px">
+        <legend>Input sources</legend>
+        <input type="checkbox" name="allow_mouse_check" #allow_mouse_check checked="checked">
+        <label for="allow_mouse_check">Allow mouse</label>
+        &nbsp;&nbsp;
+        <input type="checkbox" name="allow_touch_check" #allow_touch_check checked="checked">
+        <label for="allow_touch_check">Allow touch</label>
+        &nbsp;&nbsp;
+        <input type="checkbox" name="allow_pen_check" #allow_pen_check checked="checked">
+        <label for="allow_pen_check">Allow pen</label>
+      </fieldset>
+      <p>
+      <button #capture_canvas_btn (click)="capture('Canvas')" disabled="disabled">Capture signature from Generic device</button>
+      </p>
+      <p>Signature:</p>
+      <fieldset style="width:0;padding:0;margin:0;">
+        <div #captureDiv id="captureDiv" style="width:400px;height:330px;"></div>
+        <img #signatureImage style="display:none">
+      </fieldset>
+      <p>
+        <button #save_image_btn (click)="saveSignature('image')" disabled="disabled">Save as
+          Image</button>&nbsp;&nbsp;
+        <button #save_text_btn (click)="saveSignature('txt')" disabled="disabled">Save as Text</button>&nbsp;&nbsp;
+        <button #save_binary_btn (click)="saveSignature('binary')" disabled="disabled">Save as Binary</button>&nbsp;&nbsp;
+        <button #save_iso_btn (click)="saveSignature('iso')" disabled="disabled">Save as ISO</button>&nbsp;&nbsp;
+      </p>
+    </div>
+    <div id="read_signature_div" class="tabcontent">
+      <h2>Capture Signature</h2>
+      <p>
+        It is possible to get the data from a previously captured signature.
+      </p>
+      <label for="load_signature">Load signature</label><br>
+      <input type="file" name="load_signature" #load_signature (change)="loadSignature()"
+        disabled="disabled"><br><br>
+      <div>
+        Signatory name: <span #load_who style="font-weight: bold;"></span>
+      </div>
+      <div>
+        Reason for signing: <span #load_why style="font-weight: bold;"></span>
+      </div>
+      <div>
+        Date and time signed: <span #load_when style="font-weight: bold;"></span>
+      </div>
+      <div>
+        Extra data: <span #load_extra_data style="font-weight: bold;"></span>
+      </div>
+      <div>
+        Digitizer type: <span #load_digitizer_type style="font-weight: bold;"></span>
+      </div>
+      <div>
+        Digitizer driver: <span #load_digitizer_driver style="font-weight: bold;"></span>
+      </div>
+      <div>
+        Operating System: <span #load_operating_system style="font-weight: bold;"></span>
+      </div>
+      <div>
+        Network Interface Card: <span #load_network_interface_card style="font-weight: bold;"></span>
+      </div>
+      <div>
+        Licence: <span #load_licence style="font-weight: bold;"></span>
+      </div>
+      <br><br>
+      <div>
+        Checking the integrity of the signature we can prevent attends to modify its content.<br>
+        <span #load_integrity style="font-weight: bold;"></span>
+      </div>
+      <br><br>
+      <div>
+        <label for="document_load">Check bound document integrity</label><br>
+        <input type="file" #document_load name="document_load" (change)="checkDocumentHash()" disabled="disabled">
+      </div>
+      <br><br>
+      <div>
+        <fieldset style="width:0px;padding:5px;margin:5px">
+          <legend>Signature Image</legend>
+          <div #signatureimage_loaded_background style="width:400px;height:320px;"></div>
+          <img #signatureimage_loaded style="display:none">
+        </fieldset>
+      </div>
+    </div>
+    <div id="settings_div" class="tabcontent">
+      <h2>Settings</h2>
+      <div>
+        <fieldset style="width:400px;padding:5px;margin:5px">
+          <legend>STU Settings</legend>
+          <input type="checkbox" name="encrypt_stu" #encrypt_stu checked="checked">
+          <label for="encrypt_stu">Encrypt STU communication</label>
+        </fieldset>
+      </div>
+      <div>
+        <fieldset style="width:400px;padding:5px;margin:5px">
+          <legend>Ink</legend>
+          <label for="ink_width">Ink width:</label>
+          <input type="number" name="ink_width" #ink_width value="6">
+          <br><br>
+          <label for="rendering_color_box">Ink color:</label>
+          <input type="color" name="rendering_color_box" #rendering_color_box value="#0202FE">
+          <br>
+          <label for="background_color_box">Background color</label>
+          <input type="color" name="background_color_box" #background_color_box value="#ffffff">
+          <br>
+          <input type="checkbox" name="put_background_image" #put_background_image>
+          <label for="background_image">Use background image</label><br>
+          <input type="file" #background_image name="background_image" (change)="loadBackgroundImage()"
+            accept="image/*">
+          <br>
+          <label for="background_image_mode">Background image mode</label><br>
+          <select name="background_image_mode" #background_image_mode>
+            <option value="none">None</option>
+            <option value="fit" selected="selected">Fit</option>
+            <option value="center">Center</option>
+            <option value="pattern">Pattern</option>
+          </select>
+          <br>
+          <label for="background_opacity">Background opacity</label>
+          <input type="range" min="1" max="100" value="100" #background_opacity>
+          <br>
+          <input type="checkbox" name="allowOutSide" #allowOutSide checked="checked">
+          <label for="allowOutSide">Allow outside inking</label><br>
+          <input type="checkbox" name="allowZeroPressure" #allowZeroPressure checked="checked">
+          <label for="allowZeroPressure">Allow zero pressure</label><br>
+        </fieldset>
+      </div>
+      <div>
+        <fieldset style="width:400px;padding:5px;margin:5px">
+          <legend>Capture window</legend>
+          <label for="dialog_width">Width:</label>
+          <input type="input" name="dialog_width" #dialog_width value="400">
+          <br>
+          <label for="dialog_height">Height:</label>
+          <input type="input" name="dialog_height" #dialog_height value="300">
+          <br>
+          <label for="stu_fit_mode">Size mode:</label>
+          <select name="stu_fit_mode" #stu_fit_mode>
+            <option value="fixed">The values defined in Width and Height</option>
+            <option value="fit">Fit to parent div</option>
+            <option value="strech">Strech to parent div maintaining proportion</option>
+            <option value="stu">STU dimensions</option>
+          </select>
+          <br>
+          <input type="checkbox" name="shows_modal" #shows_modal checked="checked">
+          <label for="shows_modal">Set as modal</label>
+          <br>
+          <input type="checkbox" name="shows_as_dialog" #shows_as_dialog>
+          <label for="shows_as_dialog">Shows as dialog</label>
+          <br>
+          <fieldset>
+            <label for="dialog_left">Left:</label>
+            <input type="input" name="dialog_left" #dialog_left value="0">
+            <br>
+            <label for="dialog_top">Top:</label>
+            <input type="input" name="dialog_top" #dialog_top value="0">
+            <br>
+            <input type="checkbox" name="is_centered" #is_centered checked="checked">
+            <label for="is_centered">Set as centered</label>
+            <br>
+            <input type="checkbox" name="is_draggable" #is_draggable checked="checked">
+            <label for="is_draggable">Set as draggable</label>
+            <br>
+            <label for="border_color_box">Border color</label>
+            <input type="color" name="border_color_box" #border_color_box value="#0097d4">
+            <br>
+            <label for="border_width_box">Border width</label>
+            <input type="text" name="border_width_box" #border_width_box value="3">
+            <br>
+            <input type="checkbox" name="has_title_check" #has_title_check checked="checked">
+            <label for="has_title_check">Has title</label>
+            <br>
+            <label for="title_text">Title text</label>
+            <input type="text" name="title_text" #title_text value="Capture signature">
+          </fieldset>
+          <fieldset>
+            <legend>Signatory</legend>
+            <div>
+              <p>
+                <input type="checkbox" name="show_signatory_check" #show_signatory_check checked="checked">
+                <label for="show_signatory_check">Show signatory</label>
+              </p>
+              <p>
+                <label for="signatory_font_type_text">Font type: </label>
+                <input type="text" name="signatory_font_type_text" #signatory_font_type_text value="Verdana">
+                <br>
+                <label for="signatory_font_size_text">Font size: </label>
+                <input type="text" name="signatory_font_size_text" #signatory_font_size_text value="20">
+              </p>
+              <p>
+                <label for="signatory_offset_x_text">Offset x: </label>
+                <input type="text" name="signatory_offset_x_text" #signatory_offset_x_text value="30">
+                <br>
+                <label for="signatory_offset_y_text">Offset y: </label>
+                <input type="text" name="signatory_offset_y_text" #signatory_offset_y_text value="5">
+              </p>
+              <p>
+                <label for="signatory_color_box">Text color</label>
+                <input type="color" name="signatory_color_box" #signatory_color_box value="#000000">
+              </p>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Reason</legend>
+            <div>
+              <p>
+                <input type="checkbox" name="show_reason_check" #show_reason_check checked="checked">
+                <label for="show_reason_check">Show reason</label>
+              </p>
+              <p>
+                <label for="reason_font_type_text">Font type: </label>
+                <input type="text" name="reason_font_type_text" #reason_font_type_text value="Verdana">
+                <br>
+                <label for="reason_font_size_text">Font size: </label>
+                <input type="text" name="reason_font_size_text" #reason_font_size_text value="20">
+              </p>
+              <p>
+                <label for="reason_offset_x_text">Offset x: </label>
+                <input type="text" name="reason_offset_x_text" #reason_offset_x_text value="5">
+                <br>
+                <label for="reason_offset_y_text">Offset y: </label>
+                <input type="text" name="reason_offset_y_text" #reason_offset_y_text value="10">
+              </p>
+              <p>
+                <label for="reason_color_box">Text color</label>
+                <input type="color" name="reason_color_box" #reason_color_box value="#000000">
+              </p>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Date</legend>
+            <div>
+              <p>
+                <input type="checkbox" name="show_date_check" #show_date_check checked="checked">
+                <label for="show_date_check">Show date</label>
+              </p>
+              <p>
+                <label for="date_font_type_text">Font type: </label>
+                <input type="text" name="date_font_type_text" #date_font_type_text value="Verdana">
+                <br>
+                <label for="date_font_size_text">Font size: </label>
+                <input type="text" name="date_font_size_text" #date_font_size_text value="16">
+              </p>
+              <p>
+                <label for="date_offset_x_text">Offset x: </label>
+                <input type="text" name="date_offset_x_text" #date_offset_x_text value="30">
+                <br>
+                <label for="date_offset_y_text">Offset y: </label>
+                <input type="text" name="date_offset_y_text" #date_offset_y_text value="20">
+              </p>
+              <p>
+                <label for="date_color_box">Text color</label>
+                <input type="color" name="date_color_box" #date_color_box value="#000000">
+              </p>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Signing line</legend>
+            <div>
+              <p>
+                <input type="checkbox" name="show_signing_line_check" #show_signing_line_check checked="checked">
+                <label for="show_signing_line_check">Show signing line</label>
+              </p>
+              <p>
+                <label for="signing_line_left_text">Left: </label>
+                <input type="text" name="signing_line_left_text" #signing_line_left_text value="30">
+                <br>
+                <label for="signing_line_right_text">Right: </label>
+                <input type="text" name="signing_line_right_text" #signing_line_right_text value="30">
+              </p>
+              <p>
+                <label for="signing_line_width_text">Width: </label>
+                <input type="text" name="signing_line_width_text" #signing_line_width_text value="2">
+                <br>
+                <label for="signing_line_offset_y_text">Offset y: </label>
+                <input type="text" name="signing_line_offset_y_text" #signing_line_offset_y_text value="5">
+              </p>
+              <p>
+                <label for="signing_line_color_box">Text color</label>
+                <input type="color" name="signing_line_color_box" #signing_line_color_box value="#D3D3D3">
+              </p>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Buttons</legend>
+            <p>
+              <label for="button_font_type">Font type:</label>
+              <input type="text" name="button_font_type" #button_font_type value="Arial">
+            </p>
+            <div>
+              <button (click)="addButton()">Add Button</button>
+            </div>
+            <div #button_list_div>
+              <fieldset #clear_btn_div_default>
+                <p>
+                  <label for="button_text">Button Text:</label>
+                  <input type="text" name="button_text" value="*clear">
+                </p>
+                <p>
+                  <label for="button_action">Action:</label>
+                  <input type="text" name="button_action" value="this.clear.bind(this)">
+                </p>
+                <p>
+                  <label for="button_text_color">Text color:</label>
+                  <input type="color" name="button_text_color" value="#000000">
+                </p>
+                <p>
+                  <label for="button_background_color">Background color:</label>
+                  <input type="color" name="button_background_color" value="#e7e7e7">
+                </p>
+                <p>
+                  <label for="button_border_width">Border width:</label>
+                  <input type="text" name="button_border_width" value="1">
+                </p>
+                <p>
+                  <label for="button_border_color">Border color:</label>
+                  <input type="color" name="button_border_color" value="#cccccc">
+                </p>
+                <p>
+                  <button (click)="removeButton('clear_btn_div_default')">Remove</button>
+                </p>
+              </fieldset>
+              <fieldset #cancel_btn_div_default>
+                <p>
+                  <label for="button_text">Button Text:</label>
+                  <input type="text" name="button_text" value="*cancel">
+                </p>
+                <p>
+                  <label for="button_action">Action:</label>
+                  <input type="text" name="button_action" value="this.cancel.bind(this)">
+                </p>
+                <p>
+                  <label for="button_text_color">Text color:</label>
+                  <input type="color" name="button_text_color" value="#000000">
+                </p>
+                <p>
+                  <label for="button_background_color">Background color:</label>
+                  <input type="color" name="button_background_color" value="#e7e7e7">
+                </p>
+                <p>
+                  <label for="button_border_width">Border width:</label>
+                  <input type="text" name="button_border_width" value="1">
+                </p>
+                <p>
+                  <label for="button_border_color">Border color:</label>
+                  <input type="color" name="button_border_color" value="#cccccc">
+                </p>
+                <p>
+                  <button (click)="removeButton('cancel_btn_div_default')">Remove</button>
+                </p>
+              </fieldset>
+              <fieldset #accept_btn_div_default>
+                <p>
+                  <label for="button_text">Button Text:</label>
+                  <input type="text" name="button_text" value="*ok">
+                </p>
+                <p>
+                  <label for="button_action">Action:</label>
+                  <input type="text" name="button_action" value="this.accept.bind(this)">
+                </p>
+                <p>
+                  <label for="button_text_color">Text color:</label>
+                  <input type="color" name="button_text_color" value="#000000">
+                </p>
+                <p>
+                  <label for="button_background_color">Background color:</label>
+                  <input type="color" name="button_background_color" value="#e7e7e7">
+                </p>
+                <p>
+                  <label for="button_border_width">Border width:</label>
+                  <input type="text" name="button_border_width" value="1">
+                </p>
+                <p>
+                  <label for="button_border_color">Border color:</label>
+                  <input type="color" name="button_border_color" value="#cccccc">
+                </p>
+                <p>
+                  <button (click)="removeButton('accept_btn_div_default')">Remove</button>
+                </p>
+              </fieldset>
+            </div>
+          </fieldset>
+        </fieldset>
+        <fieldset style="width:400px;padding:5px;margin:5px">
+          <legend>Render</legend>
+          <p>
+            In order to determinate the size of the image, if none of the width and height are defined it will render
+            the signature with its real size. If only one value, width or height is defined, it will render maintaining
+            the proportion
+            rescpect with the entered value. If defined both values it will render with the defined dimensions.
+          </p>
+          <p>
+            <label for="render_width">Width:</label>
+            <input type="input" name="render_width" #render_width value="400"> px
+          </p>
+          <p>
+            <label for="render_height">Height:</label>
+            <input type="input" name="render_height" #render_height value="300"> px
+          </p>
+          <p>
+            If render relative both dimensions Width and Height, should be equals. In case the two of them are provided
+            the Height will be ignored.
+            <br>
+            <input type="checkbox" name="is_relative" #is_relative>
+            <label for="is_relative">Set as relative</label>
+          </p>
+        </fieldset>
+      </div>
+      <div>
+        <fieldset style="width:400px;padding:5px;margin:5px">
+          <legend>Encryption</legend>
+          <div>
+            <input type="radio" #no_encryption name="encryption_group" value="none" checked="checked">
+            <label for="no_encryption">Without Encryption</label>
+          </div>
+          <div>
+            <input type="radio" #symmetric_encryption name="encryption_group" value="symmetric">
+            <label for="symmetric_encryption">Symmetric encryption</label>
+            <br>
+            <label for="symmetric_password" style="padding-left:40px">Password: </label>
+            <input type="password" #symmetric_password>
+          </div>
+          <div>
+            <input type="radio" #asymmetric_encryption name="encryption_group" value="asymmetric_encryption">
+            <label for="asymmetric_encryption">Asymmetric encryption</label>
+            <br>
+            <label for="public_key" style="padding-left:40px">Public Key (used for encryption):</label>
+            <br>
+            <textarea name="public_key" #public_key style="margin-left:40px"></textarea>
+            <br>
+            <span style="padding-left:30px">Private key (used for decryption):</span>
+            <br>
+            <label for="private_key_password" style="padding-left:40px">Private key password: </label>
+            <input type="password" #private_key_password>
+            <br>
+            <label for="private_key" style="padding-left:40px">Private key:</label>
+            <br>
+            <textarea name="private_key" #private_key style="margin-left:40px"></textarea>
+          </div>
+        </fieldset>
+      </div>
+      <div>
+        <fieldset style="width:400px;padding:5px;margin:5px">
+          <legend>ISO</legend>
+          <div>
+            <label for="iso_type">Save ISO as:</label>
+            <select name="iso_type" #iso_type>
+              <option value="ISO19794_7_2007_BINARY">ISO19794_7_2007_BINARY</option>
+              <option value="ISO19785_3_2015_XML">ISO19785_3_2015_XML</option>
+              <option value="ISO19794_7_2007_ENCRYPTED_BINARY">ISO19794_7_2007_ENCRYPTED_BINARY</option>
+              <option value="ISO19794_7_2007_ENCRYPTED_TEXT">ISO19794_7_2007_ENCRYPTED_TEXT</option>
+              <option value="ISO19794_7_2014_BINARY">ISO19794_7_2014_BINARY</option>
+              <option value="ISO19794_7_2014_ENCRYPTED_BINARY">ISO19794_7_2014_ENCRYPTED_BINARY</option>
+              <option value="ISO19794_7_2014_ENCRYPTED_TEXT">ISO19794_7_2014_ENCRYPTED_TEXT</option>
+              <option value="ISO19794_7_2021_BINARY">ISO19794_7_2021_BINARY</option>
+              <option value="ISO19794_7_2021_ENCRYPTED_BINARY">ISO19794_7_2021_ENCRYPTED_BINARY</option>
+              <option value="ISO19794_7_2021_ENCRYPTED_TEXT">ISO19794_7_2021_ENCRYPTED_TEXT</option>
+            </select>
+          </div>
+        </fieldset>
+      </div>
+      <div>
+        <fieldset style="width:400px;padding:5px;margin:5px">
+          <legend>Time out</legend>
+          <div>
+            <input type="checkbox" name="enable_timeout" #enable_timeout checked="checked">
+            <label for="enable_timeout">Enable time out</label>
+            <br>
+            <label for="timeOutValue">Time out value:</label>
+            <input type="input" name="timeOutValue" #timeOutValue value="10000">
+            <br>
+            <label for="emptyTimeOut">Action when timeout without data</label>
+            <select name="emptyTimeOut" #emptyTimeOut>
+              <!--option name="accept">Accept</option-->
+              <option value="cancel" selected="selected">Cancel</option>
+            </select>
+            <br>
+            <label for="dataTimeOut">Action when timeout has data</label>
+            <select name="dataTimeOut" #dataTimeOut>
+              <option value="accept" selected="selected">Accept</option>
+              <option value="cancel">Cancel</option>
+            </select>
+          </div>
+        </fieldset>
+        <fieldset style="width:400px;padding:5px;margin:5px">
+          <legend>Capture options</legend>
+          <div>
+            <label for="minTimeOnSurface">Minimum time that is necessary to capture a signature in milliseconds:</label>
+            <br>
+            <input type="input" name="minTimeOnSurface" #minTimeOnSurface value="300">
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="footer_container">
+  <div id="footer">
+    <a style="color:white" href="https://www.wacom.com/en-us/privacy">Wacom privacy policy</a> -
+    <a style="color:white" href="https://www.wacom.com/en-us/cookie-notice">Wacom cookie policy</a> - Copyright © 2021
+    Wacom Company, Limited. All Rights Reserved. All other trademarks are the property of their respective owners and
+    are used with their permission. Modifications and errors excepted.
+  </div>
+</div>

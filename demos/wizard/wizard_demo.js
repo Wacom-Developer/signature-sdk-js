@@ -1,11 +1,10 @@
 /**
- * Copyright (C) 2024 Wacom.
+ * Copyright (C) 2025 Wacom.
  * Use of this source code is governed by the MIT License that can be found in the LICENSE file.
  */
  
-import SigSDK from "javascript-signature-sdk";
+import SigSDK from "../node_modules/@wacom/signature-sdk/signature-sdk.js"
 import WizCtl from "../../wizard/wizard.js"
-import { MyEncryptionHandler, MyEncryptionHandler2} from "../../sigCaptDialog/stu_capture/stu_capture_encryption.js"
 import PadDefs from "./pad_defs.js"
 
 import acceptBtnColor from "./images/accept_btn.png";
@@ -23,6 +22,7 @@ let documentHash;
 let wizCtl;		
 let padDefs;
 let btnWaiting;       	
+let stuDevice;
 
 try {
 	sigSDK = await new SigSDK();
@@ -39,7 +39,7 @@ try {
 	const promise = mSigObj.setLicence("key", "secret");
 	promise.then(value => {
 	    if (value) {
-	        if (navigator.hid) {				
+	        if (sigSDK.STUDevice.isHIDSupported()) {				
 			    document.getElementById("start_wizard").disabled = false;
 			}
 				
@@ -61,19 +61,25 @@ try {
 
 			
 window.startWizard = async function() {
-	const options = {};
-	options.encryptionHandler = new MyEncryptionHandler();
-	options.encryptionHandler2 = new MyEncryptionHandler2();
-	await wizCtl.padConnect(options);
-	const mirrorDiv = document.getElementById("mirror_div");
-	mirrorDiv.style.width = wizCtl.padWidth()+"px";
-	mirrorDiv.style.height = wizCtl.padHeight()+"px";
-	mirrorDiv.style.display="block";
-	document.getElementById("signature_div").style.display="none";				
-	padDefs = new PadDefs(wizCtl.padWidth(), wizCtl.padHeight());
-	await wizard_step_init();
-	document.getElementById("start_wizard").disabled = true;
-	document.getElementById("stop_wizard").disabled = false;
+	if (!stuDevice) {
+	    const devices = await sigSDK.STUDevice.requestDevices();
+		if (devices.length > 0) {
+		    stuDevice = devices[0];    
+		}	
+	}
+
+    if (stuDevice) {	
+	    await wizCtl.padConnect(stuDevice);
+	    const mirrorDiv = document.getElementById("mirror_div");
+	    mirrorDiv.style.width = wizCtl.padWidth()+"px";
+	    mirrorDiv.style.height = wizCtl.padHeight()+"px";
+	    mirrorDiv.style.display="block";
+	    document.getElementById("signature_div").style.display="none";				
+	    padDefs = new PadDefs(wizCtl.padWidth(), wizCtl.padHeight());
+	    await wizard_step_init();
+	    document.getElementById("start_wizard").disabled = true;
+	    document.getElementById("stop_wizard").disabled = false;
+	}	
 }
 			
 window.stopWizard =	async function() {
@@ -501,7 +507,7 @@ async function wizard_step5() {
 	wizCtl.addObjectText("", 10, lineObject.rect.lowerRightYpixel+10, "Primitive objects");	
 	
 	wizCtl.setProperty({font:{size:padDefs.stu.subTitleWidth, color:"black", style:" "}});
-	wizCtl.addObjectText("", "right", lineObject.rect.lowerRightYpixel+10, "Step 6 of 6");	
+	wizCtl.addObjectText("", "right", lineObject.rect.lowerRightYpixel+10, "Step 5 of 6");	
 	
 	wizCtl.setProperty({fillColor:"green", borderColor:"blue"});
 	wizCtl.addPrimitive(WizCtl.PrimitiveType.Line, padDefs.stu.shape.line1X1, padDefs.stu.shape.line1Y1, padDefs.stu.shape.line1X2, padDefs.stu.shape.line1Y2, padDefs.stu.shape.lineWidth, WizCtl.PrimitiveOptions.LineSolid);			
@@ -552,7 +558,7 @@ async function wizard_step6() {
 		signatureOpts.documentHash = documentHash;
 	}
 	
-	const signComponent = wizCtl.addObjectSignature("Sig", mSigObj, signatureOpts);
+	const signComponent = wizCtl.addObjectSignature("Sig", sigSDK, mSigObj, signatureOpts);
 	signComponent.onSignatureCaptured = async function(signature) {
 		document.getElementById("signatureImage").src= await renderSignature(signature);
 		document.getElementById("mirror_div").style.display="none";

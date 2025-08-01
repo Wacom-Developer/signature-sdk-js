@@ -7,7 +7,7 @@ export default defineConfig({
     viteStaticCopy({
 	  targets: [
 	    {
-	      src: 'node_modules/javascript-signature-sdk/signature-sdk.wasm',
+	      src: 'node_modules/@wacom/signature-sdk/signature-sdk.wasm',
 		  dest: 'assets'
 	    }
       ],	  

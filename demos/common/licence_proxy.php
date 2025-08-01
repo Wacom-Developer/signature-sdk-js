@@ -1,4 +1,4 @@
-<?php
+ <?php
 /**
  * Copyright (C) 2023 Wacom.
  * Use of this source code is governed by the MIT License that can be found in the LICENSE file.

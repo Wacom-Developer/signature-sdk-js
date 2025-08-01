@@ -1,5 +1,5 @@
 <!--
-    Copyright (C) 2024 Wacom.
+    Copyright (C) 2025 Wacom.
 	Use of this source code is governed by the MIT License that can be found in the LICENSE file.
 -->
 <!DOCTYPE html>
@@ -9,9 +9,7 @@
 		<!--meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"-->
 	    <title>Signature SDK Demo</title>
 		<link href="../common/style/wacom.css" rel="stylesheet" type="text/css">		
-	    <link href="../../sigCaptDialog/style/sigCaptDialog.css" rel="stylesheet" type="text/css">						
-		<script src="complete_demo.js" type="module"></script>
-		
+		<script src="complete_demo.js" type="module"></script>		
 		<script>
 		    function openTab(evt, tabName) {
                 // Get all elements with class="tabcontent" and hide them
@@ -111,8 +109,7 @@
 					        <button id="save_image_btn" onClick="saveSignature('image')" disabled="disabled">Save as Image</button>&nbsp;&nbsp;
 				            <button id="save_text_btn" onClick="saveSignature('txt')" disabled="disabled">Save as Text</button>&nbsp;&nbsp;
 					        <button id="save_binary_btn" onClick="saveSignature('binary')" disabled="disabled">Save as Binary</button>
-							<button id="save_iso_binary_btn" onClick="saveSignature('iso_binary')" disabled="disabled">Save as Binary ISO</button>
-							<button id="save_iso_xml_btn" onClick="saveSignature('iso_xml')" disabled="disabled">Save as XML ISO</button>
+							<button id="save_iso_btn" onClick="saveSignature('iso')" disabled="disabled">Save as ISO</button>
 						</p>
 				    </p>
 		        </div>		
@@ -537,13 +534,20 @@
 					    <fieldset style="width:400px;padding:5px;margin:5px">
 		                    <legend>ISO</legend>   
                             <div>
-							    Save encrypted ISO-19784-7 as:<br>								
-								<input type="radio" id="iso_encrypted_binary_radio" name="iso_encryption_group" value="binary" checked="checked">
-                                <label for="iso_encrypted_binary_radio">As Binary</label>
-								<br>
-								<input type="radio" id="iso_encrypted_text_radio" name="iso_encryption_group" value="text">
-                                <label for="iso_encrypted_text_radio">As Text</label>								
-                            </div>							
+                                <label for="iso_type">Save ISO as:</label>
+                                <select name="iso_type" id="iso_type">
+                                    <option value="ISO19794_7_2007_BINARY">ISO19794_7_2007_BINARY</option>
+                                    <option value="ISO19785_3_2015_XML">ISO19785_3_2015_XML</option>
+                                    <option value="ISO19794_7_2007_ENCRYPTED_BINARY">ISO19794_7_2007_ENCRYPTED_BINARY</option>
+                                    <option value="ISO19794_7_2007_ENCRYPTED_TEXT">ISO19794_7_2007_ENCRYPTED_TEXT</option>
+                                    <option value="ISO19794_7_2014_BINARY">ISO19794_7_2014_BINARY</option>
+                                    <option value="ISO19794_7_2014_ENCRYPTED_BINARY">ISO19794_7_2014_ENCRYPTED_BINARY</option>
+                                    <option value="ISO19794_7_2014_ENCRYPTED_TEXT">ISO19794_7_2014_ENCRYPTED_TEXT</option>
+                                    <option value="ISO19794_7_2021_BINARY">ISO19794_7_2021_BINARY</option>
+                                    <option value="ISO19794_7_2021_ENCRYPTED_BINARY">ISO19794_7_2021_ENCRYPTED_BINARY</option>
+                                    <option value="ISO19794_7_2021_ENCRYPTED_TEXT">ISO19794_7_2021_ENCRYPTED_TEXT</option>
+                                </select>
+                            </div>
 						</fieldset>
 					</div>
 					<div>
@@ -589,7 +593,7 @@
         </div>        	
 	</body>
 	<script>
-        // Get the element with id="defaultOpen" and click on it
-        document.getElementById("capture_signature_tab").click();
+        // open the first tab
+        document.getElementById("capture_signature_tab").click();		
     </script>
 </html>

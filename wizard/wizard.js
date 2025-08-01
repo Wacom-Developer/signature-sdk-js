@@ -153,9 +153,6 @@
  * @property {function} onSignatureCaptured - Defines a function to be called with the signature is captured. The signature is passed as parameter.
  */  
  
- import com from "../sigCaptDialog/stu_capture/stu-sdk.min.js"
- import { getBrowserNameAndOS } from "../demos/common/browser-report.js"
- 
 /**
  * @class WizCtl
  * The Wizard library provides interactive controls for STU tablets devices.
@@ -168,7 +165,7 @@ class WizCtl {
 	constructor(sigSDK) {
 		this.sigSDK = sigSDK;
 		this.reset(false);
-		this.useColor = true;			
+		this.useColor = true;        
 	}		
 	
 	/**
@@ -502,7 +499,7 @@ class WizCtl {
                  const buttonObject = {
 				     "id":id,
 				     "type":WizCtl.ObjectType.ObjectButton,
-				     "rect":new com.WacomGSS.STU.Protocol.Rectangle(position.x, 
+				     "rect":new this.sigSDK.Rectangle(position.x, 
 					                                                position.y, 
 																	position.x+canvas.width-1, 
 																	position.y+canvas.height-1),	
@@ -596,7 +593,7 @@ class WizCtl {
 				"checked":(option & WizCtl.CheckboxOptions.CheckboxChecked),
 				"style":(option & ~WizCtl.CheckboxOptions.CheckboxChecked),
 				"font":checkboxFont,
-				"rect":new com.WacomGSS.STU.Protocol.Rectangle(position.x, 
+				"rect":new this.sigSDK.Rectangle(position.x, 
 				                                               Math.floor(position.y-Math.trunc((checkBoxHeight-textObjectHeight)/2)), 
 															   Math.floor(position.x+checkBoxWidth), 
 															   Math.floor(position.y-((checkBoxHeight-textObjectHeight)/2)+checkBoxHeight)),		   
@@ -677,7 +674,7 @@ class WizCtl {
 			const position = this.#getPosition(x, y, canvas.width, canvas.height);
             const imageObject = {
 				"type":WizCtl.ObjectType.ObjectImage,
-				"rect":new com.WacomGSS.STU.Protocol.Rectangle(position.x, 
+				"rect":new this.sigSDK.Rectangle(position.x, 
 				                                               position.y, 
 															   position.x+canvas.width-1, 
 															   position.y+canvas.height-1),																		   
@@ -823,7 +820,7 @@ class WizCtl {
 	            const inputEchoObject = {
 			         "id":id,
 			         "type":WizCtl.ObjectType.ObjectInputEcho,
-			         "rect":new com.WacomGSS.STU.Protocol.Rectangle(newX, position.y, newX+canvas.width-1, position.y+canvas.height-1),																   
+			         "rect":new this.sigSDK.Rectangle(newX, position.y, newX+canvas.width-1, position.y+canvas.height-1),																   
 				     "image":canvas,
 				     "painted":false,
 					 "index":i,
@@ -899,7 +896,7 @@ class WizCtl {
 				"group":options.Group,
 				"checked":options.Checked,
 				"font":radioFont,
-				"rect":new com.WacomGSS.STU.Protocol.Rectangle(position.x,
+				"rect":new this.sigSDK.Rectangle(position.x,
                                  				               Math.floor(position.y-Math.trunc((radioButtonHeight-textObjectHeight)/2)), 
 															   Math.floor(position.x+radioButtonWidth), 
 															   Math.floor(position.y-((radioButtonHeight-textObjectHeight)/2)+radioButtonHeight)),
@@ -932,7 +929,7 @@ class WizCtl {
 	 * @param options - Object with the integrity type or hash to attach to the signature. It is optional.
 	 * @returns {ObjectSignature} The added object.
      */	
-	addObjectSignature(id, signature, options) {
+	addObjectSignature(id, sigSDK, signature, options) {
 		if ((this.mPadMode != WizCtl.#PadMode.PadIndeterminate) && (this.mPadMode != WizCtl.PadMode.PadSigning)) {
 			throw "Already setted incompabitle objects";
 		} else if (!this.#idOK(id, WizCtl.ObjectType.ObjectSignature)) {
@@ -941,9 +938,9 @@ class WizCtl {
 			throw "Invalid signature object";
 		} else {
 			this.mPadMode = WizCtl.#PadMode.PadSigning;			
+			this.sigSDK = sigSDK;
 			this.mSigObj = signature;
-			this.mSigOptions = options;
-			
+			this.mSigOptions = options;			
 		}				
         
 		const signatureObject = {"id":id, 
@@ -1046,7 +1043,7 @@ class WizCtl {
 		    const textObject = {
 			   	         "id":id,
 				         "type":WizCtl.ObjectType.ObjectText,
-				         "rect":new com.WacomGSS.STU.Protocol.Rectangle(position.x, 
+				         "rect":new this.sigSDK.Rectangle(position.x, 
 						                                                position.y+(lineHeight*i), 
 																		position.x+canvas.width-1, 
 																		position.y+canvas.height-1+(lineHeight*i)),																   
@@ -1203,7 +1200,7 @@ class WizCtl {
 		
 		const primitiveObject = {
 		    "type":WizCtl.ObjectType.ObjectPrimitive,
-			"rect":new com.WacomGSS.STU.Protocol.Rectangle(x1, y1, x2-x1>lineWidth?x2-1:x1+lineWidth-1, y2-y1>lineWidth?y2-1:y1+lineWidth-1),																		   
+			"rect":new this.sigSDK.Rectangle(x1, y1, x2-x1>lineWidth?x2-1:x1+lineWidth-1, y2-y1>lineWidth?y2-1:y1+lineWidth-1),																		   
 			"image": canvas,
 			"painted": false
 		}
@@ -1223,7 +1220,7 @@ class WizCtl {
 			showWait = this.supportsArea;
 		}
 	    if (this.config.forceMonochrome) {
-            this.mEncodingMode = com.WacomGSS.STU.Protocol.EncodingMode.EncodingMode_1bit; 
+            this.mEncodingMode = this.sigSDK.EncodingMode.EncodingMode_1bit; 
 			this.useColor = false;
 		}
 		    
@@ -1248,9 +1245,9 @@ class WizCtl {
 		
 		if ((this.mPadMode == WizCtl.#PadMode.PadSigning) || 
 		    (this.mPadMode == WizCtl.#PadMode.PadInking)) {
-			await this.mTablet.setInkingMode(com.WacomGSS.STU.Protocol.InkingMode.On);	  	  
+			await this.stuDevice.setInkingMode(this.sigSDK.InkingMode.On);	  	  
 		} else {
-			await this.mTablet.setInkingMode(com.WacomGSS.STU.Protocol.InkingMode.Off);	  	  
+			await this.stuDevice.setInkingMode(this.sigSDK.InkingMode.Off);	  	  
 		}
 		
 		/*if (encrypted) {
@@ -1302,42 +1299,31 @@ class WizCtl {
      *                  encryptionHandler - Encryption handler for old stu devices.
      *                 	encryptionHandler2 - Encryption handler for recent stu devices.
 	 */
-	async padConnect(options) {
-		if (!this.currentDevice) {
-	        let devices = await com.WacomGSS.STU.UsbDevice.requestDevices();
-	        if (devices.length > 0) {
-		        this.currentDevice = devices[0];		
-	        } else {
-		        return false;
-	        }
-	    }
-	
-	    this.mTablet = new com.WacomGSS.STU.Tablet();
-		this.mTablet.addTabletHandler(this);
-		
-		if (options) {
-			if (options.encryptionHandler) {
-				this.mTablet.setEncryptionHandler(options.encryptionHandler);
-			}
-			if (options.encryptionHandler2) {
-		        this.mTablet.setEncryptionHandler2(options.encryptionHandler2);
-			}
-		}	    	    
-
+	async padConnect(hidDevice) {        
+	    this.stuDevice = new this.sigSDK.STUDevice(hidDevice);    
+		//hidDevice.addEventListener("inputreport", this.stuDevice.onInputReport.bind(this.stuDevice));
 	    try {
-	        await this.mTablet.usbConnect(this.currentDevice);	
-	        this.mCapability = await this.mTablet.getCapability();
-	        this.mInformation = await this.mTablet.getInformation();
-	        this.mInkThreshold = await this.mTablet.getInkThreshold();
+			//this.stuDevice.setPenDataHandler(this.sigSDK.PenDataHandler.implement(this));
+			this.stuDevice.addPenDataListener(this.sigSDK.PenDataType.PEN_DATA, this.onPenData.bind(this));
+            this.stuDevice.addPenDataListener(this.sigSDK.PenDataType.PEN_DATA_OPTION, this.onPenDataOption.bind(this));
+            this.stuDevice.addPenDataListener(this.sigSDK.PenDataType.PEN_DATA_TIME_COUNT_SEQUENCE, this.onPenDataTimeCountSequence.bind(this));
+            this.stuDevice.addPenDataListener(this.sigSDK.PenDataType.PEN_DATA_ENCRYPTED, this.onPenDataEncrypted.bind(this));
+            this.stuDevice.addPenDataListener(this.sigSDK.PenDataType.PEN_DATA_ENCRYPTED_OPTION, this.onPenDataEncryptedOption.bind(this));
+            this.stuDevice.addPenDataListener(this.sigSDK.PenDataType.PEN_DATA_TIME_COUNT_SEQUENCE_ENCRYPTED, this.onPenDataTimeCountSequenceEncrypted.bind(this));			
+			
+	        await this.stuDevice.connect(true);
+	        this.mCapability = await this.stuDevice.getCapability();
+	        this.mInformation = await this.stuDevice.getInformation();
+	        this.mInkThreshold = await this.stuDevice.getInkThreshold();
 			this.#setEncoding();						
 	  
 	        try {
-		        await this.mTablet.setPenDataOptionMode(com.WacomGSS.STU.Protocol.PenDataOptionMode.TimeCountSequence);	
+		        await this.stuDevice.setPenDataOptionMode(this.sigSDK.PenDataOptionMode.TimeCountSequence);	
 	        } catch (e) {
 	        }	
 
-			await this.mTablet.setClearScreen();					
-			await this.mTablet.setInkingMode(com.WacomGSS.STU.Protocol.InkingMode.Off);	  	  									
+			await this.stuDevice.setClearScreen();					
+			await this.stuDevice.setInkingMode(this.sigSDK.InkingMode.Off);	  	  									
 	    } catch (e) {
 	        console.log(e);
 	        return false;
@@ -1351,7 +1337,7 @@ class WizCtl {
 		this.mScaleX = this.mCapability.screenWidth / this.mCapability.tabletMaxX;
 	    this.mScaleY = this.mCapability.screenHeight / this.mCapability.tabletMaxY;
 		
-		this.supportsArea = this.#supportsWriteImageArea();		
+		this.supportsArea = this.#supportsWriteImageArea();
 		this.connected = true;		
 	    return true;
 	}
@@ -1363,21 +1349,21 @@ class WizCtl {
 		// Ensure that you correctly disconnect from the tablet, otherwise you are 
         // likely to get errors when wanting to connect a second time.
 		this.connected = false;
-        if (this.mTablet != null) {			
+        if (this.stuDevice != null) {			
 	        if (this.mIsEncrypted) {
-	            await this.mTablet.endCapture();
+	            await this.stuDevice.endCapture();
 		        this.mIsEncrypted = false;
 	        }		
 		
-	        await this.mTablet.setInkingMode(com.WacomGSS.STU.Protocol.InkingMode.Off);
+	        await this.stuDevice.setInkingMode(this.sigSDK.InkingMode.Off);
 			
 			if (this.mPadMode != WizCtl.#PadMode.PadShutdown) {			
-	            await this.mTablet.setClearScreen();
+	            await this.stuDevice.setClearScreen();
 			}
 			
-	        await this.mTablet.disconnect();
-		    delete this.mTablet;
-		    this.mTablet = null;			
+	        await this.stuDevice.disconnect();
+		    delete this.stuDevice;
+		    this.stuDevice = null;			
         }	
 	}
 	
@@ -1423,6 +1409,9 @@ class WizCtl {
 		this.mFont = {};		
 		this.mInput = null;
 		this.mPenEvents = [];
+		this.mResolvers = [];
+		this.mPromises = [];
+		this.penDatas = [];		
 		this.mPenData = [];
 		this.mObject = null;
 		this.mSigObj = null;
@@ -1438,7 +1427,10 @@ class WizCtl {
 		}
 		
 		if (clear) {
-			await this.mTablet.setClearScreen();
+			if (this.stuDevice) {
+			  await new Promise(resolve => setTimeout(resolve, 100));
+			  await this.stuDevice.setClearScreen();
+			}
 			
 			if (this.config.mirrorDiv) {
 				this.ctx.fillStyle = "white";
@@ -1599,10 +1591,10 @@ class WizCtl {
 	
 	async #startEncryption() {
 		if (this.connected) {
-		    if ((this.mTablet.isSupported(com.WacomGSS.STU.Protocol.ReportId.EncryptionStatus_$LI$())) ||
-	            (await com.WacomGSS.STU.Protocol.ProtocolHelper.supportsEncryption(this.mTablet.getProtocol()))) {						   
+		    if ((this.stuDevice.isSupported(this.sigSDK.ReportId.EncryptionStatus)) ||
+	            (await this.sigSDK.ProtocolHelper.supportsEncryption(this.stuDevice.getProtocol()))) {						   
 		
-		        await this.mTablet.startCapture(this.config.sessionId);
+		        await this.stuDevice.startCapture(this.config.sessionId);
                 this.mIsEncrypted = true;
 			}
 	    }
@@ -1610,7 +1602,7 @@ class WizCtl {
 	
 	async #stopEncryption() {
 		if (this.mIsEncrypted) {
-			await this.mTablet.endCapture();
+			await this.stuDevice.endCapture();
 			this.mIsEncrypted = false;
 		}
 	}
@@ -1645,37 +1637,40 @@ class WizCtl {
 		return null;
 	}		
 	
-	onPenDataOption(penData, time) {	
-	    this.onPenData(penData, time);
+	onPenDataOption(penData) {	
+	    this.onPenData(penData);
     }
   
-    onPenDataTimeCountSequence(penData, time) {
-	    this.onPenData(penData, time);
-    }
-  
-    onPenDataTimeCountSequenceEncrypted(penData, time) {
-	    this.onPenDataTimeCountSequence(penData, time);
-    }
-  
-    onPenDataEncryptedOption(penData, time) {
-        this.onPenData(penData.penData1, time);
-        this.onPenData(penData.penData2, time);	
-    }
-
-    onPenDataEncrypted(penData, time) {
-        this.onPenData(penData.penData1, time);
-        this.onPenData(penData.penData2, time);	
+    onPenDataTimeCountSequence(penData) {
+	    this.onPenData(penData);								
     }
 	
-	async onPenData(penData, time) {
-		if (!penData.timeCount) {
-            penData.timeCount = Math.trunc(time)%1000000;
-	    }
-		
-		this.mPenEvents.push(penData);
-		if (this.mPenEvents.length == 1) {
-		    await this.#onPenDataInternal();
+    onPenDataTimeCountSequenceEncrypted(penData) {
+	    this.onPenDataTimeCountSequence(penData);
+    }
+  
+    onPenDataEncryptedOption(penData) {
+        this.onPenData(penData.penData1);
+        this.onPenData(penData.penData2);	
+    }
+
+    onPenDataEncrypted(penData) {
+        this.onPenData(penData.penData1);
+        this.onPenData(penData.penData2);	
+    }
+	
+	onPenData(penData) {
+		if (penData.sessionId && penData.sessionId !== this.config.sessionId) {
+			return;
 		}
+		
+		this.mPromises.push(new Promise(resolve => {
+			this.mResolvers.push(resolve);
+			this.mPenEvents.push(penData);
+			if (this.mPenEvents.length === 1) {
+		      this.#onPenDataInternal(penData);
+		    }  
+		}));		
 	}
 	
     async #onPenDataInternal() {
@@ -1683,7 +1678,7 @@ class WizCtl {
 			return;
 		}
 		
-		const penData = this.mPenEvents[0]; // we cannot shift until the end.
+		const penData = this.mPenEvents[0]; // we cannot shift until the end.		
 		
         //console.log(JSON.stringify(penData));	
         
@@ -1696,7 +1691,7 @@ class WizCtl {
 			     (this.mObject.pushed)) {
 			    this.mObject.pushed = false;
 				this.#drawState(this.mObject);
-				redraw = true;
+				//redraw = true;
 			}
 		}
 		
@@ -1713,7 +1708,7 @@ class WizCtl {
 					    if ((this.mPadMode == WizCtl.#PadMode.PadSigning) ||
                              (this.mPadMode == WizCtl.#PadMode.PadInking)) {
 		                    this.mPenData.push(penData);
-		  
+							
 		                    var downEvent = new PointerEvent("pointerdown", {
 			                               pointerId: 1,
                                            pointerType: "pen",							   
@@ -1731,19 +1726,13 @@ class WizCtl {
 							}
 						}
 					}
-							 
-							 
-					/*const point = InkBuilder.createPoint(downEvent);
-                    point.timestamp = penData.timeCount;		 
-					this.sigCaptDialog.draw("begin", point);	
-                    this.sigCaptDialog.stopTimeOut();
-					this.startDown = Date.now();*/
+							 							
                 } else {
 					// if we press a button change its color
 					if (this.mObject.type == WizCtl.ObjectType.ObjectButton) {
 						this.mObject.pushed = true;
 						this.#drawState(this.mObject);
-						redraw = true;
+						//redraw = true;
 					}
 				}
             } else {
@@ -1799,10 +1788,14 @@ class WizCtl {
 						
 						if ((object.onClick) && (await object.onClick(object))) {
 							this.mPenEvents = [];
+                            this.mPromises = [];
+		                    this.mResolvers.forEach((value) => {
+							  value();
+							});		
+                            this.mResolvers = [];							
 							return;
 						}
 						
-						//this.sigCaptDialog.clickButton(this.mBtnIndex);
 					}
 				} else {
 					if ((!penData.fromMouse) && 
@@ -1810,12 +1803,6 @@ class WizCtl {
 						 ((this.mObject.type != WizCtl.ObjectType.ObjectButton) && 
 						 (this.mObject.type != WizCtl.ObjectType.ObjectImage)))) {
 							                    						
-                        /*const point = InkBuilder.createPoint(upEvent);
-                        point.timestamp = penData.timeCount;		 
-					    this.sigCaptDialog.draw("end", point);		 							 																							
-                        this.sigCaptDialog.startTimeOut();
-					    this.sigCaptDialog.addTimeOnSurface(Date.now() - this.startDown);*/
-					
 					    if ((this.mPadMode == WizCtl.#PadMode.PadSigning) || 
 						    (this.mPadMode == WizCtl.#PadMode.PadInking)) {						
 						    this.mPenData.push(penData);
@@ -1846,9 +1833,6 @@ class WizCtl {
 					    ((this.mObject == null) || 
 						 ((this.mObject.type != WizCtl.ObjectType.ObjectButton) && 
 						 (this.mObject.type != WizCtl.ObjectType.ObjectImage)))) {
-				    /*const point = InkBuilder.createPoint(moveEvent);
-                    point.timestamp = penData.timeCount;		 
-				    this.sigCaptDialog.draw("move", point);	*/	 
 				
 				    if ((this.mPadMode == WizCtl.#PadMode.PadSigning) || 
 					    (this.mPadMode == WizCtl.#PadMode.PadInking)) {
@@ -1875,11 +1859,16 @@ class WizCtl {
 			}
         }
 		
-		if (redraw) {
-			await this.#draw();
-		}
+		if (redraw) {	
+			//await new Promise(resolve => setTimeout(resolve, this.mIsEncrypted ? 200 : 100));
+			await new Promise(resolve => setTimeout(resolve, 100));
+	        await this.#draw();			  
+		} 
 		
 		this.mPenEvents.shift();
+		this.mPromises.shift();
+		this.mResolvers.shift()();
+
 		if (this.mPenEvents.length > 0) {
 		    await this.#onPenDataInternal();
 		}		
@@ -1890,27 +1879,27 @@ class WizCtl {
 	#setEncoding() {
 		if (this.config.forceMonochrome) {
 			// assumes 1bit is available
-	        this.mEncodingMode = com.WacomGSS.STU.Protocol.EncodingMode.EncodingMode_1bit; 
+	        this.mEncodingMode = this.sigSDK.EncodingMode.EncodingMode_1bit; 
 		    this.useColor = false;
-		} else if (this.mTablet) {
-	        let encodingFlag = com.WacomGSS.STU.Protocol.ProtocolHelper.simulateEncodingFlag(this.mTablet.getProductId(), this.mCapability.encodingFlag);
+		} else if (this.stuDevice) {
+	        let encodingFlag = this.sigSDK.ProtocolHelper.simulateEncodingFlag(this.stuDevice.getProductId(), this.mCapability.encodingFlag);
 	        // Disable color if the bulk driver isn't installed (supportsWrite())
-	        if ((encodingFlag & com.WacomGSS.STU.Protocol.EncodingFlag.EncodingFlag_24bit) != 0) {
-	            this.mEncodingMode = com.WacomGSS.STU.Protocol.EncodingMode.EncodingMode_24bit; 
+	        if ((encodingFlag & this.sigSDK.EncodingFlag.EncodingFlag_24bit.value) != 0) {
+	            this.mEncodingMode = this.sigSDK.EncodingMode.EncodingMode_24bit; 
 				this.useColor = true;
-	        } else if ((encodingFlag & com.WacomGSS.STU.Protocol.EncodingFlag.EncodingFlag_16bit) != 0) {
-	            this.mEncodingMode = com.WacomGSS.STU.Protocol.EncodingMode.EncodingMode_16bit; 
+	        } else if ((encodingFlag & this.sigSDK.EncodingFlag.EncodingFlag_16bit.value) != 0) {
+	            this.mEncodingMode = this.sigSDK.EncodingMode.EncodingMode_16bit; 
 				this.useColor = true;
 	        } else {
 	            // assumes 1bit is available
-	            this.mEncodingMode = com.WacomGSS.STU.Protocol.EncodingMode.EncodingMode_1bit; 
+	            this.mEncodingMode = this.sigSDK.EncodingMode.EncodingMode_1bit; 
 			    this.useColor = false;
 			}
 	    }		
 	}		
 	
 	#supportsWriteImageArea() {
-		return this.mTablet.isSupported(com.WacomGSS.STU.Protocol.ReportId.StartImageDataArea_$LI$());
+		return this.stuDevice.isSupported(this.sigSDK.ReportId.StartImageDataArea);
 	}
 				
 	
@@ -1959,7 +1948,7 @@ class WizCtl {
 	
 	
 	
-	async #draw(oneBlock) {
+	async #draw(oneBlock) {		
 		if ((!this.supportsArea) || (oneBlock)) {			
             let x1, x2, y1, y2;
             if (!this.supportsArea) {
@@ -2011,14 +2000,15 @@ class WizCtl {
 				}				
 			}
 									
-			const rect = new com.WacomGSS.STU.Protocol.Rectangle(x1, y1, x2-1, y2-1);
-			const image = com.WacomGSS.STU.Protocol.ProtocolHelper.resizeAndFlatten(canvas, 0, 0, canvas.width, canvas.height, 
+			const rect = new this.sigSDK.Rectangle(x1, y1, x2-1, y2-1);
+			const image = this.sigSDK.ProtocolHelper.resizeAndFlatten(canvas, 0, 0, canvas.width, canvas.height, 
 	                                                                                canvas.width, canvas.height, this.mEncodingMode, 
 		  																	        0, "white", false, false);		
+																					
 			if (this.supportsArea) {
-			    await this.mTablet.writeImageArea(this.mEncodingMode, rect, image);
+			    await this.stuDevice.writeImageArea(this.mEncodingMode, rect, image);
 			} else {
-				await this.mTablet.writeImage(this.mEncodingMode, image);
+				await this.stuDevice.writeImage(this.mEncodingMode, image);
 			}
 			if (this.config.mirrorDiv) {
 			    this.ctx.drawImage(canvas, x1, y1);
@@ -2029,10 +2019,11 @@ class WizCtl {
 				if ((this.objects[i].painted !== undefined) && (!this.objects[i].painted)) {
 					const canvas = this.objects[i].image;										
 					
-					const image = com.WacomGSS.STU.Protocol.ProtocolHelper.resizeAndFlatten(canvas, 0, 0, canvas.width, canvas.height, 
+					const image =this.sigSDK.ProtocolHelper.resizeAndFlatten(canvas, 0, 0, canvas.width, canvas.height, 
 	                                                                                        canvas.width, canvas.height, this.mEncodingMode, 
 		  																	                0, "white", false, false);	               		
-					await this.mTablet.writeImageArea(this.mEncodingMode, this.objects[i].rect, image);
+
+					await this.stuDevice.writeImageArea(this.mEncodingMode, this.objects[i].rect, image);
 				    this.objects[i].painted = true;
 					
 					if (this.config.mirrorDiv) {
@@ -2075,12 +2066,12 @@ class WizCtl {
 				
 		const x = Math.floor(this.mCapability.screenWidth/2 - size/2);
 		const y = Math.floor(this.mCapability.screenHeight/2 - size/2);
-		const image = com.WacomGSS.STU.Protocol.ProtocolHelper.resizeAndFlatten(canvas, 0, 0, canvas.width, canvas.height, 
+		const image = this.sigSDK.ProtocolHelper.resizeAndFlatten(canvas, 0, 0, canvas.width, canvas.height, 
 	                                                                            canvas.width, canvas.height, this.mEncodingMode, 
 		  																	    0, "white", false, false);																																				  		    
 		
-		const rect = new com.WacomGSS.STU.Protocol.Rectangle(x, y, x+canvas.width-1, y+canvas.height-1);
-		await this.mTablet.writeImageArea(this.mEncodingMode, rect, image);		
+		const rect = new this.sigSDK.Rectangle(x, y, x+canvas.width-1, y+canvas.height-1);
+		await this.stuDevice.writeImageArea(this.mEncodingMode, rect, image);		
 		
 		if (this.config.mirrorDiv) {
 			this.ctx.drawImage(canvas, x, y);
@@ -2251,28 +2242,20 @@ class WizCtl {
 	async #onOk() {
 		if (this.mPadMode == WizCtl.#PadMode.PadSigning) {
 			if (this.#hasPenData()) {
-			    const promise = this.#generateSignature();			
-				promise.then(value => {
-					if (value) {
-			            this.#onCancel();
+			    const value = await this.#generateSignature();			
+				if (value) {
+			        this.#onCancel();
 				
-				        let signObject;
-				        for (var i=this.objects.length-1; i>-1; i--) {
-			                if (this.objects[i].type == WizCtl.ObjectType.ObjectSignature) {
-					            signObject = this.objects[i];
-				            }
+				    let signObject;
+				    for (var i=this.objects.length-1; i>-1; i--) {
+			            if (this.objects[i].type == WizCtl.ObjectType.ObjectSignature) {
+				          signObject = this.objects[i];
 				        }
-				        if (signObject && signObject.onSignatureCaptured) {
-				            return signObject.onSignatureCaptured(this.mSigObj);	
-				        }
-					} else {
-						alert("Error");
-					}						
-				});
-				promise.catch(error => {
-					alert(error);
-					
-				});
+				    }
+				    if (signObject && signObject.onSignatureCaptured) {
+				      return signObject.onSignatureCaptured(this.mSigObj);	
+				    }
+				}				
 			}
 		} else if (this.mPadMode == WizCtl.#PadMode.PadInking) {
 			if (this.#hasPenData() > 0) {
@@ -2312,7 +2295,7 @@ class WizCtl {
 			}
 			
 			this.mPenData = [];
-			await this.mTablet.setClearScreen();
+			await this.stuDevice.setClearScreen();
 			for (var i=0; i<this.objects.length; i++) {
 				if (this.objects[i].painted !== undefined) {
 			        this.objects[i].painted = false;
@@ -2631,6 +2614,44 @@ class WizCtl {
         //await this.draw();		
 	}
 	
+	async getSystemInfo() {
+      let browserInfo = "";
+      let osInfo = "";
+      
+	  //Along with the signature we are going to include the Operative System and Web Browser
+      //in where the signature has been captured. However this is sensible information that 
+      //most web browsers does not allow to obtain. First of all we are going to try to get the data
+      //using the new experimental User-Agent Client Hints API, only available on certains web browsers.
+	  const navigatorUAData = window.navigator.userAgentData;
+      if (navigatorUAData) {
+        const values = await navigatorUAData.getHighEntropyValues(["platformVersion"]);
+	    const brandList = ['chrome', 'opera', 'safari', 'edge', 'firefox'];
+		
+	    let found = false;
+	    for (const agentBrand of values.brands) {
+	      const agentBrandEntry = agentBrand.brand.toLowerCase();
+	      const foundBrand = brandList.find(brand => agentBrandEntry.includes(brand));
+
+		  if (foundBrand) {
+            browserInfo = agentBrand.brand + " " + agentBrand.version;
+		    found = true;
+            break
+          }
+	    }
+		
+	    if (!found) {
+	      browserInfo = values.brands[0].brand + " " + values.brands[0].version;
+	    }		
+		  
+	    osInfo = values.platform + " " + values.platformVersion;
+      } else {
+	    browserInfo = navigator.userAgent;
+        osInfo = "Unkwon OS";	  
+      }
+
+      return [browserInfo, osInfo];
+    }
+	
 	async #generateSignature() {
 	    //Create Stroke Data
         let strokeVector = new this.sigSDK.StrokeVector();
@@ -2672,8 +2693,8 @@ class WizCtl {
             };
 		
             currentStroke.push_back(point);			
-        }		
-	
+        }	
+
 	    //Create capture area character
         var device = {
             'device_max_X': this.mCapability.tabletMaxX,
@@ -2689,7 +2710,7 @@ class WizCtl {
 	    var uid2;
 	    try {
             // getUid2 will throw if the pad doesn't support Uid2
-            uid2 = await mTablet.getUid2();
+            uid2 = await stuDevice.getUid2();
         }
         catch (e) {
         }
@@ -2698,8 +2719,7 @@ class WizCtl {
 		    uid2 = 0;
 	    }
 
-		const webBrowserData = await getBrowserNameAndOS();
-		const osInfo = webBrowserData.os.name + " " + webBrowserData.os.version;
+        const [browserInfo, osInfo] = await this.getSystemInfo();
         const nicInfo = "";
         const digitizerInfo = "STU;'"+this.mInformation.modelName+"';"+this.mInformation.firmwareMajorVersion+"."+((parseInt(this.mInformation.firmwareMinorVersion) >> 4) & 0x0f)+"."+(parseInt(this.mInformation.firmwareMinorVersion) & 0x0f)+";"+uid2;
         const timeResolution = 1000;

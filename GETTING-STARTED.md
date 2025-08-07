@@ -84,8 +84,13 @@ The web-based app needs a web server.
   - open a web browser with the URL: http://localhost:4173
 
 
-> **NB:** When making any changes to the code, including inserting a new license, it is necessary to run `npm run build` before running `npm run preview` again. 
+> **NB:** When making any changes to the code, including inserting a new license, it is necessary to run `npm run build` before running `npm run preview` again.  
  
+### Using the Signature SDK Angular sample
+
+To build the samples in Angular, follow the same steps above but:
+- Instead of using `npm run build` to build the demo code, use `ng serve` to build the project.
+
 ## Licensing
 
 A valid license is needed for using Signature SDK for JavaScript. 
@@ -125,6 +130,13 @@ Once you have a valid license, you can initialize the Signature SDK for JavaScri
 
 ```
 
+#### Angular demo - in demos/angular_demo/src/app/app.components.ts
+
+```typescript
+
+	  await this.sigObj?.setLicence("key", "secret");		  
+
+```
 
 
 Now you may use any of the API functions, calling them directly from the Signature Object. You can see these functions in more detail in: Signature_SDK_JS_API.md.

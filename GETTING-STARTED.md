@@ -6,11 +6,13 @@
   - [Installation](#installation)
     - [Web Development Environment](#web-development-environment)
     - [Using the Signature SDK Sample Code](#using-the-signature-sdk-sample-code)
+    - [Using the Signature SDK Angular sample](#using-the-signature-sdk-angular-sample)
   - [Licensing](#licensing)
     - [Setting up the license](#setting-up-the-license)
       - [Simple demo - in demos/simple/simple.js](#simple-demo---in-demossimplesimplejs)
       - [Complete demo - in demos/complete/complete\_demo.js](#complete-demo---in-demoscompletecomplete_demojs)
       - [Wizard demo - in demos/wizard/wizard\_demo.js](#wizard-demo---in-demoswizardwizard_demojs)
+      - [Angular demo - in demos/angular\_demo/src/app/app.components.ts](#angular-demo---in-demosangular_demosrcappappcomponentsts)
     - [On premise licensing](#on-premise-licensing)
     - [Using a custom URL](#using-a-custom-url)
   - [Operate the Demo application](#operate-the-demo-application)
@@ -139,7 +141,7 @@ Once you have a valid license, you can initialize the Signature SDK for JavaScri
 ```
 
 
-Now you may use any of the API functions, calling them directly from the Signature Object. You can see these functions in more detail in: Signature_SDK_JS_API.md.
+Now you may use any of the API functions, calling them directly from the Signature Object. You can see these functions in more detail [on our developer documentation site here.](https://developer-docs.wacom.com/docs/sdk-for-signature/javascript/api/js-api/)
 
 ### On premise licensing
 

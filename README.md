@@ -14,11 +14,10 @@
     - [Using HTML5 canvas](#using-html5-canvas)
     - [Problems](#problems)
   - [About the content of this folder](#about-the-content-of-this-folder)
-    - [Documentation](#documentation)
     - [Demos](#demos)
   - [Additional resources](#additional-resources)
     - [Sample Code](#sample-code)
-    - [Documentation](#documentation-1)
+    - [Documentation](#documentation)
     - [Support](#support)
     - [Developer Community](#developer-community)
     - [License](#license)
@@ -319,10 +318,6 @@ On the latest version of Firefox, running an incognito window will disable the u
 - README.md – This file, containing general background and platform information.
 - GETTING-STARTED.md – The description of how to use the Signature SDK. 
 - THIRDPARTY.md - List of third-party licenses.
-
-### Documentation
-
-- Signature_SDK_JS_API.md – The description of the Signature SDK API.
 
 ### Demos
 

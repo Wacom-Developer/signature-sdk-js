@@ -1,11 +1,11 @@
 {
   "name": "javascript-signature-sdk-demos",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "type": "module",
   "description": "Demos for Signature SDK JS",
   "main": "index.js",
   "dependencies": {
-	  "@wacom/signature-sdk": "^2.1.0"
+	  "@wacom/signature-sdk": "^2.1.1"
   },	  
   "scripts": {
 	"build": "vite build",

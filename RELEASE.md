@@ -1,8 +1,12 @@
 # Wacom Ink SDK for Signature - JavaScript
 
-## Version 2.1.0
+## Version 2.1.1
 
 ## History
+
+* Release 2.1.1 24-Sep-2025
+   - Fix for Apple Pen issue
+
 * Release 2.1.0 08-Jul-2025
    - Added TypeScript support
    - Integrated SigCaptDialog, StuCaptDialog & STU SDK into the SDK's WebAssembly component.

@@ -1,6 +1,6 @@
 {
   "name": "angular-sig-sdk-demo",
-  "version": "0.0.0",
+  "version": "3.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -20,7 +20,7 @@
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0",
-	"@wacom/signature-sdk": "^2.1.1"
+	"@wacom/signature-sdk": "^3.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.2.4",

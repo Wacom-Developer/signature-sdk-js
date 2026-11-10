@@ -4,7 +4,7 @@ class CompleteDemo {
 	
   async initialize() {
     try {
-      this.sigSDK = await new SigSDK();	
+      this.sigSDK = await SigSDK();	
 				
 	  document.getElementById("version_txt").innerHTML = this.sigSDK.VERSION;								
 	  this.sigObj = new this.sigSDK.SigObj();	
@@ -208,8 +208,8 @@ class CompleteDemo {
     this.stuReady = false;
     this.sigCaptDialog = null;
     const config = await this.generateConfig();    
-    config.showWait = true;
-    config.encryptSTU = document.getElementById("encrypt_stu").checked;
+    config.showWait = document.getElementById("show_wait").checked;
+    config.encryptSTU = document.getElementById("encrypt_stu").checked;	
 
     const stuDeviceStr = localStorage.getItem("stuDevice");
     let stuDevice;
@@ -751,12 +751,12 @@ class CompleteDemo {
 	  try {
 		const data = reader.result;   
 						
-		const types = [outer.sigSDK.KeyType.MD5, 
-				       outer.sigSDK.KeyType.SHA1, 
-					   outer.sigSDK.KeyType.SHA224, 
-					   outer.sigSDK.KeyType.SHA256, 
-					   outer.sigSDK.KeyType.SHA384, 
-					   outer.sigSDK.KeyType.SHA512];
+		const types = [outer.sigSDK.HashType.MD5, 
+				       outer.sigSDK.HashType.SHA1, 
+					   outer.sigSDK.HashType.SHA224, 
+					   outer.sigSDK.HashType.SHA256, 
+					   outer.sigSDK.HashType.SHA384, 
+					   outer.sigSDK.HashType.SHA512];
 						
 		for (let i=0; i<types.length; i++) {
 		  const hashType = types[i];

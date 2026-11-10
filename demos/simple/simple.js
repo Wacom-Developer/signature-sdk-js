@@ -4,12 +4,13 @@ class SimpleDemo {
 	
   async initialize() {
     try {
-	  this.sigSDK = await new SigSDK();
+	  this.sigSDK = await SigSDK();
 	
 	  document.getElementById("version_txt").innerHTML = this.sigSDK.VERSION;								
 	  this.sigObj = new this.sigSDK.SigObj();		
 				
-	  await this.sigObj.setLicence("key", "secret");	
+	  //await this.sigObj.setLicenceProxy("url from where to get the licence");	
+	  await this.sigObj.setLicence("key", "secret");
 	  if (this.sigSDK.STUDevice.isHIDSupported()) {				
         document.getElementById("capture_stu_device").disabled = false;
       }
@@ -34,7 +35,7 @@ class SimpleDemo {
           reader.onload = async function() {
             const data = reader.result;
 			try {
-				if (await outer.sigObj.setTextData(data)) {
+				if (await this.sigObj.setTextData(data)) {
 					outer.renderSignature();
 				} else {
 					alert("Incorrect signature data found");
@@ -89,7 +90,7 @@ class SimpleDemo {
             const data = reader.result;
 			try {
 				if (await outer.sigObj.setSigData(new Uint8Array(data))) {
-					outer.renderSignature();
+					this.renderSignature();
 				} else {
 					alert("Incorrect signature data found");
 				}

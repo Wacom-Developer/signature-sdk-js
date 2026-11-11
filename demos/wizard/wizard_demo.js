@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2026 Wacom.
+ * Copyright (C) 2025 Wacom.
  * Use of this source code is governed by the MIT License that can be found in the LICENSE file.
  */
  
@@ -120,11 +120,11 @@ async function renderSignature() {
 	renderWidth += renderWidth % 4;
 	const inkColor = "blue";
 	const inkWidth = 3.0;
-	const image = await mSigObj.renderBitmap(renderWidth, renderHeight, "image/png", inkWidth, inkColor, "white", 0, 0, 0);				
+	const image = await mSigObj.renderBitmap(renderWidth, renderHeight, "image/png", inkWidth, inkColor, "white", 0, 0, sigSDK.RenderFlags.RenderEncodeData.value);				
 	return image;
 }
 				
-async function addDocumentHash() {
+window.addDocumentHash = async function() {
 	const reader = new FileReader();
     reader.onload = async function() {                    
 		try {

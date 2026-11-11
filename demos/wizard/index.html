@@ -9,9 +9,8 @@
 		<!--meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"-->
 	    <title>Signature SDK Wizard Demo</title>
 		<link href="../common/style/wacom.css" rel="stylesheet" type="text/css">		
-        <script src="./pad_defs.js"></script>		
-		<script src="./wizard_demo.js"></script>		
-		<script>
+		<script src="wizard_demo.js" type="module"></script>	
+        <script>
 		    function openTab(evt, tabName) {
                 // Get all elements with class="tabcontent" and hide them
                 var tabcontent = document.getElementsByClassName("tabcontent");
@@ -29,130 +28,8 @@
                 document.getElementById(tabName).style.display = "block";
                 evt.currentTarget.className += " active";
             }
-		</script>
-		<script type="module">
-		    import SigSDK from "../node_modules/@wacom/signature-sdk/signature-sdk.js";
-			
-			var sigSDK
-			var mSigObj;	
-			var wizCtl;		
-			
-			var stuDevice;
-			
-			try {			     
-	            sigSDK = await SigSDK();
-	            document.getElementById("version_txt").innerHTML = sigSDK.VERSION;		
-				mSigObj = new sigSDK.SigObj();	
-				
-				// Here we need to set the licence. The easiest way is directly using
-			    // const promise = mSigObj.setLicence(key, secret);
-			    // however here the problem it is that we expose the key and secret publically.
-			    // if we want to hide the licence we can get the licence from an external server.				
-			    // there is a php demo file in /common/licence_proxy.php
-                //const promise = mSigObj.setLicenceProxy("url from where to get the licence");
-				const promise = mSigObj.setLicence("key", "secret");
-				promise.then(value => {
-				    if (value) {
-					    if (sigSDK.STUDevice.isHIDSupported()) {				
-				            document.getElementById("start_wizard").disabled = false;
-				        }
-				
-				        window.documentHash = new sigSDK.Hash(sigSDK.HashType.None);				                
-				        wizCtl = new sigSDK.WizCtl(sigSDK);				
-				
-				        document.getElementById("document_hash").disabled = false;
-						document.getElementById("initializeBanground").style.display = "none";
-					}
-				});
-				promise.catch(error => {
-				    alert(error);
-				});
-				
-            } catch (e) {
-	            alert("Error initializing SigSDK "+e);
- 	            document.getElementById("initializeBanground").style.display = "none";
-            }
-			
-			window.startWizard = async function() {
-			    if (!stuDevice) {
-				  const devices = await sigSDK.STUDevice.requestDevices();
-				  if (devices.length > 0) {
-				    stuDevice = new sigSDK.STUDevice(devices[0]);    
-				  }
-				}
-				
-				if (stuDevice) {
-			      await wizCtl.padConnect(stuDevice);
-				  const mirrorDiv = document.getElementById("mirror_div");
-				  mirrorDiv.style.width = wizCtl.padWidth()+"px";
-				  mirrorDiv.style.height = wizCtl.padHeight()+"px";
-				  mirrorDiv.style.display="block";
-		          document.getElementById("signature_div").style.display="none";				
-				  const padDefs = new PadDefs(wizCtl.padWidth(), wizCtl.padHeight());
-				  initializeDemo(sigSDK, mSigObj, WizCtl, wizCtl, padDefs);
-				  await wizard_step_init();
-				  document.getElementById("start_wizard").disabled = true;
-				  document.getElementById("stop_wizard").disabled = false;
-				}
-			}
-			
-			window.stopWizard = async function() {
-			    await shutdown_step();
-				document.getElementById("start_wizard").disabled = false;
-				document.getElementById("stop_wizard").disabled = true;
-			}
-			
-			window.showMirrorChanged = function(object) {
-			    if (object.checked) {
-			        document.getElementById("mirror_div").style.display = "block";
-				} else {
-				    document.getElementById("mirror_div").style.display = "none";
-				}
-			}
-			
-			window.mirrorInputChanged = function(object) {
-			    wizCtl.setProperty({mirrorDiv:{enable:object.checked}});
-			}
-			
-			window.encryptionChanged = function(object) {
-			    wizCtl.setProperty({encrypted:object.checked, sessionId:0xc0ffee});
-			}
-			
-			window.monochromeChanged = function(object) {
-			    wizCtl.setProperty({forceMonochrome:object.checked});
-			}            									
-				
-			window.addDocumentHash = async function() {
-			    const reader = new FileReader();
-                reader.onload = async function() {                    
-					try {
-				        window.documentHash.delete();
-					    const data = reader.result;   
-                        const hashType = sigSDK.HashType.SHA512;
-	                    window.documentHash = new sigSDK.Hash(hashType);	  
-	                    var enc = new TextEncoder(); // always utf-8
-	                    if (await window.documentHash.add(data)) {
-						    alert("Document bounded properly");
-	                    } else {
-		                    alert("Document fails to bound");
-	                    }     
-	                } catch (e) {
-		                alert(e);
-	                }
-		        }
-                reader.readAsArrayBuffer(document.getElementById("document_hash").files[0]);		
-		    }	
 
-			var btnWaiting;
-            window.fireClick = async function(id) {
-			    if (!btnWaiting) {
-				    btnWaiting = true;
-					await wizCtl.fireClick(id);
-					btnWaiting = false;
-				}
-			    
-			}
-		</script>
+        </script>		
     </head>
 	<body>	
 	    <div id="initializeBanground" class="active" style="width:100%;height:100%;position:fixed;background:#cccccccc;">
@@ -175,21 +52,21 @@
 				<div id="wizard_div" class="tabcontent">
 				    <p>This demo will go through all the optios provided by the Wizard component included in the Signature SDK JS.</p>
 				    <p>
-					    <button id="start_wizard" disabled="disabled" onClick="window.startWizard()">Start Wizard</button>
-						<button id="stop_wizard" disabled="disabled" onClick="window.stopWizard()">Stop Wizard</button>
+					    <button id="start_wizard" disabled="disabled" onClick="startWizard()">Start Wizard</button>
+						<button id="stop_wizard" disabled="disabled" onClick="stopWizard()">Stop Wizard</button>
 					</p>
 					<p>
 					    <fieldset style="border:1px solid black;display:inline">
 						    <legend>Controls</legend>
 							<div>
-							    <button id="start_btn" disabled="disabled" onClick="window.fireClick('start')">Start >></button>
-							    <button id="back_btn" disabled="disabled" onClick="window.fireClick('back')"><< Back</button>
-								<button id="next_btn" disabled="disabled" onClick="window.fireClick('next')">Next >></button>
-								<button id="cancel_btn" disabled="disabled" onClick="window.fireClick('cancel')">Cancel</button>
-								<button id="clear_btn" disabled="disabled" onClick="window.fireClick('clear')">Clear</button>
-								<button id="ok_btn" disabled="disabled" onClick="window.fireClick('ok')">Ok</button>
-								<button id="big_check_btn" disabled="disabled" onClick="window.fireClick('checkbox3')">Big checkbox</button>
-								<button id="big_radio_btn" disabled="disabled" onClick="window.fireClick('radio3')">Big radiobutton</button>
+							    <button id="start_btn" disabled="disabled" onClick="fireClick('start')">Start &gt;&gt;</button>
+							    <button id="back_btn" disabled="disabled" onClick="fireClick('back')">&lt;&lt; Back</button>
+								<button id="next_btn" disabled="disabled" onClick="fireClick('next')">Next &gt;&gt;</button>
+								<button id="cancel_btn" disabled="disabled" onClick="fireClick('cancel')">Cancel</button>
+								<button id="clear_btn" disabled="disabled" onClick="fireClick('clear')">Clear</button>
+								<button id="ok_btn" disabled="disabled" onClick="fireClick('ok')">Ok</button>
+								<button id="big_check_btn" disabled="disabled" onClick="fireClick('checkbox3')">Big checkbox</button>
+								<button id="big_radio_btn" disabled="disabled" onClick="fireClick('radio3')">Big radiobutton</button>
 							</div>
 						</fieldset>
 					</p>
@@ -201,7 +78,7 @@
 					  <label for="show_mirror_checkbox">Show the content of STU tablet on screen.</label>
 					  <br>
 					  <input type="checkbox" id="enable_mirror_checkbox" onChange="mirrorInputChanged(this)">
-					  <label for="enable_mirror_checkbox">Enable input from sreen.</label>
+					  <label for="enable_mirror_checkbox">Enable input from screen.</label>
 					  <br>
 					  <input type="checkbox" id="enable_encryption_checkbox" onChange="encryptionChanged(this)">
 					  <label for="enable_encryption_checkbox">Encrypt the communication between the PC and STU Tablet</label>
@@ -229,7 +106,7 @@
 						            if the document has been changed or not.
 					            </p>
 					            <label for="document_hash">Document:</label><br>
-					            <input type="file" id="document_hash" name="document_hash" onchange="window.addDocumentHash()" disabled="disabled"><br><br>							                
+					            <input type="file" id="document_hash" name="document_hash" onchange="addDocumentHash()" disabled="disabled"><br><br>							                
 				            </p>
 		                </div>					    
 					</fieldset>					    

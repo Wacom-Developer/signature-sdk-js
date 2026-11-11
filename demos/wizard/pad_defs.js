@@ -1,3 +1,8 @@
+/**
+ * Copyright (C) 2026 Wacom.
+ * Use of this source code is governed by the MIT License that can be found in the LICENSE file.
+ */
+ 
 class PadDefs {
 
 	static STU430 = {
@@ -72,7 +77,7 @@ class PadDefs {
 		whoFontSize: "12pt"
 	}
 	
-	//Wacom STU-520, 530, 540, 541 or 500
+	//Wacom STU-520, 530, 540 or 541
 	static STU5X0 = {
 		titleSize: "40pt",
 		tileLineWidth: 10,
@@ -151,11 +156,10 @@ class PadDefs {
 		
 		switch (padWidth) {
 			case 640:
-			    // stu 500
-				this.stu = PadDefs.STU5X0;
+			    // stu 500 not supported yet
 				break;
 			case 800:
-			    // for the moment only stu 540 supported
+			    // for the moment only stu 540 is supported
 				this.stu = PadDefs.STU5X0;
 				break;
 			case 396:
@@ -168,3 +172,5 @@ class PadDefs {
 		}
 	}
 }
+
+export default PadDefs;

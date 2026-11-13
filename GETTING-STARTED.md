@@ -3,6 +3,7 @@
 - [Wacom Signature SDK for JavaScript](#wacom-signature-sdk-for-javascript)
   - [Setting up the Demo application](#setting-up-the-demo-application)
     - [How to use](#how-to-use)
+      - [Using the legacy build](#using-the-legacy-build)
   - [Installation](#installation)
     - [Web Development Environment](#web-development-environment)
     - [Using the Signature SDK Sample Code](#using-the-signature-sdk-sample-code)
@@ -12,7 +13,7 @@
       - [Simple demo - in demos/simple/simple.js](#simple-demo---in-demossimplesimplejs)
       - [Complete demo - in demos/complete/complete\_demo.js](#complete-demo---in-demoscompletecomplete_demojs)
       - [Wizard demo - in demos/wizard/wizard\_demo.js](#wizard-demo---in-demoswizardwizard_demojs)
-      - [Angular demo - in demos/angular\_demo/src/app/app.components.ts](#angular-demo---in-demosangular_demosrcappappcomponentsts)
+      - [Angular demo - in demos/angular\_demo/src/app/app.component.ts](#angular-demo---in-demosangular_demosrcappappcomponentts)
     - [On premise licensing](#on-premise-licensing)
     - [Using a custom URL](#using-a-custom-url)
   - [Operate the Demo application](#operate-the-demo-application)
@@ -36,32 +37,45 @@ Please view the README for additional information on WebHID and WebAssembly.
 
 ### How to use
 
-Currently, WebHID works if executed locally or on a secure connection.
+Due to WebAssembly security restrictions, the SDK must be served from a web server and cannot be opened directly from the local file system. WebHID (required for STU tablets) also needs a secure context: use `localhost` during development, and https for any other URL.
 
-Download the SDK from https://developer.wacom.com/developer-dashboard
+To get access to the SDK, go to the [Developer Dashboard](https://developer.wacom.com/developer-dashboard):
 
 - Log in using your Wacom ID
 - Select **For signature** within **Download SDKs**
 - Select **More info** within **Wacom Ink SDK for signatures for JavaScript**
-- Follow the instructions on the page to download the SDK
+- Follow the instructions on the page to create the `.npmrc` file used to install the SDK from Cloudsmith
 
-The downloaded Zip file contains the Signature SDK for JavaScript.
+The Signature SDK for JavaScript is installed from Cloudsmith as the `@wacom/signature-sdk` npm package. See [Using the Signature SDK Sample Code](#using-the-signature-sdk-sample-code) for setup.
 
-The Signature SDK for JavaScript is distributed as two files:
+Once installed, the package is located in `node_modules/@wacom/signature-sdk` and contains:
 
-1. signature_sdk.wasm – This is the SDK itself.
-2. signature_sdk.js – This is the JavaScript wrapper.
+| Path | Description |
+|---|---|
+| `signature-sdk.js` | ES module wrapper. This is the package's default entry point. |
+| `signature-sdk.wasm` | The SDK, compiled to WebAssembly. Loaded by the wrapper. |
+| `signature-sdk.d.ts` | TypeScript type definitions. |
+| `dist/` | CommonJS (`signature-sdk.cjs`) and UMD (`signature-sdk.umd.cjs`) bundles. |
+| `legacy/` | The previous distribution of the SDK, for use with a plain `<script>` tag. |
+| `eula/`, `evaluation-license-agreement/` | License agreements. |
 
-Using the SDK via the website must be done on a web server due to security restrictions. It cannot be used directly from the local file system. Additionally, the connection must be secure (https) when using another URL other than localhost.
+Only the JavaScript wrapper needs to be imported:
 
-Only the JavaScript file needs to be included & imported on the HTML page:
+```javascript
+import SigSDK from "@wacom/signature-sdk";
 
+const sigSDK = await new SigSDK();
 ```
-      <script src="signature_sdk.js"></script> <!-- signature SDK -->
-```
 
-Due to WebAssembly security restrictions, the demo page must be opened on a web server and not directly from a local file system.
-For initial development, it is convenient to use localhost for this purpose.
+The `.wasm` file must be served alongside your application. The demos use `vite-plugin-static-copy` to copy it into the build output (see `demos/vite.config.js`).
+
+#### Using the legacy build
+
+The installed package also contains the legacy build of the Signature SDK for JavaScript in `legacy/`. If your application includes the SDK with a `<script>` tag instead of importing it as a module, use these files: `signature-sdk.js`, `signature-sdk.wasm` and `stu-sdk.min.js`. Copy them to your web server and include the wrapper on your page:
+
+```html
+<script src="signature-sdk.js"></script>
+```
 
 ## Installation
 
@@ -90,8 +104,12 @@ The web-based app needs a web server.
  
 ### Using the Signature SDK Angular sample
 
-To build the samples in Angular, follow the same steps above but:
-- Instead of using `npm run build` to build the demo code, use `ng serve` to build the project.
+The Angular sample is a separate project in `demos/angular_demo`. To build and run it:
+
+* Go to the `demos/angular_demo` folder. Add the `.npmrc` file created from the Developer Dashboard instructions to this folder. Run the following commands on the console.
+  - `npm install` -> this will download and install Signature SDK JS from Cloudsmith, along with the Angular dependencies.
+  - `npm start` -> this will build the project and start a web server using `ng serve`.
+  - open a web browser with the URL: http://localhost:4200
 
 ## Licensing
 
@@ -132,7 +150,7 @@ Once you have a valid license, you can initialize the Signature SDK for JavaScri
 
 ```
 
-#### Angular demo - in demos/angular_demo/src/app/app.components.ts
+#### Angular demo - in demos/angular_demo/src/app/app.component.ts
 
 ```typescript
 
@@ -164,7 +182,7 @@ More information about the on premise feature can be found within our [developer
 
  ### Using a custom URL
 
-To set a custom URL, change the `$url` within `license_proxy.php` to be the custom URL as required.
+To set a custom URL, change the `$url` within `demos/common/licence_proxy.php` to be the custom URL as required.
 
 ```php
 ...
@@ -173,6 +191,12 @@ To set a custom URL, change the `$url` within `license_proxy.php` to be the cust
     $url = "https://lms-tx.azurewebsites.net/api/Client/".$key."?hashedKey=".$sign;
 
 ...
+```
+
+A Node.js version of the proxy is also provided in `demos/common/licence_proxy.js`. To set a custom URL there, change the `url` constant:
+
+```javascript
+const url = "https://lms-tx.azurewebsites.net/api/Client/"+key+"?hashedKey="+hashedKey;
 ```
 
 
@@ -184,9 +208,9 @@ When opening the demo application, you will reach this page. Its main functions 
 
 Each section does the following:
 
-- Capture Signature: Choose a file to load a previously captured signature.
-- Read Signature: With an attached STU, capture a new signature.
-- Settings: With an attached integrated pen device, capture a new signature.
+- Capture Signature: Capture a new signature with an attached STU or integrated pen device, optionally binding it to a file.
+- Read Signature: Load a previously captured signature and view its details.
+- Settings: Configure the ink, capture window and signature render used by the demo.
 
 ### Capture Signature
 

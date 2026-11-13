@@ -3,7 +3,6 @@
 - [Wacom Signature SDK for JavaScript](#wacom-signature-sdk-for-javascript)
   - [Setting up the Demo application](#setting-up-the-demo-application)
     - [How to use](#how-to-use)
-      - [Using the legacy build](#using-the-legacy-build)
   - [Installation](#installation)
     - [Web Development Environment](#web-development-environment)
     - [Using the Signature SDK Sample Code](#using-the-signature-sdk-sample-code)
@@ -56,7 +55,6 @@ Once installed, the package is located in `node_modules/@wacom/signature-sdk` an
 | `signature-sdk.wasm` | The SDK, compiled to WebAssembly. Loaded by the wrapper. |
 | `signature-sdk.d.ts` | TypeScript type definitions. |
 | `dist/` | CommonJS (`signature-sdk.cjs`) and UMD (`signature-sdk.umd.cjs`) bundles. |
-| `legacy/` | The previous distribution of the SDK, for use with a plain `<script>` tag. |
 | `eula/`, `evaluation-license-agreement/` | License agreements. |
 
 Only the JavaScript wrapper needs to be imported:
@@ -68,14 +66,6 @@ const sigSDK = await new SigSDK();
 ```
 
 The `.wasm` file must be served alongside your application. The demos use `vite-plugin-static-copy` to copy it into the build output (see `demos/vite.config.js`).
-
-#### Using the legacy build
-
-The installed package also contains the legacy build of the Signature SDK for JavaScript in `legacy/`. If your application includes the SDK with a `<script>` tag instead of importing it as a module, use these files: `signature-sdk.js`, `signature-sdk.wasm` and `stu-sdk.min.js`. Copy them to your web server and include the wrapper on your page:
-
-```html
-<script src="signature-sdk.js"></script>
-```
 
 ## Installation
 

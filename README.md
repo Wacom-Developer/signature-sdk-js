@@ -335,7 +335,7 @@ https://github.com/Wacom-Developer
 
 ### Documentation
 
-For further details on using the SDK see [Wacom Ink SDK for signature documentation](https://developer-docs.wacom.com/docs/overview/sdks/sdk-for-signature/)
+For further details on using the SDK see [Wacom Ink SDK for signature documentation](https://developer-docs.wacom.com/docs/sdk-for-signature/javascript/overview/)
 
 ### Support
 If you experience issues with the technology components, please see related [FAQs](https://developer-support.wacom.com/hc/en-us)
